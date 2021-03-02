@@ -23,6 +23,7 @@ Widget TextFieldWidget(
         fontSize: AppConstants.size_medium_large,
         fontWeight: FontWeight.w400),
     decoration: InputDecoration(
+        contentPadding: EdgeInsets.only(left: 10, right: 10),
         hintText: hintText,
         hintStyle: TextStyle(
             color: AppConstants.clrDarkGrey,

@@ -68,8 +68,11 @@ class AppConstants {
       "AudioRoom is a Lorem ipsum dolor sit amet, consectetur adipiscing elit. Porttitor comodo netus vitae, nibh pellentesque.";
   static const String str_user_name = "User Name";
   static const String str_password = "Password";
+  static const String str_resend_otp = "Resend OTP";
+  static const String str_mobile_number = "Mobile Number";
   static const String str_search = "Search";
   static const String str_confirm_password = "Confirm Password";
+  static const String str_continue = "Continue";
   static const String str_remember = "Remember Me";
   static const String str_registerText = "Don't have an account? Register";
   static const String str_loginText = "Have an account? Login";
@@ -82,6 +85,8 @@ class AppConstants {
   static const String str_enter_profile_image = "Profile image required.";
   static const String str_enter_email = "Email address required.";
   static const String str_valid_email = "Please enter valid email.";
+  static const String str_enter_code = "Verification code required.";
+  static const String str_valid_code = "Please enter valid code.";
   static const String str_enter_pwd = "Password required.";
   static const String str_valid_pwd =
       "Password should be at least 6 characters.";

@@ -7,7 +7,6 @@ import 'package:audioroom/helper/constants.dart';
 // ignore: non_constant_identifier_names
 Widget MobileTextFieldWidget(
     {TextEditingController controller,
-    String hintText,
     TextInputType keyboardType,
     FormFieldValidator<String> validator,
     ValueChanged<String> onChanged,
@@ -26,7 +25,7 @@ Widget MobileTextFieldWidget(
         fontSize: AppConstants.size_medium_large,
         fontWeight: FontWeight.w400),
     decoration: InputDecoration(
-        hintText: hintText,
+        hintText: AppConstants.str_mobile_number,
         contentPadding: EdgeInsets.all(0),
         hintStyle: TextStyle(
             color: AppConstants.clrDarkGrey,

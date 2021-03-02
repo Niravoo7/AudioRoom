@@ -7,7 +7,7 @@ import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
 import 'package:audioroom/helper/validate.dart';
 import 'package:audioroom/library/country_code_picker/country_code_picker.dart';
-import 'package:audioroom/screen/main_module/main_screen.dart';
+import 'package:audioroom/screen/sign_module/enter_code_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void submitEvent() {
-    Navigator.pushReplacement(
-        context, NavigatePageRoute(context, MainScreen()));
+    Navigator.push(
+        context, NavigatePageRoute(context, EnterCodeScreen()));
   }
 }
