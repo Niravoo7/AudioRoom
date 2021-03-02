@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "882881085203",
+    "firebase_url": "https://delta-trees-232904.firebaseio.com",
+    "project_id": "delta-trees-232904",
+    "storage_bucket": "delta-trees-232904.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882881085203:android:c50492ec19c3ac131364e6",
+        "android_client_info": {
+          "package_name": "com.app.audioroom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "882881085203-idpo867ocamn7kpn7a45kqpqh9jsv3sg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.audioroom",
+            "certificate_hash": "ecebb17595c44d0f65125e29c0b2874a46b939e0"
+          }
+        },
+        {
+          "client_id": "882881085203-tel67mv7hj83uok4ck9k6954bh5p8h1b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMi4lQQM0a4eROnWu689vUyZfYKjHcxUQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "882881085203-tel67mv7hj83uok4ck9k6954bh5p8h1b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
