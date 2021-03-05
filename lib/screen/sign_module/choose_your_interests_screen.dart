@@ -95,7 +95,7 @@ class _ChooseYourInterestsScreenState extends State<ChooseYourInterestsScreen> {
                                 SizedBox(height: 8),
                                 GridView.builder(
                                     shrinkWrap: true,
-                                    padding: EdgeInsets.all(0),
+                                    padding: EdgeInsets.all(0),physics: NeverScrollableScrollPhysics(),
                                     itemCount: interestsCategoryModels[index]
                                         .interestsModels
                                         .length,

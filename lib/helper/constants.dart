@@ -19,6 +19,7 @@ class AppConstants {
   static const Color clrDivider = Color(0xFFE9E9E9);
   static const Color clrDarkGrey = Color(0xFF9C9C9C);
   static const Color clrGrey = Color(0xFFE5E4E3);
+  static const Color clrTitleBG = Color(0xFFFAF9F9);
   static const Color clrBlack = Color(0xFF000000);
   static const Color clrTransparent = Color(0x00000000);
   static const Color clrInputBorder = Color(0xFFEEEEEE);
@@ -152,6 +153,7 @@ class AppConstants {
   static const String str_following = 'Following';
   static const String str_invited = 'Invited';
   static const String str_invite = 'Invite';
+  static const String str_room = '+ Room';
   static const String str_send_remainder = 'Send Remainder';
   static const String str_clubs_joined = 'Clubs Joined';
   static const String str_joined = 'Joined';
@@ -161,6 +163,12 @@ class AppConstants {
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eros, eleifend neque, arcu eget in tortor facilisi dignissim elementum. Fermentum semper turpis felis lacus, euismod egestas lorem malesuada a. Quam faucibus cras et tincidunt feugiat.';
   static const String str_search_for_people = 'Search for people';
   static const String str_search_for_clubs = 'Search for clubs';
+  static const String str_search_for_people_and_club = 'Search for people and club';
   static const String str_empty_invites_list = 'You have 0 invites left. And You have 4 pending invites.';
   static const String str_pending_invites = 'Pending Invites';
+  static const String str_top = 'Top';
+  static const String str_all = 'All';
+  static const String str_people = 'People';
+  static const String str_clubs = 'Clubs';
+  static const String str_view_more_people = 'View more people';
 }
