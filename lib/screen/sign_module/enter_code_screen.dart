@@ -2,10 +2,11 @@ import 'package:audioroom/custom_widget/flexible_widget.dart';
 import 'package:audioroom/custom_widget/button_widget.dart';
 import 'package:audioroom/custom_widget/text_field_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
+import 'package:audioroom/custom_widget/common_appbar.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
 import 'package:audioroom/helper/validate.dart';
-import 'package:audioroom/screen/main_module/main_screen.dart';
+import 'package:audioroom/screen/sign_module/basic_info_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,8 +16,6 @@ class EnterCodeScreen extends StatefulWidget {
 }
 
 class _EnterCodeScreenState extends State<EnterCodeScreen> {
-  bool isPasswordVisible = false;
-
   TextEditingController codeController = TextEditingController();
 
   @override
@@ -35,9 +34,11 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
           }
         },
         child: Scaffold(
+          appBar:  CommonAppBar(
+              context, "Enter Code", true, false, null),
             body: SafeArea(
                 child: Container(
-                    padding: EdgeInsets.only(left: 16, right: 16),
+                    padding: EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -76,6 +77,6 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
   }
 
   void submitEvent() {
-    Navigator.push(context, NavigatePageRoute(context, MainScreen()));
+    Navigator.push(context, NavigatePageRoute(context, BasicInfoScreen()));
   }
 }

@@ -3,6 +3,7 @@ import 'package:audioroom/custom_widget/button_widget.dart';
 import 'package:audioroom/custom_widget/logo_widget.dart';
 import 'package:audioroom/custom_widget/mobile_text_field_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
+import 'package:audioroom/custom_widget/common_appbar.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
 import 'package:audioroom/helper/validate.dart';
@@ -27,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    mobileNumberController.text = "nva@gmail.com";
+    mobileNumberController.text = "1234567890";
   }
 
   @override
@@ -40,6 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         child: Scaffold(
+            appBar: CommonAppBar(
+                context, "🙏 Welcome to AudioRoom", false, false, null),
             body: SafeArea(
                 child: Container(
                     padding: EdgeInsets.only(left: 16, right: 16),
@@ -75,24 +78,24 @@ class _LoginScreenState extends State<LoginScreen> {
             fontWeight: FontWeight.bold),
         SizedBox(height: 8),
         MobileTextFieldWidget(
-            controller: mobileNumberController, countryCode: countryCode),
+            controller: mobileNumberController,
+            countryCode: countryCode,
+            keyboardType: TextInputType.number),
       ],
     );
   }
 
   void validateInputs(BuildContext con) {
     if (mobileNumberController.text.trim().isEmpty) {
-      showToast(AppConstants.str_enter_email);
-    } else if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(mobileNumberController.text)) {
-      showToast(AppConstants.str_valid_email);
+      showToast(AppConstants.str_enter_mobile_number);
+    } else if (mobileNumberController.text.length != 10) {
+      showToast(AppConstants.str_valid_mobile_number);
     } else {
       submitEvent();
     }
   }
 
   void submitEvent() {
-    Navigator.push(
-        context, NavigatePageRoute(context, EnterCodeScreen()));
+    Navigator.push(context, NavigatePageRoute(context, EnterCodeScreen()));
   }
 }
