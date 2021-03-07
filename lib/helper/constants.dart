@@ -31,6 +31,7 @@ class AppConstants {
   static const Color clrProfileBG = Color(0xFF25AE87);
   static const Color clrSearchBG = Color(0xFFE5E4E3);
   static const Color clrSearchIconColor = Color(0xFF898988);
+  static const Color clrWidgetBGColor = Color(0xFFE6E4E3);
 
   //fonts
   static const String fontGothic = "Gothic";
@@ -81,6 +82,11 @@ class AppConstants {
   static const String ic_setting = '$root_image/ic_setting.png';
   static const String ic_spiker = '$root_image/ic_spiker.png';
   static const String ic_twitter = '$root_image/ic_twitter.png';
+  static const String ic_clock = '$root_image/ic_clock.png';
+  static const String ic_user = '$root_image/ic_user.png';
+  static const String ic_user_profile = '$root_image/ic_user_profile.png';
+  static const String ic_user_profile2 = '$root_image/ic_user_profile2.png';
+  static const String ic_hide = '$root_image/ic_hide.png';
 
   //string
   static const String str_app_name = "Audio Room";
@@ -171,4 +177,8 @@ class AppConstants {
   static const String str_people = 'People';
   static const String str_clubs = 'Clubs';
   static const String str_view_more_people = 'View more people';
+  static const String str_ongoing = 'Ongoing';
+  static const String str_upcoming_for_you = 'Upcoming for you';
+  static const String str_upcoming = 'Upcoming';
+  static const String str_hide_room = 'Hide Room';
 }
