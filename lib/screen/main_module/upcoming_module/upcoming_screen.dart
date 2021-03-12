@@ -1,9 +1,9 @@
-import 'package:audioroom/custom_widget/card_widget.dart';
+import 'package:audioroom/custom_widget/room_card_widget.dart';
 import 'package:audioroom/custom_widget/divider_widget.dart';
 import 'package:audioroom/custom_widget/ongoing_button_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/helper/constants.dart';
-import 'package:audioroom/model/home_page_model.dart';
+import 'package:audioroom/model/room_card_model.dart';
 import 'package:flutter/material.dart';
 
 class UpcomingScreen extends StatefulWidget {
@@ -13,24 +13,47 @@ class UpcomingScreen extends StatefulWidget {
 
 class _UpcomingScreenState extends State<UpcomingScreen> {
   int _selectedIndex = 0;
+
   // ignore: deprecated_member_use
-  List<PostListModel> postListModel = List<PostListModel>();
-@override
+  List<RoomCardModel> roomCardModels = List<RoomCardModel>();
+
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // ignore: deprecated_member_use
-    List<UserListModel> userListModel1 = List<UserListModel>();
-    userListModel1.add(UserListModel(AppConstants.ic_user_profile, "Melinda Livsey"));
-    userListModel1.add(UserListModel(AppConstants.ic_user_profile2, "Ben Bhai"));
-    userListModel1.add(UserListModel(AppConstants.ic_user_profile, "Melinda Livsey"));
-    userListModel1.add(UserListModel(AppConstants.ic_user_profile2, "Ben Bhai"));
-    userListModel1.add(UserListModel(AppConstants.ic_user_profile, "Melinda Livsey"));
+    List<RoomCardPeopleModel> roomCardPeopleModels =
+        List<RoomCardPeopleModel>();
+    roomCardPeopleModels.add(
+        RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
+    roomCardPeopleModels
+        .add(RoomCardPeopleModel(AppConstants.ic_user_profile2, "Ben Bhai"));
+    roomCardPeopleModels.add(
+        RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
+    roomCardPeopleModels
+        .add(RoomCardPeopleModel(AppConstants.ic_user_profile2, "Ben Bhai"));
+    roomCardPeopleModels.add(
+        RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
 
-    postListModel.add(new PostListModel("TheFutur","Take The Guess Work Out Of Bidding - How To Bid",userListModel1,"5","132"));
-    postListModel.add(new PostListModel("TheFutur","Take The Guess Work Out Of Bidding - How To Bid",userListModel1,"5","132"));
-    postListModel.add(new PostListModel("TheFutur","Take The Guess Work Out Of Bidding - How To Bid",userListModel1,"5","132"));
+    roomCardModels.add(new RoomCardModel(
+        "TheFutur",
+        "Take The Guess Work Out Of Bidding - How To Bid",
+        roomCardPeopleModels,
+        "5",
+        "132"));
+    roomCardModels.add(new RoomCardModel(
+        "TheFutur",
+        "Take The Guess Work Out Of Bidding - How To Bid",
+        roomCardPeopleModels,
+        "5",
+        "132"));
+    roomCardModels.add(new RoomCardModel(
+        "TheFutur",
+        "Take The Guess Work Out Of Bidding - How To Bid",
+        roomCardPeopleModels,
+        "5",
+        "132"));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,15 +91,17 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                 padding: EdgeInsets.only(bottom: 16),
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
-                itemCount: postListModel.length,
+                itemCount: roomCardModels.length,
                 itemBuilder: (context, index) {
-                  final itemsList = List<String>.generate(postListModel.length, (n) => "List item ${n}");
+                  final itemsList = List<String>.generate(
+                      roomCardModels.length, (n) => "List item $n");
                   return Dismissible(
                       key: Key(itemsList[index]),
                       background: slideRightBackground(),
                       direction: DismissDirection.startToEnd,
-                     // secondaryBackground: slideLeftBackground(),
-                      child: cardWidgets(context,postListModel[index],true));
+                      // secondaryBackground: slideLeftBackground(),
+                      child:
+                          RoomCardWidget(context, roomCardModels[index], true));
                 })
           ],
         )),
@@ -94,14 +119,15 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
             SizedBox(
               width: 20,
             ),
-            Image.asset(AppConstants.ic_hide,height: 18,width: 18),
+            Image.asset(AppConstants.ic_hide, height: 18, width: 18),
             SizedBox(
               width: 15,
             ),
             TextWidget(AppConstants.str_hide_room,
                 color: AppConstants.clrBlack,
                 fontSize: AppConstants.size_medium_large,
-                fontWeight: FontWeight.w600, textAlign: TextAlign.left),
+                fontWeight: FontWeight.w600,
+                textAlign: TextAlign.left),
           ],
         ),
         alignment: Alignment.centerLeft,

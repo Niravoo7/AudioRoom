@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioroom/helper/constants.dart';
-import 'package:audioroom/custom_widget/people_widget.dart';
+import 'package:audioroom/custom_widget/follow_people_widget.dart';
 import 'package:audioroom/screen/main_module/invite_module/pending_invite_screen.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
 import 'package:audioroom/custom_widget/search_input_field.dart';
@@ -56,14 +56,14 @@ class _InviteScreenState extends State<InviteScreen> {
   Widget inviteListWidget() {
     return Column(children: [
       SearchInputField(
-          AppConstants.str_search_for_clubs, searchController, (text) {}),
+          AppConstants.str_search_for_clubs, searchController, true, (text) {}),
       DividerWidget(height: 1),
       Flexible(
         child: ListView.builder(
             padding: EdgeInsets.all(0),
             itemCount: followPeopleModels.length,
             itemBuilder: (BuildContext context, int index) {
-              return PeopleWidget(
+              return FollowPeopleWidget(
                   context,
                   followPeopleModels[index].profilePic,
                   followPeopleModels[index].name,

@@ -37,6 +37,7 @@ class AppConstants {
   static const String fontGothic = "Gothic";
 
   //size
+  static const double size_double_extra_small = 8;
   static const double size_extra_small = 10;
   static const double size_small = 12;
   static const double size_small_medium = 13;
@@ -80,13 +81,21 @@ class AppConstants {
   static const String ic_notification = '$root_image/ic_notification.png';
   static const String ic_raise_hand = '$root_image/ic_raise_hand.png';
   static const String ic_setting = '$root_image/ic_setting.png';
-  static const String ic_spiker = '$root_image/ic_spiker.png';
+  static const String ic_speaker = '$root_image/ic_speaker.png';
+  static const String ic_speaker_mute = '$root_image/ic_speaker_mute.png';
+  static const String ic_star = '$root_image/ic_star.png';
   static const String ic_twitter = '$root_image/ic_twitter.png';
   static const String ic_clock = '$root_image/ic_clock.png';
   static const String ic_user = '$root_image/ic_user.png';
   static const String ic_user_profile = '$root_image/ic_user_profile.png';
   static const String ic_user_profile2 = '$root_image/ic_user_profile2.png';
   static const String ic_hide = '$root_image/ic_hide.png';
+  static const String ic_closed = '$root_image/ic_closed.png';
+  static const String ic_global = '$root_image/ic_global.png';
+  static const String ic_social = '$root_image/ic_social.png';
+  static const String ic_add_to_call = '$root_image/ic_add_to_call.png';
+  static const String ic_copy_link = '$root_image/ic_copy_link.png';
+  static const String ic_share = '$root_image/ic_share.png';
 
   //string
   static const String str_app_name = "Audio Room";
@@ -117,6 +126,7 @@ class AppConstants {
   static const String str_request_code = "Request Code";
   static const String str_sign_up = "Sign Up";
   static const String str_tab_room = "Start A Room";
+  static const String str_all_rooms = "All Rooms";
   static const String str_tab_home = "🙏 Welcome Sera";
   static const String str_tab_search = "Explore";
   static const String str_tab_upcoming = "Upcoming for you";
@@ -160,6 +170,7 @@ class AppConstants {
   static const String str_invited = 'Invited';
   static const String str_invite = 'Invite';
   static const String str_room = '+ Room';
+  static const String str_make_speaker = 'Make Speaker';
   static const String str_send_remainder = 'Send Remainder';
   static const String str_clubs_joined = 'Clubs Joined';
   static const String str_joined = 'Joined';
@@ -169,16 +180,40 @@ class AppConstants {
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eros, eleifend neque, arcu eget in tortor facilisi dignissim elementum. Fermentum semper turpis felis lacus, euismod egestas lorem malesuada a. Quam faucibus cras et tincidunt feugiat.';
   static const String str_search_for_people = 'Search for people';
   static const String str_search_for_clubs = 'Search for clubs';
-  static const String str_search_for_people_and_club = 'Search for people and club';
-  static const String str_empty_invites_list = 'You have 0 invites left. And You have 4 pending invites.';
+  static const String str_search_for_people_and_club =
+      'Search for people and club';
+  static const String str_empty_invites_list =
+      'You have 0 invites left. And You have 4 pending invites.';
   static const String str_pending_invites = 'Pending Invites';
   static const String str_top = 'Top';
   static const String str_all = 'All';
   static const String str_people = 'People';
+  static const String str_people_conversation =
+      'People Interested in This Conversation';
   static const String str_clubs = 'Clubs';
   static const String str_view_more_people = 'View more people';
   static const String str_ongoing = 'Ongoing';
   static const String str_upcoming_for_you = 'Upcoming for you';
   static const String str_upcoming = 'Upcoming';
   static const String str_hide_room = 'Hide Room';
+  static const String str_clubs_to_follow = 'Clubs to Follow';
+  static const String str_title = 'Title';
+  static const String str_select_the_audience = 'Select The Audience';
+  static const String str_write_a_title_for_the_conversation =
+      'Write a title for the conversation';
+  static const String str_global = 'Global';
+  static const String str_social = 'Social';
+  static const String str_closed = 'Closed';
+  static const String str_start_a_room_small = 'Start a room';
+  static const String str_choose_people = 'Choose people';
+  static const String str_leave_quietly = 'Leave Quietly';
+  static const String str_people_who_raised_hand = 'People who raised hand';
+  static const String str_invite_people = 'Invite people';
+  static const String str_make_a_speaker = 'Make a speaker';
+  static const String str_move_to_audience = 'Move to audience';
+  static const String str_view_full_profile = 'View full profile';
+  static const String str_share = 'Share';
+  static const String str_tweet = 'Tweet';
+  static const String str_copy_link = 'Copy Link';
+  static const String str_add_to_call = 'Add to Call';
 }

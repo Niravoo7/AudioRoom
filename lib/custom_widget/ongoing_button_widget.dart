@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:audioroom/helper/constants.dart';
 
 // ignore: non_constant_identifier_names
-Widget OnGoingButtonWidget(
-    BuildContext context, String name, Function onClick,
+Widget OnGoingButtonWidget(BuildContext context, String name, Function onClick,
     {EdgeInsetsGeometry margin, int selectedIndex, int index}) {
   return Container(
     padding: EdgeInsets.only(top: 16),

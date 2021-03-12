@@ -31,9 +31,9 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
   @override
   void initState() {
     super.initState();
-    firstNameController.text = "test";
-    lastNameController.text = "test";
-    userNameController.text = "test";
+    //firstNameController.text = "test";
+    //lastNameController.text = "test";
+    //userNameController.text = "test";
 
     _controller = new AnimationController(
       vsync: this,

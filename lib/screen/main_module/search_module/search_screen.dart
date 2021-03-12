@@ -15,7 +15,12 @@ class TabNavigatorRoutes {
   static const String detail = '/search';
 }
 
+// ignore: must_be_immutable
 class SearchScreen extends StatefulWidget {
+  Function onConversationsClick;
+
+  SearchScreen(this.onConversationsClick);
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
@@ -39,7 +44,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
 
-    topScreen = new TopScreen();
+    topScreen = new TopScreen(widget.onConversationsClick);
     peopleScreen = new PeopleScreen();
     clubsScreen = new ClubsScreen();
 
@@ -54,7 +59,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             children: <Widget>[
               SearchInputField(
-                  searchInputHintText(currentTab), searchController, (text) {}),
+                  searchInputHintText(currentTab), searchController, true, (text) {}),
               tabBar(context),
               Flexible(
                   child: Stack(children: <Widget>[

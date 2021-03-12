@@ -27,7 +27,8 @@ class SplashState extends State<SplashScreen> {
           context, NavigatePageRoute(context, MainScreen()));
     } else {
       //Navigator.pushReplacement(context, NavigatePageRoute(context, LoginScreen()));
-      Navigator.pushReplacement(context, NavigatePageRoute(context, MainScreen()));
+      Navigator.pushReplacement(
+          context, NavigatePageRoute(context, MainScreen()));
     }
   }
 
@@ -40,13 +41,10 @@ class SplashState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          child: Center(
-              child: LogoWidgetText(
-                  width: MediaQuery.of(context).size.width - 200)),
-        ),
-      ),
-    );
+        body: SafeArea(
+            child: Container(
+                child: Center(
+                    child: LogoWidgetText(
+                        width: MediaQuery.of(context).size.width - 200)))));
   }
 }

@@ -21,7 +21,7 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
   @override
   void initState() {
     super.initState();
-    codeController.text = "1234";
+    //codeController.text = "1234";
   }
 
   @override

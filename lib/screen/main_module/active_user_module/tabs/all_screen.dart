@@ -1,4 +1,4 @@
-import 'package:audioroom/custom_widget/people_widget.dart';
+import 'package:audioroom/custom_widget/follow_people_widget.dart';
 import 'package:audioroom/custom_widget/title_widget.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ class _AllScreenState extends State<AllScreen> {
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: followPeopleModelsClub.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return PeopleWidget(
+                    return FollowPeopleWidget(
                         context,
                         followPeopleModelsClub[index].profilePic,
                         followPeopleModelsClub[index].name,
@@ -69,7 +69,7 @@ class _AllScreenState extends State<AllScreen> {
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: followPeopleModelsPeople.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return PeopleWidget(
+                    return FollowPeopleWidget(
                         context,
                         followPeopleModelsPeople[index].profilePic,
                         followPeopleModelsPeople[index].name,

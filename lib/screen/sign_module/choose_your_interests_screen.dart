@@ -62,15 +62,17 @@ class _ChooseYourInterestsScreenState extends State<ChooseYourInterestsScreen> {
     int crossAxisCount = 3;
     double width = (screenWidth - ((crossAxisCount - 1) * crossAxisSpacing)) /
         crossAxisCount;
-    double cellHeight = 36;
+    double cellHeight =
+        (interestsCategoryModels[0].interestsModels[0].description != null)
+            ? 70
+            : 40;
     double aspectRatio = width / cellHeight;
 
     return Scaffold(
-      appBar: CommonAppBar(
-          context, "Choose your interests", true, true, (){
-        Navigator.push(
-            context, NavigatePageRoute(context, FollowSomePeopleScreen()));
-      }),
+        appBar: CommonAppBar(context, "Choose your interests", true, true, () {
+          Navigator.push(
+              context, NavigatePageRoute(context, FollowSomePeopleScreen()));
+        }),
         body: SafeArea(
             child: Container(
                 padding: EdgeInsets.only(left: 16, right: 16, top: 16),
@@ -95,7 +97,8 @@ class _ChooseYourInterestsScreenState extends State<ChooseYourInterestsScreen> {
                                 SizedBox(height: 8),
                                 GridView.builder(
                                     shrinkWrap: true,
-                                    padding: EdgeInsets.all(0),physics: NeverScrollableScrollPhysics(),
+                                    padding: EdgeInsets.all(0),
+                                    physics: NeverScrollableScrollPhysics(),
                                     itemCount: interestsCategoryModels[index]
                                         .interestsModels
                                         .length,
@@ -118,37 +121,68 @@ class _ChooseYourInterestsScreenState extends State<ChooseYourInterestsScreen> {
                                           setState(() {});
                                         },
                                         child: Container(
-                                          height: 36,
                                           alignment: Alignment.center,
-                                          padding: EdgeInsets.only(
-                                              left: 5, right: 5),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 8, horizontal: 12),
                                           decoration: BoxDecoration(
-                                              color: interestsCategoryModels[
-                                                          index]
-                                                      .interestsModels[index1]
-                                                      .isSelected
+                                              color: interestsCategoryModels[index]
+                                                  .interestsModels[index1]
+                                                  .isSelected
                                                   ? AppConstants.clrBlack
                                                   : AppConstants.clrWhite,
                                               border: Border.all(
                                                   color: AppConstants.clrGrey),
                                               borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: TextWidget(
-                                              interestsCategoryModels[index]
-                                                  .interestsModels[index1]
-                                                  .name,
-                                              color: interestsCategoryModels[
-                                                          index]
+                                              BorderRadius.circular(10)),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              TextWidget(
+                                                  interestsCategoryModels[index]
+                                                      .interestsModels[index1]
+                                                      .name,
+                                                  color: interestsCategoryModels[
+                                                  index]
                                                       .interestsModels[index1]
                                                       .isSelected
-                                                  ? AppConstants.clrWhite
-                                                  : AppConstants.clrBlack,
-                                              fontSize:
+                                                      ? AppConstants.clrWhite
+                                                      : AppConstants.clrBlack,
+                                                  fontSize:
                                                   AppConstants.size_medium,
-                                              fontWeight: FontWeight.bold,
-                                              maxLines: 1,
-                                              textOverflow:
+                                                  fontWeight: FontWeight.bold,
+                                                  maxLines: 1,
+                                                  textOverflow:
                                                   TextOverflow.ellipsis),
+                                              (interestsCategoryModels[index]
+                                                  .interestsModels[index1]
+                                                  .description !=
+                                                  null)
+                                                  ? TextWidget(
+                                                  interestsCategoryModels[index]
+                                                      .interestsModels[index1]
+                                                      .description,
+                                                  color:
+                                                  interestsCategoryModels[
+                                                  index]
+                                                      .interestsModels[
+                                                  index1]
+                                                      .isSelected
+                                                      ? AppConstants
+                                                      .clrWhite
+                                                      : AppConstants
+                                                      .clrBlack,
+                                                  fontSize: AppConstants
+                                                      .size_small_medium,
+                                                  fontWeight: FontWeight.w400,
+                                                  maxLines: 2,
+                                                  textOverflow:
+                                                  TextOverflow.ellipsis)
+                                                  : Container(),
+                                            ],
+                                          ),
                                         ),
                                       );
                                     }),

@@ -54,7 +54,7 @@ class _ActiveUserScreenState extends State<ActiveUserScreen> {
           child: Column(
             children: <Widget>[
               SearchInputField(
-                  searchInputHintText(currentTab), searchController, (text) {}),
+                  searchInputHintText(currentTab), searchController, true,(text) {}),
               tabBar(context),
               Flexible(
                   child: Stack(children: <Widget>[

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioroom/helper/constants.dart';
-import 'package:audioroom/custom_widget/people_widget.dart';
+import 'package:audioroom/custom_widget/follow_people_widget.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
 import 'package:audioroom/model/follow_people_model.dart';
 
@@ -39,7 +39,7 @@ class _PendingInviteScreenState extends State<PendingInviteScreen> {
               padding: EdgeInsets.all(0),
               itemCount: followPeopleModels.length,
               itemBuilder: (BuildContext context, int index) {
-                return PeopleWidget(
+                return FollowPeopleWidget(
                     context,
                     followPeopleModels[index].profilePic,
                     followPeopleModels[index].name,

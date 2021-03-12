@@ -1,10 +1,10 @@
-import 'package:audioroom/custom_widget/card_widget.dart';
+import 'package:audioroom/custom_widget/room_card_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:audioroom/custom_widget/ongoing_button_widget.dart';
 import 'package:audioroom/custom_widget/divider_widget.dart';
-import 'package:audioroom/model/home_page_model.dart';
+import 'package:audioroom/model/room_card_model.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,12 +12,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  @override
-  int _selectedIndex = 0;
-  // ignore: deprecated_member_use
+  int selectedIndex = 0;
   List<HomeModel> homeModel = List<HomeModel>();
-  // ignore: deprecated_member_use
-  List<PostListModel> postListModel = List<PostListModel>();
+  List<RoomCardModel> roomCardModels = List<RoomCardModel>();
 
   void initState() {
     super.initState();
@@ -29,17 +26,30 @@ class _HomeScreenState extends State<HomeScreen> {
         'TheFutur', '3:30 PM', 'Take The Guess Work Out Of Bidding - How...'));
 
     // ignore: deprecated_member_use
-    List<UserListModel> userListModel1 = List<UserListModel>();
-    userListModel1.add(UserListModel(AppConstants.ic_user_profile, "Melinda Livsey"));
-    userListModel1.add(UserListModel(AppConstants.ic_user_profile2, "Ben Bhai"));
-    userListModel1.add(UserListModel(AppConstants.ic_user_profile, "Melinda Livsey"));
-    userListModel1.add(UserListModel(AppConstants.ic_user_profile2, "Ben Bhai"));
-    userListModel1.add(UserListModel(AppConstants.ic_user_profile, "Melinda Livsey"));
+    List<RoomCardPeopleModel> roomCardPeopleModels = List<RoomCardPeopleModel>();
+    roomCardPeopleModels
+        .add(RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
+    roomCardPeopleModels
+        .add(RoomCardPeopleModel(AppConstants.ic_user_profile2, "Ben Bhai"));
+    roomCardPeopleModels
+        .add(RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
+    roomCardPeopleModels
+        .add(RoomCardPeopleModel(AppConstants.ic_user_profile2, "Ben Bhai"));
+    roomCardPeopleModels
+        .add(RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
 
-    postListModel.add(new PostListModel("TheFutur","Take The Guess Work Out Of Bidding - How To Bid",userListModel1,"5","132"));
-    postListModel.add(new PostListModel("TheFutur","Take The Guess Work Out Of Bidding - How To Bid",userListModel1,"5","132"));
-
-
+    roomCardModels.add(new RoomCardModel(
+        "TheFutur",
+        "Take The Guess Work Out Of Bidding - How To Bid",
+        roomCardPeopleModels,
+        "5",
+        "132"));
+    roomCardModels.add(new RoomCardModel(
+        "TheFutur",
+        "Take The Guess Work Out Of Bidding - How To Bid",
+        roomCardPeopleModels,
+        "5",
+        "132"));
   }
 
   Widget build(BuildContext context) {
@@ -61,18 +71,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: 2,
                     itemBuilder: (context, index) {
                       return OnGoingButtonWidget(
-                          context,index==0? AppConstants.str_ongoing:AppConstants.str_ongoing + " " + "🌎", () {
+                          context,
+                          index == 0
+                              ? AppConstants.str_ongoing
+                              : AppConstants.str_ongoing + " " + "🌎", () {
                         setState(() {
-                          _selectedIndex = index;
+                          selectedIndex = index;
                         });
                       },
                           margin: EdgeInsets.only(right: 16),
                           index: index,
-                          selectedIndex: _selectedIndex);
+                          selectedIndex: selectedIndex);
                     }),
               ),
               Container(
-                margin: EdgeInsets.only(left: 16, right: 16,top: 16),
+                margin: EdgeInsets.only(left: 16, right: 16, top: 16),
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                     color: AppConstants.clrGrey,
@@ -143,15 +156,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.only(bottom: 16),
                   shrinkWrap: true,
                   physics: BouncingScrollPhysics(),
-                  itemCount: postListModel.length,
+                  itemCount: roomCardModels.length,
                   itemBuilder: (context, index) {
-                    final itemsList = List<String>.generate(postListModel.length, (n) => "List item ${n}");
+                    final itemsList = List<String>.generate(
+                        roomCardModels.length, (n) => "List item $n");
                     return Dismissible(
                         key: Key(itemsList[index]),
                         background: slideRightBackground(),
                         direction: DismissDirection.startToEnd,
-                       // secondaryBackground: slideLeftBackground(),
-                        child: cardWidgets(context,postListModel[index],false));
+                        // secondaryBackground: slideLeftBackground(),
+                        child:
+                            RoomCardWidget(context, roomCardModels[index], false));
                   })
             ],
           ),
@@ -159,6 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
   Widget slideRightBackground() {
     return Container(
       color: AppConstants.clrTransparent,
@@ -169,14 +185,15 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               width: 20,
             ),
-            Image.asset(AppConstants.ic_hide,height: 18,width: 18),
+            Image.asset(AppConstants.ic_hide, height: 18, width: 18),
             SizedBox(
               width: 15,
             ),
             TextWidget(AppConstants.str_hide_room,
                 color: AppConstants.clrBlack,
                 fontSize: AppConstants.size_medium_large,
-                fontWeight: FontWeight.w600, textAlign: TextAlign.left),
+                fontWeight: FontWeight.w600,
+                textAlign: TextAlign.left),
           ],
         ),
         alignment: Alignment.centerLeft,

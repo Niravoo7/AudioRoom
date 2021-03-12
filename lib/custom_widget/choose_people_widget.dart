@@ -4,8 +4,15 @@ import 'package:audioroom/helper/constants.dart';
 import 'package:flutter/material.dart';
 
 // ignore: non_constant_identifier_names
-Widget PeopleWidget(BuildContext context, String profilePic, String name,
-    String tagName, String btnName, bool isSelected, Function btnClick) {
+Widget ChoosePeopleWidget(
+    BuildContext context,
+    String profilePic,
+    String name,
+    String tagName,
+    String btnName,
+    bool isSelected,
+    bool isOnline,
+    Function btnClick) {
   return Container(
       child: Column(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -14,8 +21,24 @@ Widget PeopleWidget(BuildContext context, String profilePic, String name,
       Row(children: [
         Container(
           margin: EdgeInsets.only(left: 16, top: 16, bottom: 16),
-          decoration: BoxDecoration(shape: BoxShape.circle),
-          child: Image.network(profilePic, height: 40, width: 40),
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Container(
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                child: Image.network(profilePic, height: 40, width: 40),
+              ),
+              Container(
+                height: 8,
+                width: 8,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: (isOnline)
+                        ? AppConstants.clrGreen
+                        : AppConstants.clrTransparent),
+              ),
+            ],
+          ),
         ),
         Flexible(
           child: Container(
@@ -43,25 +66,18 @@ Widget PeopleWidget(BuildContext context, String profilePic, String name,
             },
             child: Container(
                 alignment: Alignment.center,
-                height: 36,
+                height: 22,
+                width: 22,
                 margin: EdgeInsets.only(right: 16),
                 padding: EdgeInsets.only(left: 24, right: 24),
                 decoration: BoxDecoration(
                     color: isSelected
                         ? AppConstants.clrPrimary
                         : AppConstants.clrWhite,
-                    borderRadius: BorderRadius.circular(10),
+                    shape: BoxShape.circle,
                     border: isSelected
                         ? null
-                        : Border.all(width: 1, color: AppConstants.clrPrimary)),
-                child: TextWidget(btnName,
-                    color: isSelected
-                        ? AppConstants.clrWhite
-                        : AppConstants.clrPrimary,
-                    fontSize: AppConstants.size_medium,
-                    fontWeight: FontWeight.bold,
-                    maxLines: 1,
-                    textOverflow: TextOverflow.ellipsis)))
+                        : Border.all(width: 1, color: AppConstants.clrGrey))))
       ]),
       DividerWidget(height: 1, width: MediaQuery.of(context).size.width)
     ],

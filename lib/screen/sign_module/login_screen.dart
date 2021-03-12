@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    mobileNumberController.text = "1234567890";
+    //mobileNumberController.text = "1234567890";
   }
 
   @override

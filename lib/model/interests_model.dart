@@ -8,6 +8,7 @@ class InterestsCategoryModel {
 class InterestsModel {
   String name;
   bool isSelected;
+  String description;
 
-  InterestsModel(this.name, this.isSelected);
+  InterestsModel(this.name, this.isSelected, {this.description});
 }

@@ -6,9 +6,11 @@ import 'package:audioroom/helper/constants.dart';
 class SearchInputField extends StatelessWidget {
   String hintText;
   TextEditingController controller;
+  bool isSearchIconVisible;
   void Function(String) callback;
 
-  SearchInputField(this.hintText, this.controller, this.callback);
+  SearchInputField(
+      this.hintText, this.controller, this.isSearchIconVisible, this.callback);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,9 @@ class SearchInputField extends StatelessWidget {
             focusColor: AppConstants.clrBlack,
             filled: true,
             fillColor: AppConstants.clrSearchBG,
-            contentPadding: EdgeInsets.all(0),
+            contentPadding: (isSearchIconVisible)
+                ? EdgeInsets.all(0)
+                : EdgeInsets.only(left: 15),
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 gapPadding: 0,
@@ -54,21 +58,23 @@ class SearchInputField extends StatelessWidget {
                 gapPadding: 0,
                 borderSide:
                     BorderSide(color: AppConstants.clrTransparent, width: 1)),
-            prefixIcon: Container(
-              width: 40,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Image.asset(
-                      AppConstants.img_search,
-                      height: 18,
-                      color: AppConstants.clrSearchIconColor,
+            prefixIcon: (isSearchIconVisible)
+                ? Container(
+                    width: 40,
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Image.asset(
+                            AppConstants.img_search,
+                            height: 18,
+                            color: AppConstants.clrSearchIconColor,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            )),
+                  )
+                : null),
         style: TextStyle(
             fontFamily: AppConstants.fontGothic,
             fontSize: AppConstants.size_medium_large,
