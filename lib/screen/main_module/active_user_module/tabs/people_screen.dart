@@ -9,7 +9,7 @@ class PeopleScreen extends StatefulWidget {
 }
 
 class _PeopleScreenState extends State<PeopleScreen> {
-  List<FollowPeopleModel> followPeopleModels = new List<FollowPeopleModel>();
+  List<FollowPeopleModel> followPeopleModels = [];
 
   @override
   void initState() {

@@ -1,6 +1,6 @@
 class InterestsCategoryModel {
   String categoryName;
-  List<InterestsModel> interestsModels = new List<InterestsModel>();
+  List<InterestsModel> interestsModels =[];
 
   InterestsCategoryModel(this.categoryName, this.interestsModels);
 }

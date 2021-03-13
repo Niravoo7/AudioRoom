@@ -9,7 +9,7 @@ class ClubsScreen extends StatefulWidget {
 }
 
 class _ClubsScreenState extends State<ClubsScreen> {
-  List<FollowPeopleModel> followPeopleModels = new List<FollowPeopleModel>();
+  List<FollowPeopleModel> followPeopleModels = [];
 
   @override
   void initState() {

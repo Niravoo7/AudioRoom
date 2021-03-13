@@ -20,9 +20,9 @@ class YourRoomScreen extends StatefulWidget {
 }
 
 class _YourRoomScreenState extends State<YourRoomScreen> {
-  List<YourRoomCardModel> yourRoomCardModels = List<YourRoomCardModel>();
+  List<YourRoomCardModel> yourRoomCardModels = [];
   List<YourRoomCardPeopleModel> yourRoomCardPeopleModels;
-  List<String> icons = new List<String>();
+  List<String> icons = [];
 
   bool isRaisedHand = true;
   bool icListBottomSheetVisible = false;
@@ -33,7 +33,7 @@ class _YourRoomScreenState extends State<YourRoomScreen> {
   void initState() {
     super.initState();
 
-    yourRoomCardPeopleModels = List<YourRoomCardPeopleModel>();
+    yourRoomCardPeopleModels = [];
     yourRoomCardPeopleModels.add(YourRoomCardPeopleModel(
         AppConstants.ic_user_profile, "Melinda Livsey", true, false));
     yourRoomCardPeopleModels.add(YourRoomCardPeopleModel(
@@ -52,7 +52,7 @@ class _YourRoomScreenState extends State<YourRoomScreen> {
         "5",
         "132"));
 
-    yourRoomCardPeopleModels = List<YourRoomCardPeopleModel>();
+    yourRoomCardPeopleModels = [];
     yourRoomCardPeopleModels.add(YourRoomCardPeopleModel(
         AppConstants.ic_user_profile, "Melinda Livsey", true, true));
     yourRoomCardPeopleModels.add(YourRoomCardPeopleModel(
@@ -202,7 +202,7 @@ class _YourRoomScreenState extends State<YourRoomScreen> {
   }
 
   Widget icListBottomSheet() {
-    List<FollowPeopleModel> followPeopleModels = new List<FollowPeopleModel>();
+    List<FollowPeopleModel> followPeopleModels =[];
 
     followPeopleModels.add(new FollowPeopleModel(
         "Saikik", "@saikik.jp", AppConstants.str_image_url, true));
@@ -255,7 +255,7 @@ class _YourRoomScreenState extends State<YourRoomScreen> {
   }
 
   Widget icAddUserBottomSheet() {
-    List<ChoosePeopleModel> choosePeopleModels = new List<ChoosePeopleModel>();
+    List<ChoosePeopleModel> choosePeopleModels = [];
 
     choosePeopleModels.add(new ChoosePeopleModel(
         "Saikik", "@saikik.jp", AppConstants.str_image_url, true, false));

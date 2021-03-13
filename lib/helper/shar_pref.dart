@@ -4,6 +4,7 @@ class SharePref {
   static SharedPreferences prefs;
 
   static const String keyMobileNo = "USER_MOBILE_NUMBER";
+  static const String keyUId = "USER_UNIQUE_ID";
 
   //int
   static Future prefSetInt(String key, int value) async {

@@ -16,14 +16,14 @@ class ChooseYourInterestsScreen extends StatefulWidget {
 
 class _ChooseYourInterestsScreenState extends State<ChooseYourInterestsScreen> {
   List<InterestsCategoryModel> interestsCategoryModels =
-      new List<InterestsCategoryModel>();
+  [];
 
-  List<InterestsModel> interestsModels = new List<InterestsModel>();
+  List<InterestsModel> interestsModels =[];
 
   @override
   void initState() {
     super.initState();
-    interestsModels = new List<InterestsModel>();
+    interestsModels =[];
     interestsModels.add(new InterestsModel("🌎 Interest", false));
     interestsModels.add(new InterestsModel("🌎 Interest", false));
     interestsModels.add(new InterestsModel("🌎 Interest", false));
@@ -33,7 +33,7 @@ class _ChooseYourInterestsScreenState extends State<ChooseYourInterestsScreen> {
     interestsCategoryModels
         .add(new InterestsCategoryModel("Category Title", interestsModels));
 
-    interestsModels = new List<InterestsModel>();
+    interestsModels = [];
     interestsModels.add(new InterestsModel("🌎 Interest", false));
     interestsModels.add(new InterestsModel("🌎 Interest", false));
     interestsModels.add(new InterestsModel("🌎 Interest", false));
@@ -43,7 +43,7 @@ class _ChooseYourInterestsScreenState extends State<ChooseYourInterestsScreen> {
     interestsCategoryModels
         .add(new InterestsCategoryModel("Category Title", interestsModels));
 
-    interestsModels = new List<InterestsModel>();
+    interestsModels = [];
     interestsModels.add(new InterestsModel("🌎 Interest", false));
     interestsModels.add(new InterestsModel("🌎 Interest", false));
     interestsModels.add(new InterestsModel("🌎 Interest", false));

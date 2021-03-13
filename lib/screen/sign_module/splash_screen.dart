@@ -3,6 +3,7 @@ import 'package:audioroom/custom_widget/logo_widget.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
 import 'package:audioroom/helper/shar_pref.dart';
 import 'package:audioroom/screen/main_module/main_screen.dart';
+import 'package:audioroom/screen/sign_module/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,9 +27,9 @@ class SplashState extends State<SplashScreen> {
       Navigator.pushReplacement(
           context, NavigatePageRoute(context, MainScreen()));
     } else {
-      //Navigator.pushReplacement(context, NavigatePageRoute(context, LoginScreen()));
       Navigator.pushReplacement(
-          context, NavigatePageRoute(context, MainScreen()));
+          context, NavigatePageRoute(context, LoginScreen()));
+      //Navigator.pushReplacement(context, NavigatePageRoute(context, MainScreen()));
     }
   }
 

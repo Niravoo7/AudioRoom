@@ -12,7 +12,7 @@ class FollowerScreen extends StatefulWidget {
 }
 
 class _FollowerScreenState extends State<FollowerScreen> {
-  List<FollowPeopleModel> followPeopleModels = new List<FollowPeopleModel>();
+  List<FollowPeopleModel> followPeopleModels = [];
   TextEditingController searchController = new TextEditingController();
 
   @override

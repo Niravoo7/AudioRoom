@@ -13,8 +13,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
-  List<HomeModel> homeModel = List<HomeModel>();
-  List<RoomCardModel> roomCardModels = List<RoomCardModel>();
+  List<HomeModel> homeModel = [];
+  List<RoomCardModel> roomCardModels = [];
 
   void initState() {
     super.initState();
@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           selectedIndex = index;
                         });
                       },
-                          margin: EdgeInsets.only(right: 16),
+
                           index: index,
                           selectedIndex: selectedIndex);
                     }),

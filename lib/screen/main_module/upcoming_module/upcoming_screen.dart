@@ -21,8 +21,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
   void initState() {
     super.initState();
     // ignore: deprecated_member_use
-    List<RoomCardPeopleModel> roomCardPeopleModels =
-        List<RoomCardPeopleModel>();
+    List<RoomCardPeopleModel> roomCardPeopleModels = [];
     roomCardPeopleModels.add(
         RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
     roomCardPeopleModels
@@ -81,10 +80,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                       setState(() {
                         _selectedIndex = index;
                       });
-                    },
-                        margin: EdgeInsets.only(right: 16),
-                        index: index,
-                        selectedIndex: _selectedIndex);
+                    }, index: index, selectedIndex: _selectedIndex);
                   }),
             ),
             ListView.builder(

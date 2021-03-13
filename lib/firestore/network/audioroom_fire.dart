@@ -25,7 +25,7 @@ class AudioRoomService {
         .where("channel_delete", isEqualTo: false)
         .get(GetOptions(source: Source.serverAndCache))
         .then((QuerySnapshot snapshot) {
-      List<AudioRoomModel> audioRoomModels = new List<AudioRoomModel>();
+      List<AudioRoomModel> audioRoomModels = [];
       if (snapshot != null &&
           snapshot.docs != null &&
           snapshot.docs.length > 0) {
@@ -48,7 +48,7 @@ class AudioRoomService {
         .where("channel_delete", isEqualTo: false)
         .get(GetOptions(source: Source.serverAndCache))
         .then((QuerySnapshot snapshot) {
-      List<AudioRoomModel> audioRoomModels = new List<AudioRoomModel>();
+      List<AudioRoomModel> audioRoomModels = [];
       if (snapshot != null &&
           snapshot.docs != null &&
           snapshot.docs.length > 0) {

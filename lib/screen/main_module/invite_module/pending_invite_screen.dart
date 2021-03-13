@@ -10,7 +10,7 @@ class PendingInviteScreen extends StatefulWidget {
 }
 
 class _PendingInviteScreenState extends State<PendingInviteScreen> {
-  List<FollowPeopleModel> followPeopleModels = new List<FollowPeopleModel>();
+  List<FollowPeopleModel> followPeopleModels = [];
   TextEditingController searchController = new TextEditingController();
 
   @override

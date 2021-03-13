@@ -4,7 +4,24 @@ import 'package:audioroom/helper/constants.dart';
 
 // ignore: non_constant_identifier_names
 Widget ButtonWidget(BuildContext context, String name, Function onClick) {
-  return Container(
+  return GestureDetector(
+    child: Container(
+      width: MediaQuery.of(context).size.width,
+      height: 44,
+      margin: EdgeInsets.only(top: 16, bottom: 16),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: AppConstants.clrPrimary,
+          borderRadius: BorderRadius.circular(10)),
+      child: TextWidget(name,
+          color: AppConstants.clrWhite,
+          fontSize: AppConstants.size_medium,
+          fontWeight: FontWeight.w600),
+    ),
+    onTap: onClick,
+  );
+
+  /*return Container(
     padding: EdgeInsets.only(top: 16, bottom: 16),
     child: ButtonTheme(
       minWidth: MediaQuery.of(context).size.width,
@@ -22,5 +39,5 @@ Widget ButtonWidget(BuildContext context, String name, Function onClick) {
         color: AppConstants.clrPrimary,
       ),
     ),
-  );
+  );*/
 }

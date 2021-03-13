@@ -27,7 +27,7 @@ class AudioRoomUsersService {
         .get(GetOptions(source: Source.serverAndCache))
         .then((QuerySnapshot snapshot) {
       List<AudioRoomUserModel> audioRoomUserModels =
-          new List<AudioRoomUserModel>();
+      [];
       if (snapshot != null &&
           snapshot.docs != null &&
           snapshot.docs.length > 0) {
@@ -78,7 +78,7 @@ class AudioRoomUsersService {
         .get(GetOptions(source: Source.serverAndCache))
         .then((QuerySnapshot snapshot) {
       List<AudioRoomUserModel> audioRoomUserModels =
-          new List<AudioRoomUserModel>();
+      [];
       if (snapshot != null &&
           snapshot.docs != null &&
           snapshot.docs.length > 0) {

@@ -18,7 +18,7 @@ class ChoosePeopleScreen extends StatefulWidget {
 }
 
 class _ChoosePeopleScreenState extends State<ChoosePeopleScreen> {
-  List<ChoosePeopleModel> choosePeopleModels = new List<ChoosePeopleModel>();
+  List<ChoosePeopleModel> choosePeopleModels =[];
   TextEditingController searchController = new TextEditingController();
 
   @override

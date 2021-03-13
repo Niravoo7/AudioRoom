@@ -3,7 +3,6 @@ import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:audioroom/helper/constants.dart';
 
 void showAlert(BuildContext context, String strMessage, String strTitle,
@@ -14,7 +13,7 @@ void showAlert(BuildContext context, String strMessage, String strTitle,
             title: TextWidget(strTitle),
             content: TextWidget(strMessage),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   child: Text(strButton),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -58,28 +57,6 @@ void onLoading(BuildContext context, String strMessage) {
       );
     },
   );
-}
-
-Future<bool> onWillPops(BuildContext context) {
-  return showDialog(
-        context: context,
-        // ignore: deprecated_member_use
-        child: AlertDialog(
-          title: TextWidget(AppConstants.str_are_you_sure_you_want_to_exit),
-          content: TextWidget(AppConstants.str_exitApp),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: TextWidget(AppConstants.str_no),
-            ),
-            FlatButton(
-              onPressed: () => SystemNavigator.pop(),
-              child: TextWidget(AppConstants.str_yes),
-            ),
-          ],
-        ),
-      ) ??
-      false;
 }
 
 void showApiLoader() {

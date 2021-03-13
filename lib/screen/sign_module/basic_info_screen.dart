@@ -1,12 +1,18 @@
+import 'dart:io';
+
 import 'package:audioroom/custom_widget/button_widget.dart';
 import 'package:audioroom/custom_widget/text_field_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
 import 'package:audioroom/helper/constants.dart';
+import 'package:audioroom/helper/dialogues.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
 import 'package:audioroom/helper/print_log.dart';
 import 'package:audioroom/helper/validate.dart';
+import 'package:audioroom/main.dart';
 import 'package:audioroom/screen/sign_module/choose_your_interests_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' as io;
@@ -28,12 +34,15 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
   ImagePickerHandler imagePicker;
   PickedFile imageFile;
 
+  final _firebaseStorage = FirebaseStorage.instance;
+  String profileUrl;
+
   @override
   void initState() {
     super.initState();
-    //firstNameController.text = "test";
-    //lastNameController.text = "test";
-    //userNameController.text = "test";
+    firstNameController.text = "test";
+    lastNameController.text = "test";
+    userNameController.text = "test";
 
     _controller = new AnimationController(
       vsync: this,
@@ -53,8 +62,8 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
           }
         },
         child: Scaffold(
-          appBar:  CommonAppBar(
-              context, "Basic Information", true, false, null),
+            appBar:
+                CommonAppBar(context, "Basic Information", true, false, null),
             body: SafeArea(
                 child: Container(
                     padding: EdgeInsets.only(left: 16, right: 16, top: 16),
@@ -164,11 +173,28 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
     } else if (userNameController.text.trim().isEmpty) {
       showToast(AppConstants.str_enter_user_name);
     } else {
-      submitEvent();
+      uplodeProfileImage();
     }
   }
 
+  Future<void> uplodeProfileImage() async {
+    showApiLoader();
+    var snapshot = await _firebaseStorage
+        .ref()
+        .child('user_profile/${DateTime.now().millisecondsSinceEpoch}.jpeg')
+        .putFile(File(imageFile.path))
+        .whenComplete(() => {});
+
+    profileUrl = await snapshot.ref.getDownloadURL();
+    PrintLog.printMessage('imageUrl -> $profileUrl');
+    submitEvent();
+  }
+
   void submitEvent() {
+    User user = FirebaseAuth.instance.currentUser;
+    user.updateProfile(
+        displayName: userNameController.text, photoURL: profileUrl);
+    Navigator.pop(navigatorKey.currentContext);
     Navigator.push(
         context, NavigatePageRoute(context, ChooseYourInterestsScreen()));
   }

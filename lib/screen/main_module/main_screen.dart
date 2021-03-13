@@ -54,7 +54,7 @@ class MainScreenState extends State<MainScreen> {
   bool isRoomSmallVisible = false;
   bool isRoomLargeVisible = false;
 
-  List<String> icons = new List<String>();
+  List<String> icons = [];
 
   @override
   void initState() {
@@ -92,7 +92,7 @@ class MainScreenState extends State<MainScreen> {
         if (!navigatorKeys[currentTab].currentState.canPop()) {
           onWillPop();
         } else {
-          !await navigatorKeys[currentTab].currentState.maybePop();
+          await navigatorKeys[currentTab].currentState.maybePop();
         }
         return false;
       },
@@ -304,7 +304,7 @@ class MainScreenState extends State<MainScreen> {
 
   Widget icRoomLargeBottomSheet() {
     List<RoomCardPeopleModel> roomCardPeopleModels =
-        List<RoomCardPeopleModel>();
+    [];
     roomCardPeopleModels.add(
         RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
     roomCardPeopleModels

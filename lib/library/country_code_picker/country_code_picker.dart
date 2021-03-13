@@ -3,6 +3,7 @@ library country_code_picker;
 import 'package:audioroom/library/country_code_picker/country_code.dart';
 import 'package:audioroom/library/country_code_picker/country_codes.dart';
 import 'package:audioroom/library/country_code_picker/selection_dialog.dart';
+import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/library/modal_bottom_sheet/bottom_sheets/material_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
@@ -129,41 +130,46 @@ class CountryCodePickerState extends State<CountryCodePicker> {
         child: widget.builder(selectedItem),
       );
     else {
-      _widget = FlatButton(
+      _widget = Padding(
         padding: widget.padding,
-        onPressed: widget.enabled ? showCountryCodePickerDialog : null,
-        child: Flex(
-          direction: Axis.horizontal,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            if (widget.showFlagMain != null
-                ? widget.showFlagMain
-                : widget.showFlag)
-              Flexible(
-                flex: widget.alignLeft ? 0 : 1,
-                fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
-                child: Padding(
-                  padding: widget.alignLeft
-                      ? const EdgeInsets.only(right: 16.0, left: 16.0)
-                      : const EdgeInsets.only(right: 16.0, left: 16.0),
-                  child: Image.asset(
-                    "assets/images/flags/${selectedItem.code.toLowerCase()}.png",
-                    width: widget.flagWidth,
+        child: TextButton(
+          onPressed: widget.enabled ? showCountryCodePickerDialog : null,
+          child: Flex(
+            direction: Axis.horizontal,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              if (widget.showFlagMain != null
+                  ? widget.showFlagMain
+                  : widget.showFlag)
+                Flexible(
+                  flex: widget.alignLeft ? 0 : 1,
+                  fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
+                  child: Padding(
+                    padding: widget.alignLeft
+                        ? const EdgeInsets.only(right: 16.0, left: 16.0)
+                        : const EdgeInsets.only(right: 16.0, left: 16.0),
+                    child: Image.asset(
+                      "assets/images/flags/${selectedItem.code.toLowerCase()}.png",
+                      width: widget.flagWidth,
+                    ),
                   ),
                 ),
-              ),
-            if (!widget.hideMainText)
-              Flexible(
-                fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
-                child: Text(
-                  widget.showOnlyCountryWhenClosed
-                      ? selectedItem.dialCode
-                      : selectedItem.dialCode,
-                  style: widget.textStyle ?? Theme.of(context).textTheme.button,
-                  overflow: widget.textOverflow,
+              if (!widget.hideMainText)
+                Flexible(
+                  fit: widget.alignLeft ? FlexFit.tight : FlexFit.loose,
+                  child: Text(
+                    widget.showOnlyCountryWhenClosed
+                        ? selectedItem.dialCode
+                        : selectedItem.dialCode,
+                    style: TextStyle(
+                        color: AppConstants.clrBlack,
+                        fontSize: AppConstants.size_medium_large,
+                        fontWeight: FontWeight.w400),
+                    overflow: widget.textOverflow,
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       );
     }

@@ -1,6 +1,8 @@
 import 'package:audioroom/custom_widget/flexible_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/helper/constants.dart';
+import 'package:audioroom/helper/print_log.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
 import 'package:audioroom/screen/main_module/profile_module/follower_screen.dart';
@@ -20,6 +22,15 @@ class ProfileScreen extends StatefulWidget {
 
 class ProfileScreenState extends State<ProfileScreen> {
   bool isFollowingSelected = true;
+  User user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = FirebaseAuth.instance.currentUser;
+    PrintLog.printMessage("ProfileScreen -> ${user.displayName}");
+    //PrintLog.printMessage("ProfileScreen -> ${user.providerData}");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,15 +103,14 @@ class ProfileScreenState extends State<ProfileScreen> {
                             decoration: BoxDecoration(
                                 color: AppConstants.clrProfileBG,
                                 image: DecorationImage(
-                                    image: NetworkImage(
-                                        AppConstants.str_image_url),
+                                    image: NetworkImage(user.photoURL),
                                     fit: BoxFit.fill),
                                 borderRadius: BorderRadius.circular(35))),
                         Flexible(
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                              TextWidget("Sera Scholfield",
+                              TextWidget(user.displayName,
                                   color: AppConstants.clrBlack,
                                   fontSize: AppConstants.size_medium_large,
                                   fontWeight: FontWeight.bold),

@@ -1,3 +1,5 @@
+import 'package:audioroom/helper/shar_pref.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
@@ -122,6 +124,8 @@ class _SettingScreenState extends State<SettingScreen> {
       onTap: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
+        FirebaseAuth.instance.signOut();
+        SharePref.clearAllPref();
         Navigator.pushReplacement(
             context, NavigatePageRoute(context, LoginScreen()));
       },

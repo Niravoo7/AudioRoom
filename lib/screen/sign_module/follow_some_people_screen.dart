@@ -14,56 +14,29 @@ class FollowSomePeopleScreen extends StatefulWidget {
 }
 
 class _FollowSomePeopleScreenState extends State<FollowSomePeopleScreen> {
-  List<FollowPeopleModel> followPeopleModels = new List<FollowPeopleModel>();
+  List<FollowPeopleModel> followPeopleModels = [];
 
   @override
   void initState() {
     super.initState();
     followPeopleModels.add(new FollowPeopleModel(
-        "Saikik",
-        "@saikik.jp",
-        AppConstants.str_image_url,
-        false));
+        "Saikik", "@saikik.jp", AppConstants.str_image_url, false));
     followPeopleModels.add(new FollowPeopleModel(
-        "Mr Beast",
-        "@mrbest6000",
-        AppConstants.str_image_url,
-        false));
+        "Mr Beast", "@mrbest6000", AppConstants.str_image_url, false));
     followPeopleModels.add(new FollowPeopleModel(
-        "GraphyBoy",
-        "@graphyboy",
-        AppConstants.str_image_url,
-        false));
+        "GraphyBoy", "@graphyboy", AppConstants.str_image_url, false));
     followPeopleModels.add(new FollowPeopleModel(
-        "Amy Doe",
-        "@amygirl",
-        AppConstants.str_image_url,
-        false));
+        "Amy Doe", "@amygirl", AppConstants.str_image_url, false));
     followPeopleModels.add(new FollowPeopleModel(
-        "Saikik",
-        "@saikik.jp",
-        AppConstants.str_image_url,
-        false));
+        "Saikik", "@saikik.jp", AppConstants.str_image_url, false));
     followPeopleModels.add(new FollowPeopleModel(
-        "Mr Beast",
-        "@mrbest6000",
-        AppConstants.str_image_url,
-        false));
+        "Mr Beast", "@mrbest6000", AppConstants.str_image_url, false));
     followPeopleModels.add(new FollowPeopleModel(
-        "GraphyBoy",
-        "@graphyboy",
-        AppConstants.str_image_url,
-        false));
+        "GraphyBoy", "@graphyboy", AppConstants.str_image_url, false));
     followPeopleModels.add(new FollowPeopleModel(
-        "Amy Doe",
-        "@amygirl",
-        AppConstants.str_image_url,
-        false));
+        "Amy Doe", "@amygirl", AppConstants.str_image_url, false));
     followPeopleModels.add(new FollowPeopleModel(
-        "Rishab Pant",
-        "@amygirl",
-        AppConstants.str_image_url,
-        false));
+        "Rishab Pant", "@amygirl", AppConstants.str_image_url, false));
   }
 
   @override

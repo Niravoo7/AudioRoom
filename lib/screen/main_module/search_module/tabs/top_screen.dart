@@ -19,12 +19,12 @@ class TopScreen extends StatefulWidget {
 
 class _TopScreenState extends State<TopScreen> {
   List<FollowPeopleModel> followPeopleModelsPeople =
-      new List<FollowPeopleModel>();
+  [];
 
   List<InterestsCategoryModel> interestsCategoryModels =
-      new List<InterestsCategoryModel>();
+  [];
 
-  List<InterestsModel> interestsModels = new List<InterestsModel>();
+  List<InterestsModel> interestsModels =[];
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _TopScreenState extends State<TopScreen> {
     followPeopleModelsPeople.add(new FollowPeopleModel(
         "GraphyBoy", "@graphyboy", AppConstants.str_image_url, false));
 
-    interestsModels = new List<InterestsModel>();
+    interestsModels = [];
     interestsModels.add(new InterestsModel("🌎 Interest", false,
         description: "lorem ipsum lorem ipsu avlorem ipsum sajonnm"));
     interestsModels.add(new InterestsModel("🌎 Interest", false,

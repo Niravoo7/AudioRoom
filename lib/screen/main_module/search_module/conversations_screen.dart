@@ -14,15 +14,12 @@ class ConversationsScreen extends StatefulWidget {
 }
 
 class _ConversationsScreenState extends State<ConversationsScreen> {
-  List<FollowPeopleModel> followPeopleModelsPeople =
-      new List<FollowPeopleModel>();
-  List<FollowPeopleModel> followPeopleModelsClubs =
-      new List<FollowPeopleModel>();
+  List<FollowPeopleModel> followPeopleModelsPeople = [];
+  List<FollowPeopleModel> followPeopleModelsClubs = [];
 
-  List<InterestsCategoryModel> interestsCategoryModels =
-      new List<InterestsCategoryModel>();
+  List<InterestsCategoryModel> interestsCategoryModels = [];
 
-  List<InterestsModel> interestsModels = new List<InterestsModel>();
+  List<InterestsModel> interestsModels = [];
 
   @override
   void initState() {
@@ -42,7 +39,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
     followPeopleModelsClubs.add(new FollowPeopleModel("GraphyBoy",
         "3,017 members online", AppConstants.str_image_url, false));
 
-    interestsModels = new List<InterestsModel>();
+    interestsModels = [];
     interestsModels.add(new InterestsModel("🌎 Interest", false));
     interestsModels.add(new InterestsModel("🌎 Interest", false));
     interestsModels.add(new InterestsModel("🌎 Interest", false));

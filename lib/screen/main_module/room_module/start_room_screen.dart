@@ -21,7 +21,7 @@ class StartRoomScreen extends StatefulWidget {
 
 class _StartRoomScreenState extends State<StartRoomScreen> {
   TextEditingController searchController = new TextEditingController();
-  List<RoomTypeModel> roomTypeModels = new List<RoomTypeModel>();
+  List<RoomTypeModel> roomTypeModels = [];
   int selectedRoomType = 0;
 
   @override

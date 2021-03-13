@@ -12,9 +12,9 @@ class AllScreen extends StatefulWidget {
 
 class _AllScreenState extends State<AllScreen> {
   List<FollowPeopleModel> followPeopleModelsClub =
-      new List<FollowPeopleModel>();
+  [];
   List<FollowPeopleModel> followPeopleModelsPeople =
-      new List<FollowPeopleModel>();
+  [];
 
   @override
   void initState() {

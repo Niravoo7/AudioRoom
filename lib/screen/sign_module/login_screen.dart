@@ -5,10 +5,14 @@ import 'package:audioroom/custom_widget/mobile_text_field_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
 import 'package:audioroom/helper/constants.dart';
+import 'package:audioroom/helper/dialogues.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
+import 'package:audioroom/helper/print_log.dart';
 import 'package:audioroom/helper/validate.dart';
 import 'package:audioroom/library/country_code_picker/country_code_picker.dart';
+import 'package:audioroom/main.dart';
 import 'package:audioroom/screen/sign_module/enter_code_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    //mobileNumberController.text = "1234567890";
+    mobileNumberController.text = "3692581470";
   }
 
   @override
@@ -85,17 +89,51 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void validateInputs(BuildContext con) {
+  Future<void> validateInputs(BuildContext con) async {
     if (mobileNumberController.text.trim().isEmpty) {
       showToast(AppConstants.str_enter_mobile_number);
-    } else if (mobileNumberController.text.length != 10) {
+    } else if (mobileNumberController.text.length < 5 ||
+        mobileNumberController.text.length > 15) {
       showToast(AppConstants.str_valid_mobile_number);
     } else {
       submitEvent();
     }
   }
 
-  void submitEvent() {
-    Navigator.push(context, NavigatePageRoute(context, EnterCodeScreen()));
+  Future<void> submitEvent() async {
+    showApiLoader();
+    FirebaseAuth auth = FirebaseAuth.instance;
+    PrintLog.printMessage(
+        "verifyPhoneNumber -> ${countryCode.dialCode} ${mobileNumberController.text}");
+
+    await auth.verifyPhoneNumber(
+      phoneNumber: '${countryCode.dialCode} ${mobileNumberController.text}',
+      timeout: const Duration(seconds: 5),
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        PrintLog.printMessage("verifyPhoneNumber -> verificationCompleted");
+        await auth.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        Navigator.pop(navigatorKey.currentContext);
+        PrintLog.printMessage("verifyPhoneNumber -> verificationFailed");
+        if (e.code == 'invalid-phone-number') {
+          showToast(AppConstants.str_valid_mobile_number);
+        } else {
+          showToast(e.code);
+        }
+      },
+      codeSent: (String verificationId, int resendToken) async {
+        Navigator.pop(navigatorKey.currentContext);
+        PrintLog.printMessage("verifyPhoneNumber -> codeSent $verificationId");
+        Navigator.push(context,
+            NavigatePageRoute(context, EnterCodeScreen(verificationId)));
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        PrintLog.printMessage(
+            "verifyPhoneNumber -> codeAutoRetrievalTimeout $verificationId");
+      },
+    );
+
+    //Navigator.push(context, NavigatePageRoute(context, EnterCodeScreen()));
   }
 }
