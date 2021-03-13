@@ -96,6 +96,8 @@ class AppConstants {
   static const String ic_add_to_call = '$root_image/ic_add_to_call.png';
   static const String ic_copy_link = '$root_image/ic_copy_link.png';
   static const String ic_share = '$root_image/ic_share.png';
+  static const String ic_add_upcoming_event =
+      '$root_image/ic_add_upcoming_event.png';
 
   //string
   static const String str_app_name = "Audio Room";
@@ -112,12 +114,14 @@ class AppConstants {
   static const String str_first_name = "First Name";
   static const String str_last_name = "Last Name";
   static const String str_choose_your_username = "Choose your Username";
+  static const String str_about = "About";
   static const String str_resend_otp = "Resend OTP";
   static const String str_mobile_number = "Mobile Number";
   static const String str_search = "Search";
   static const String str_skip = "Skip";
   static const String str_confirm_password = "Confirm Password";
   static const String str_continue = "Continue";
+  static const String str_publish = "Publish";
   static const String str_create_account = "Create Account";
   static const String str_remember = "Remember Me";
   static const String str_registerText = "Don't have an account? Register";
@@ -134,10 +138,20 @@ class AppConstants {
   static const String str_sign_out = "Sign Out";
   static const String str_forgot_password = "Forgot Password?";
   static const String str_enter_user_name = "User name required.";
+  static const String str_enter_about = "About required.";
   static const String str_enter_profile_image = "Profile image required.";
   static const String str_enter_email = "Email address required.";
   static const String str_valid_email = "Please enter valid email.";
   static const String str_enter_mobile_number = "Mobile number required.";
+  static const String str_event_name = "Event Name";
+  static const String str_with = "With";
+  static const String str_melinda_livsey = "Melinda Livsey";
+  static const String str_date = "Date";
+  static const String str_time = "Time";
+  static const String str_description = "Description";
+  static const String str_write_the_event_details = "Write the event details";
+  static const String str_add_a_co_host_or_guest = "Add a Co-host or Guest";
+  static const String str_write_a_title_for_the_event = "Write a title for the event";
   static const String str_valid_mobile_number =
       "Mobile number require 10 digits.";
   static const String str_enter_first_name = "First name required.";
@@ -174,7 +188,6 @@ class AppConstants {
   static const String str_send_remainder = 'Send Remainder';
   static const String str_clubs_joined = 'Clubs Joined';
   static const String str_joined = 'Joined';
-  static const String str_about = 'About';
   static const String str_recommended_by = 'Recommended by';
   static const String str_lorem_ipsum =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eros, eleifend neque, arcu eget in tortor facilisi dignissim elementum. Fermentum semper turpis felis lacus, euismod egestas lorem malesuada a. Quam faucibus cras et tincidunt feugiat.';
@@ -196,6 +209,7 @@ class AppConstants {
   static const String str_upcoming_for_you = 'Upcoming for you';
   static const String str_upcoming = 'Upcoming';
   static const String str_hide_room = 'Hide Room';
+  static const String str_show_room = 'Show Room';
   static const String str_clubs_to_follow = 'Clubs to Follow';
   static const String str_title = 'Title';
   static const String str_select_the_audience = 'Select The Audience';

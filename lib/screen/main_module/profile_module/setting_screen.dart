@@ -1,4 +1,5 @@
 import 'package:audioroom/helper/shar_pref.dart';
+import 'package:audioroom/screen/main_module/profile_module/hidden_rooms_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:audioroom/helper/constants.dart';
@@ -28,6 +29,7 @@ class _SettingScreenState extends State<SettingScreen> {
             children: [
               settingNotificationWidget(context, "Notification"),
               settingListWidget(context, "Interests"),
+              settingListWidget(context, "Hidden Rooms"),
               settingListWidget(context, "What’s New"),
               settingListWidget(context, "FAQ / Contact Us"),
               settingListWidget(context, "Report an Incident"),
@@ -74,28 +76,33 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget settingListWidget(BuildContext context, String option) {
-    return Container(
-      alignment: Alignment.center,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Flexible(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.all(16),
-                    child: TextWidget(option,
-                        color: AppConstants.clrBlack,
-                        fontSize: AppConstants.size_medium_large,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  flex: 1),
-              Icon(Icons.arrow_forward_ios, size: 18),
-              SizedBox(width: 16)
-            ],
-          ),
-          DividerWidget(height: 1)
-        ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, NavigatePageRoute(context, HiddenRoomsScreen()));
+      },
+      child: Container(
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Flexible(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(16),
+                      child: TextWidget(option,
+                          color: AppConstants.clrBlack,
+                          fontSize: AppConstants.size_medium_large,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    flex: 1),
+                Icon(Icons.arrow_forward_ios, size: 18),
+                SizedBox(width: 16)
+              ],
+            ),
+            DividerWidget(height: 1)
+          ],
+        ),
       ),
     );
   }

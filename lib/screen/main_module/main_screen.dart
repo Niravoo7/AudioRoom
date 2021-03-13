@@ -6,6 +6,7 @@ import 'package:audioroom/screen/main_module/active_user_module/active_user_scre
 import 'package:audioroom/screen/main_module/home_module/home_screen.dart';
 import 'package:audioroom/screen/main_module/room_module/start_room_screen.dart';
 import 'package:audioroom/screen/main_module/search_module/search_screen.dart';
+import 'package:audioroom/screen/main_module/upcoming_module/new_event_screen.dart';
 import 'package:audioroom/screen/main_module/upcoming_module/upcoming_screen.dart';
 import 'package:audioroom/screen/main_module/room_module/your_room_screen.dart';
 import 'package:audioroom/screen/main_module/profile_module/profile_screen.dart';
@@ -63,7 +64,7 @@ class MainScreenState extends State<MainScreen> {
     homeScreen = new HomeScreen();
     searchScreen = new SearchScreen(callConversationsScreen);
     startRoomScreen = new StartRoomScreen(callYourRoomScreen);
-    upcomingScreen = new UpcomingScreen();
+    upcomingScreen = new UpcomingScreen(callNewEventScreen);
     activeUserScreen = new ActiveUserScreen();
 
     currentTab = TabItemMain.room;
@@ -303,8 +304,7 @@ class MainScreenState extends State<MainScreen> {
   }
 
   Widget icRoomLargeBottomSheet() {
-    List<RoomCardPeopleModel> roomCardPeopleModels =
-    [];
+    List<RoomCardPeopleModel> roomCardPeopleModels = [];
     roomCardPeopleModels.add(
         RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
     roomCardPeopleModels
@@ -644,5 +644,10 @@ class MainScreenState extends State<MainScreen> {
 
   void callYourRoomScreen() {
     Navigator.push(context, NavigatePageRoute(context, YourRoomScreen()));
+  }
+
+  void callNewEventScreen() {
+    Navigator.push(context,
+        NavigatePageRoute(context, NewEventScreen()));
   }
 }

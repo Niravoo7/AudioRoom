@@ -8,10 +8,11 @@ Widget TextFieldWidget(
     String hintText,
     TextInputType keyboardType,
     FormFieldValidator<String> validator,
-    ValueChanged<String> onChanged}) {
+    ValueChanged<String> onChanged,
+    int lines}) {
   return TextFormField(
-    minLines: 1,
-    maxLines: 1,
+    minLines: (lines != null) ? lines : 1,
+    maxLines: (lines != null) ? lines : 1,
     keyboardType: keyboardType,
     controller: controller,
     autocorrect: true,
@@ -23,7 +24,8 @@ Widget TextFieldWidget(
         fontSize: AppConstants.size_medium_large,
         fontWeight: FontWeight.w400),
     decoration: InputDecoration(
-        contentPadding: EdgeInsets.only(left: 10, right: 10),
+        contentPadding:
+            EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
         hintText: hintText,
         hintStyle: TextStyle(
             color: AppConstants.clrDarkGrey,

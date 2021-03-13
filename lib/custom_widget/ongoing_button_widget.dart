@@ -7,7 +7,7 @@ Widget OnGoingButtonWidget(BuildContext context, String name, Function onClick,
     {int selectedIndex, int index}) {
   return GestureDetector(
     child: Container(
-      height: 44,
+      height: 36,
       margin: EdgeInsets.only(top: 16, right: 16),
       padding: EdgeInsets.symmetric(horizontal: 12),
       alignment: Alignment.center,

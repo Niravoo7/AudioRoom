@@ -6,7 +6,12 @@ import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/model/room_card_model.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class UpcomingScreen extends StatefulWidget {
+  Function onNewEventClick;
+
+  UpcomingScreen(this.onNewEventClick);
+
   @override
   _UpcomingScreenState createState() => _UpcomingScreenState();
 }
@@ -14,13 +19,11 @@ class UpcomingScreen extends StatefulWidget {
 class _UpcomingScreenState extends State<UpcomingScreen> {
   int _selectedIndex = 0;
 
-  // ignore: deprecated_member_use
-  List<RoomCardModel> roomCardModels = List<RoomCardModel>();
+  List<RoomCardModel> roomCardModels = [];
 
   @override
   void initState() {
     super.initState();
-    // ignore: deprecated_member_use
     List<RoomCardPeopleModel> roomCardPeopleModels = [];
     roomCardPeopleModels.add(
         RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
@@ -64,24 +67,50 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
           children: [
             DividerWidget(height: 1, color: AppConstants.clrSearchBG),
             Container(
-              height: 60,
+              height: 52,
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 2,
-                  itemBuilder: (context, index) {
-                    return OnGoingButtonWidget(
-                        context,
-                        index == 0
-                            ? AppConstants.str_upcoming_for_you
-                            : AppConstants.str_upcoming + " " + "🌎", () {
-                      setState(() {
-                        _selectedIndex = index;
-                      });
-                    }, index: index, selectedIndex: _selectedIndex);
-                  }),
+              alignment: Alignment.center,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 2,
+                        itemBuilder: (context, index) {
+                          return OnGoingButtonWidget(
+                              context,
+                              index == 0
+                                  ? AppConstants.str_upcoming_for_you
+                                  : AppConstants.str_upcoming + " " + "🌎", () {
+                            setState(() {
+                              _selectedIndex = index;
+                            });
+                          }, index: index, selectedIndex: _selectedIndex);
+                        }),
+                    flex: 1,
+                  ),
+                  GestureDetector(
+                    child: Container(
+                      height: 36,
+                      width: 36,
+                      margin: EdgeInsets.only(top: 16, left: 16),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: AppConstants.clrPrimary,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Image.asset(AppConstants.ic_add_upcoming_event,
+                          height: 20, width: 20),
+                    ),
+                    onTap: () {
+                      widget.onNewEventClick();
+                    },
+                  )
+                ],
+              ),
             ),
             ListView.builder(
                 padding: EdgeInsets.only(bottom: 16),

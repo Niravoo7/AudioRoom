@@ -3,6 +3,8 @@ import 'package:audioroom/custom_widget/button_widget.dart';
 import 'package:audioroom/custom_widget/text_field_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
+import 'package:audioroom/firestore/model/user_model.dart';
+import 'package:audioroom/firestore/network/user_fire.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/helper/dialogues.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
@@ -10,6 +12,7 @@ import 'package:audioroom/helper/shar_pref.dart';
 import 'package:audioroom/helper/validate.dart';
 import 'package:audioroom/main.dart';
 import 'package:audioroom/screen/sign_module/basic_info_screen.dart';
+import 'package:audioroom/screen/sign_module/choose_your_interests_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +33,7 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
   @override
   void initState() {
     super.initState();
-    codeController.text = "123456";
+    //codeController.text = "123456";
   }
 
   @override
@@ -90,12 +93,23 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
     PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
         verificationId: widget.verificationId,
         smsCode: codeController.text.trim());
-    await auth.signInWithCredential(phoneAuthCredential).then((userCredential) {
+    await auth
+        .signInWithCredential(phoneAuthCredential)
+        .then((userCredential) async {
       SharePref.prefSetString(SharePref.keyUId, userCredential.user.uid);
       SharePref.prefSetString(
           SharePref.keyMobileNo, userCredential.user.phoneNumber);
       Navigator.pop(navigatorKey.currentContext);
-      Navigator.push(context, NavigatePageRoute(context, BasicInfoScreen()));
+
+      UserModel userModel =
+          await UserService().getUsersByRefID(userCredential.user.uid);
+      if (userModel == null) {
+        Navigator.push(context, NavigatePageRoute(context, BasicInfoScreen()));
+      } else {
+        //Navigator.push(context, NavigatePageRoute(context, MainScreen()));
+        Navigator.push(
+            context, NavigatePageRoute(context, ChooseYourInterestsScreen()));
+      }
     });
   }
 }

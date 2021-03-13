@@ -1,10 +1,13 @@
 import 'package:audioroom/custom_widget/button_widget.dart';
 import 'package:audioroom/custom_widget/follow_people_widget.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
+import 'package:audioroom/custom_widget/text_widget.dart';
+import 'package:audioroom/firestore/network/user_fire.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
-import 'package:audioroom/model/follow_people_model.dart';
 import 'package:audioroom/screen/sign_module/account_created_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,29 +17,12 @@ class FollowSomePeopleScreen extends StatefulWidget {
 }
 
 class _FollowSomePeopleScreenState extends State<FollowSomePeopleScreen> {
-  List<FollowPeopleModel> followPeopleModels = [];
+  String uid;
 
   @override
   void initState() {
     super.initState();
-    followPeopleModels.add(new FollowPeopleModel(
-        "Saikik", "@saikik.jp", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Mr Beast", "@mrbest6000", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "GraphyBoy", "@graphyboy", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Amy Doe", "@amygirl", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Saikik", "@saikik.jp", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Mr Beast", "@mrbest6000", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "GraphyBoy", "@graphyboy", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Amy Doe", "@amygirl", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Rishab Pant", "@amygirl", AppConstants.str_image_url, false));
+    uid = FirebaseAuth.instance.currentUser.uid;
   }
 
   @override
@@ -53,24 +39,48 @@ class _FollowSomePeopleScreenState extends State<FollowSomePeopleScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Flexible(
-                      child: ListView.builder(
-                          padding: EdgeInsets.all(0),
-                          itemCount: followPeopleModels.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return FollowPeopleWidget(
-                                context,
-                                followPeopleModels[index].profilePic,
-                                followPeopleModels[index].name,
-                                followPeopleModels[index].tagName,
-                                followPeopleModels[index].isFollow
-                                    ? AppConstants.str_following
-                                    : AppConstants.str_follow,
-                                followPeopleModels[index].isFollow, () {
-                              followPeopleModels[index].isFollow =
-                                  !followPeopleModels[index].isFollow;
-                              setState(() {});
-                            });
-                          }),
+                      child: Container(
+                        child: StreamBuilder(
+                          stream: UserService().getUserQuery().snapshots(),
+                          builder: (context, stream) {
+                            /*if (stream.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }*/
+                            if (stream.hasError) {
+                              return Center(
+                                  child: TextWidget(stream.error.toString(),
+                                      color: AppConstants.clrBlack,
+                                      fontSize: 20));
+                            }
+                            QuerySnapshot querySnapshot = stream.data;
+                            if (querySnapshot == null ||
+                                querySnapshot.size == 0) {
+                              return Center(
+                                  child: TextWidget(
+                                      AppConstants.str_no_room_found,
+                                      color: AppConstants.clrBlack,
+                                      fontSize: 20));
+                            }
+                            return ListView.builder(
+                                padding: EdgeInsets.all(0),
+                                itemCount: querySnapshot.size,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return FollowPeopleWidget(
+                                      context,
+                                      querySnapshot.docs[index]["image_url"],
+                                      querySnapshot.docs[index]["first_name"] +
+                                          " " +
+                                          querySnapshot.docs[index]
+                                              ["last_name"],
+                                      querySnapshot.docs[index]["tag_name"],
+                                      AppConstants.str_follow,
+                                      false,
+                                      () {});
+                                });
+                          },
+                        ),
+                      ),
                       flex: 1,
                     ),
                     Container(

@@ -13,10 +13,13 @@ Widget FollowPeopleWidget(BuildContext context, String profilePic, String name,
     children: [
       Row(children: [
         Container(
-          margin: EdgeInsets.only(left: 16, top: 16, bottom: 16),
-          decoration: BoxDecoration(shape: BoxShape.circle),
-          child: Image.network(profilePic, height: 40, width: 40),
-        ),
+            margin: EdgeInsets.only(left: 16, top: 16, bottom: 16),
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              color: AppConstants.clrGrey,
+                shape: BoxShape.circle,
+                image: DecorationImage(image: NetworkImage(profilePic)))),
         Flexible(
           child: Container(
               margin: EdgeInsets.only(left: 10),

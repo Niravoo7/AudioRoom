@@ -1,9 +1,10 @@
 import 'dart:io';
-
 import 'package:audioroom/custom_widget/button_widget.dart';
 import 'package:audioroom/custom_widget/text_field_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
+import 'package:audioroom/firestore/model/user_model.dart';
+import 'package:audioroom/firestore/network/user_fire.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/helper/dialogues.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
@@ -29,6 +30,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
+  TextEditingController aboutController = TextEditingController();
 
   AnimationController _controller;
   ImagePickerHandler imagePicker;
@@ -40,9 +42,10 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
   @override
   void initState() {
     super.initState();
-    firstNameController.text = "test";
-    lastNameController.text = "test";
-    userNameController.text = "test";
+    //firstNameController.text = "test";
+    //lastNameController.text = "test";
+    //userNameController.text = "test";
+    //aboutController.text = "about info";
 
     _controller = new AnimationController(
       vsync: this,
@@ -161,6 +164,16 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
         SizedBox(height: 8),
         TextFieldWidget(
             controller: userNameController, keyboardType: TextInputType.text),
+        SizedBox(height: 16),
+        TextWidget(AppConstants.str_about,
+            color: AppConstants.clrBlack,
+            fontSize: AppConstants.size_medium_large,
+            fontWeight: FontWeight.bold),
+        SizedBox(height: 8),
+        TextFieldWidget(
+            controller: aboutController,
+            keyboardType: TextInputType.text,
+            lines: 4),
       ],
     );
   }
@@ -172,12 +185,14 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
       showToast(AppConstants.str_enter_last_name);
     } else if (userNameController.text.trim().isEmpty) {
       showToast(AppConstants.str_enter_user_name);
+    } else if (aboutController.text.trim().isEmpty) {
+      showToast(AppConstants.str_enter_about);
     } else {
-      uplodeProfileImage();
+      uploadProfileImage();
     }
   }
 
-  Future<void> uplodeProfileImage() async {
+  Future<void> uploadProfileImage() async {
     showApiLoader();
     var snapshot = await _firebaseStorage
         .ref()
@@ -193,7 +208,25 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
   void submitEvent() {
     User user = FirebaseAuth.instance.currentUser;
     user.updateProfile(
-        displayName: userNameController.text, photoURL: profileUrl);
+        displayName: userNameController.text.toLowerCase(),
+        photoURL: profileUrl);
+    UserModel userModel = UserModel(
+        displayName: userNameController.text.toLowerCase(),
+        firstName: firstNameController.text,
+        lastName: lastNameController.text,
+        tagName: "@${userNameController.text.toLowerCase()}",
+        followers: 0,
+        following: 0,
+        clubJoined: 0,
+        aboutInfo: aboutController.text,
+        imageUrl: profileUrl,
+        instagramName: "",
+        twitterName: "",
+        isDelete: false,
+        joinedDate: DateTime.now(),
+        uId: user.uid,
+        recommendedBy: null,phoneNumber: user.phoneNumber);
+    UserService().createUser(userModel);
     Navigator.pop(navigatorKey.currentContext);
     Navigator.push(
         context, NavigatePageRoute(context, ChooseYourInterestsScreen()));

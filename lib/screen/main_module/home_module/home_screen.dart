@@ -26,17 +26,17 @@ class _HomeScreenState extends State<HomeScreen> {
         'TheFutur', '3:30 PM', 'Take The Guess Work Out Of Bidding - How...'));
 
     // ignore: deprecated_member_use
-    List<RoomCardPeopleModel> roomCardPeopleModels = List<RoomCardPeopleModel>();
-    roomCardPeopleModels
-        .add(RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
-    roomCardPeopleModels
-        .add(RoomCardPeopleModel(AppConstants.ic_user_profile2, "Ben Bhai"));
-    roomCardPeopleModels
-        .add(RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
+    List<RoomCardPeopleModel> roomCardPeopleModels = [];
+    roomCardPeopleModels.add(
+        RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
     roomCardPeopleModels
         .add(RoomCardPeopleModel(AppConstants.ic_user_profile2, "Ben Bhai"));
+    roomCardPeopleModels.add(
+        RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
     roomCardPeopleModels
-        .add(RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
+        .add(RoomCardPeopleModel(AppConstants.ic_user_profile2, "Ben Bhai"));
+    roomCardPeopleModels.add(
+        RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
 
     roomCardModels.add(new RoomCardModel(
         "TheFutur",
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               DividerWidget(height: 1, color: AppConstants.clrSearchBG),
               Container(
-                height: 60,
+                height: 52,
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: ListView.builder(
                     padding: EdgeInsets.zero,
@@ -78,10 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         setState(() {
                           selectedIndex = index;
                         });
-                      },
-
-                          index: index,
-                          selectedIndex: selectedIndex);
+                      }, index: index, selectedIndex: selectedIndex);
                     }),
               ),
               Container(
@@ -165,8 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         background: slideRightBackground(),
                         direction: DismissDirection.startToEnd,
                         // secondaryBackground: slideLeftBackground(),
-                        child:
-                            RoomCardWidget(context, roomCardModels[index], false));
+                        child: RoomCardWidget(
+                            context, roomCardModels[index], false));
                   })
             ],
           ),
