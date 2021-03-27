@@ -1,7 +1,10 @@
+import 'package:audioroom/firestore/model/user_model.dart';
+import 'package:audioroom/firestore/network/user_fire.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
 import 'package:audioroom/helper/validate.dart';
 import 'package:audioroom/model/room_card_model.dart';
+import 'package:audioroom/model/your_room_card_model.dart';
 import 'package:audioroom/screen/main_module/active_user_module/active_user_screen.dart';
 import 'package:audioroom/screen/main_module/home_module/home_screen.dart';
 import 'package:audioroom/screen/main_module/room_module/start_room_screen.dart';
@@ -15,8 +18,11 @@ import 'package:audioroom/screen/main_module/invite_module/invite_screen.dart';
 import 'package:audioroom/custom_widget/flexible_widget.dart';
 import 'package:audioroom/custom_widget/divider_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:audioroom/screen/main_module/search_module/conversations_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 enum TabItemMain { home, search, room, upcoming, active }
 
@@ -42,7 +48,9 @@ class MainScreenState extends State<MainScreen> {
 
   DateTime currentBackPressTime;
 
-  String appbarName = AppConstants.str_tab_room;
+  String appbarName = AppConstants.str_tab_home;
+
+  UserModel userModel;
 
   Map<TabItemMain, GlobalKey<NavigatorState>> navigatorKeys = {
     TabItemMain.home: GlobalKey<NavigatorState>(),
@@ -61,18 +69,45 @@ class MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
 
-    homeScreen = new HomeScreen();
-    searchScreen = new SearchScreen(callConversationsScreen);
+    homeScreen = new HomeScreen(callYourRoomScreen);
+    searchScreen =
+        new SearchScreen(callConversationsScreen, callOtherProfileScreen);
     startRoomScreen = new StartRoomScreen(callYourRoomScreen);
     upcomingScreen = new UpcomingScreen(callNewEventScreen);
-    activeUserScreen = new ActiveUserScreen();
+    activeUserScreen = new ActiveUserScreen(callOtherProfileScreen);
 
-    currentTab = TabItemMain.room;
+    currentTab = TabItemMain.home;
 
     icons.add(AppConstants.ic_leave_group);
     icons.add(AppConstants.ic_list);
     icons.add(AppConstants.ic_add_user);
     icons.add(AppConstants.ic_speaker);
+
+    UserService()
+        .getUserByReferences(FirebaseAuth.instance.currentUser.uid)
+        .then((userModel) {
+      if (userModel != null) {
+        this.userModel = userModel;
+        if (currentTab == TabItemMain.home) {
+          appbarName = AppConstants.str_tab_home + userModel.displayName;
+        }
+        setState(() {});
+      }
+    });
+
+    getPermission();
+  }
+
+  Future<void> getPermission() async {
+    var status = await Permission.storage.status;
+    if (status.isDenied) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.microphone,
+        Permission.camera,
+        Permission.storage,
+      ].request();
+      print(statuses);
+    }
   }
 
   Future<bool> onWillPop() {
@@ -91,7 +126,7 @@ class MainScreenState extends State<MainScreen> {
     return WillPopScope(
       onWillPop: () async {
         if (!navigatorKeys[currentTab].currentState.canPop()) {
-          onWillPop();
+          SystemNavigator.pop();
         } else {
           await navigatorKeys[currentTab].currentState.maybePop();
         }
@@ -168,7 +203,9 @@ class MainScreenState extends State<MainScreen> {
                                       color: AppConstants.clrProfileBG,
                                       image: DecorationImage(
                                           image: NetworkImage(
-                                              AppConstants.str_image_url),
+                                              (userModel != null)
+                                                  ? userModel.imageUrl
+                                                  : AppConstants.str_image_url),
                                           fit: BoxFit.fill),
                                       borderRadius: BorderRadius.circular(15))),
                             ),
@@ -176,7 +213,11 @@ class MainScreenState extends State<MainScreen> {
                               Navigator.push(
                                   context,
                                   NavigatePageRoute(
-                                      context, ProfileScreen(false)));
+                                      context,
+                                      ProfileScreen(
+                                          false,
+                                          FirebaseAuth
+                                              .instance.currentUser.uid)));
                             },
                           ),
                         ],
@@ -197,6 +238,11 @@ class MainScreenState extends State<MainScreen> {
                       buildOffstageNavigator(TabItemMain.room, context),
                       buildOffstageNavigator(TabItemMain.upcoming, context),
                       buildOffstageNavigator(TabItemMain.active, context),
+                      /*buildOffstageNavigator(TabItemMain.home, context),
+                      buildOffstageNavigator(TabItemMain.search, context),
+                      buildOffstageNavigator(TabItemMain.room, context),
+                      buildOffstageNavigator(TabItemMain.upcoming, context),
+                      buildOffstageNavigator(TabItemMain.active, context),*/
                     ]),
                     flex: 1),
                 Stack(
@@ -553,8 +599,12 @@ class MainScreenState extends State<MainScreen> {
       child: Row(
         children: <Widget>[
           Flexible(
-              child: tabWidget(context, TabItemMain.home, AppConstants.ic_home,
-                  AppConstants.str_tab_home),
+              child: tabWidget(
+                  context,
+                  TabItemMain.home,
+                  AppConstants.ic_home,
+                  AppConstants.str_tab_home +
+                      ((userModel != null) ? userModel.displayName : "")),
               flex: 1),
           Flexible(
               child: tabWidget(context, TabItemMain.search,
@@ -642,12 +692,17 @@ class MainScreenState extends State<MainScreen> {
     Navigator.push(context, NavigatePageRoute(context, ConversationsScreen()));
   }
 
-  void callYourRoomScreen() {
-    Navigator.push(context, NavigatePageRoute(context, YourRoomScreen()));
+  void callYourRoomScreen(StartRoomModel startRoomModel) {
+    Navigator.push(
+        context, NavigatePageRoute(context, YourRoomScreen(startRoomModel)));
   }
 
   void callNewEventScreen() {
-    Navigator.push(context,
-        NavigatePageRoute(context, NewEventScreen()));
+    Navigator.push(context, NavigatePageRoute(context, NewEventScreen()));
+  }
+
+  void callOtherProfileScreen(String uId) {
+    Navigator.push(
+        context, NavigatePageRoute(context, ProfileScreen(true, uId)));
   }
 }

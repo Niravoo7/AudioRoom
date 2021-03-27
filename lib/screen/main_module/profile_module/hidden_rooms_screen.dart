@@ -1,8 +1,11 @@
 import 'package:audioroom/custom_widget/common_appbar.dart';
 import 'package:audioroom/custom_widget/room_card_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
+import 'package:audioroom/firestore/model/room_model.dart';
+import 'package:audioroom/firestore/network/room_fire.dart';
 import 'package:audioroom/helper/constants.dart';
-import 'package:audioroom/model/room_card_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HiddenRoomsScreen extends StatefulWidget {
@@ -11,41 +14,9 @@ class HiddenRoomsScreen extends StatefulWidget {
 }
 
 class _HiddenRoomsScreenState extends State<HiddenRoomsScreen> {
-  List<RoomCardModel> roomCardModels = [];
-
   @override
   void initState() {
     super.initState();
-    List<RoomCardPeopleModel> roomCardPeopleModels = [];
-    roomCardPeopleModels.add(
-        RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
-    roomCardPeopleModels
-        .add(RoomCardPeopleModel(AppConstants.ic_user_profile2, "Ben Bhai"));
-    roomCardPeopleModels.add(
-        RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
-    roomCardPeopleModels
-        .add(RoomCardPeopleModel(AppConstants.ic_user_profile2, "Ben Bhai"));
-    roomCardPeopleModels.add(
-        RoomCardPeopleModel(AppConstants.ic_user_profile, "Melinda Livsey"));
-
-    roomCardModels.add(new RoomCardModel(
-        "TheFutur",
-        "Take The Guess Work Out Of Bidding - How To Bid",
-        roomCardPeopleModels,
-        "5",
-        "132"));
-    roomCardModels.add(new RoomCardModel(
-        "TheFutur",
-        "Take The Guess Work Out Of Bidding - How To Bid",
-        roomCardPeopleModels,
-        "5",
-        "132"));
-    roomCardModels.add(new RoomCardModel(
-        "TheFutur",
-        "Take The Guess Work Out Of Bidding - How To Bid",
-        roomCardPeopleModels,
-        "5",
-        "132"));
   }
 
   @override
@@ -53,21 +24,59 @@ class _HiddenRoomsScreenState extends State<HiddenRoomsScreen> {
     return Scaffold(
       appBar: CommonAppBar(context, "Hidden Rooms", true, false, null),
       body: SafeArea(
-        child: ListView.builder(
-            padding: EdgeInsets.only(bottom: 16),
-            shrinkWrap: true,
-            physics: BouncingScrollPhysics(),
-            itemCount: roomCardModels.length,
-            itemBuilder: (context, index) {
-              final itemsList = List<String>.generate(
-                  roomCardModels.length, (n) => "List item $n");
-              return Dismissible(
-                  key: Key(itemsList[index]),
-                  background: slideRightBackground(),
-                  direction: DismissDirection.startToEnd,
-                  // secondaryBackground: slideLeftBackground(),
-                  child: RoomCardWidget(context, roomCardModels[index], true));
-            }),
+        child: Container(
+          child: StreamBuilder(
+            stream: RoomService().getRoomQueryHide().snapshots(),
+            builder: (context, stream) {
+              if (stream.hasError) {
+                return Center(
+                    child: TextWidget(stream.error.toString(),
+                        color: AppConstants.clrBlack, fontSize: 20));
+              }
+              QuerySnapshot querySnapshot = stream.data;
+              if (querySnapshot == null || querySnapshot.size == 0) {
+                if (querySnapshot == null) {
+                  return Container();
+                } else {
+                  return Center(
+                    child: TextWidget(
+                        AppConstants.str_no_record_found,
+                        color: AppConstants.clrBlack,
+                        fontSize: 20),
+                  );
+                }
+              } else {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.all(0),
+                    itemCount: querySnapshot.size,
+                    itemBuilder: (BuildContext context, int index) {
+                      RoomModel roomModelTemp =
+                          RoomModel.fromJson(querySnapshot.docs[index].data());
+
+                      if (roomModelTemp != null) {
+                        final itemsList = List<String>.generate(
+                            querySnapshot.size, (n) => "List item $n");
+                        return Dismissible(
+                            key: Key(itemsList[index]),
+                            background: slideRightBackground(),
+                            direction: DismissDirection.startToEnd,
+                            onDismissed: (t) {
+                              roomModelTemp.hidePeople.remove(
+                                  FirebaseAuth.instance.currentUser.uid);
+                              RoomService().updateRoom(roomModelTemp);
+                            },
+                            // secondaryBackground: slideLeftBackground(),
+                            child:
+                                RoomCardWidget(context, roomModelTemp, false));
+                      } else {
+                        return Container();
+                      }
+                    });
+              }
+            },
+          ),
+        ),
       ),
     );
   }

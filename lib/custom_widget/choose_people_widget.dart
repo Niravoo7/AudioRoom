@@ -1,36 +1,30 @@
+import 'package:audioroom/custom_widget/common_user_detail_widget.dart';
 import 'package:audioroom/custom_widget/divider_widget.dart';
-import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:flutter/material.dart';
 
 // ignore: non_constant_identifier_names
-Widget ChoosePeopleWidget(
-    BuildContext context,
-    String profilePic,
-    String name,
-    String tagName,
-    String btnName,
-    bool isSelected,
-    bool isOnline,
-    Function btnClick) {
+Widget ChoosePeopleWidget(BuildContext context, String profilePic, String name,
+    String tagName, bool isSelected, bool isOnline, Function btnClick) {
   return Container(
       child: Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Row(children: [
-        Container(
-          margin: EdgeInsets.only(left: 16, top: 16, bottom: 16),
+        Flexible(
           child: Stack(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.bottomLeft,
             children: [
-              Container(
-                decoration: BoxDecoration(shape: BoxShape.circle),
-                child: Image.network(profilePic, height: 40, width: 40),
+              Row(
+                children: [
+                  CommonUserDetailWidget(context, profilePic, name, tagName),
+                ],
               ),
               Container(
                 height: 8,
                 width: 8,
+                margin: EdgeInsets.only(bottom: 16,left: 45),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: (isOnline)
@@ -39,25 +33,6 @@ Widget ChoosePeopleWidget(
               ),
             ],
           ),
-        ),
-        Flexible(
-          child: Container(
-              margin: EdgeInsets.only(left: 10),
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextWidget(name,
-                      color: AppConstants.clrBlack,
-                      fontSize: AppConstants.size_medium_large,
-                      fontWeight: FontWeight.bold),
-                  TextWidget(tagName,
-                      color: AppConstants.clrBlack,
-                      fontSize: AppConstants.size_small_medium,
-                      fontWeight: FontWeight.w500)
-                ],
-              )),
           flex: 1,
         ),
         GestureDetector(

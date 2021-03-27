@@ -1,37 +1,27 @@
+import 'package:audioroom/custom_widget/text_widget.dart';
+import 'package:audioroom/firestore/model/user_model.dart';
+import 'package:audioroom/firestore/network/user_fire.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:audioroom/helper/constants.dart';
-import 'package:audioroom/custom_widget/follow_people_widget.dart';
-import 'package:audioroom/model/follow_people_model.dart';
+import 'package:audioroom/custom_widget/active_people_widget.dart';
 
+// ignore: must_be_immutable
 class PeopleScreen extends StatefulWidget {
+  Function(String) onOtherProfileClick;
+  TextEditingController searchController;
+
+  PeopleScreen(this.searchController, this.onOtherProfileClick);
+
   @override
   _PeopleScreenState createState() => _PeopleScreenState();
 }
 
 class _PeopleScreenState extends State<PeopleScreen> {
-  List<FollowPeopleModel> followPeopleModels = [];
-
   @override
   void initState() {
     super.initState();
-    followPeopleModels.add(new FollowPeopleModel(
-        "Saikik", "online", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Mr Beast", "online", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "GraphyBoy", "online", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Amy Doe", "12 mins ago", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Saikik", "online", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Mr Beast", "10 mins ago", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "GraphyBoy", "online", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Amy Doe", "online", AppConstants.str_image_url, false));
-    followPeopleModels.add(new FollowPeopleModel(
-        "Rishab Pant", "online", AppConstants.str_image_url, false));
   }
 
   @override
@@ -39,21 +29,64 @@ class _PeopleScreenState extends State<PeopleScreen> {
     return Scaffold(
         body: SafeArea(
             child: Container(
-                child: ListView.builder(
-                    padding: EdgeInsets.all(0),
-                    itemCount: followPeopleModels.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return FollowPeopleWidget(
-                          context,
-                          followPeopleModels[index].profilePic,
-                          followPeopleModels[index].name,
-                          followPeopleModels[index].tagName,
-                          AppConstants.str_room,
-                          followPeopleModels[index].isFollow, () {
-                        followPeopleModels[index].isFollow =
-                            !followPeopleModels[index].isFollow;
-                        setState(() {});
-                      });
+                child: StreamBuilder(
+                    stream: UserService().getUserQuery().snapshots(),
+                    builder: (context, stream) {
+                      if (stream.hasError) {
+                        return Center(
+                            child: TextWidget(stream.error.toString(),
+                                color: AppConstants.clrBlack, fontSize: 20));
+                      }
+                      QuerySnapshot querySnapshot = stream.data;
+                      if (querySnapshot == null || querySnapshot.size == 1) {
+                        if (querySnapshot == null) {
+                          return Container();
+                        } else {
+                          return Center(
+                            child: TextWidget(
+                                AppConstants.str_no_record_found,
+                                color: AppConstants.clrBlack,
+                                fontSize: 20),
+                          );
+                        }
+                      } else {
+                        return ListView.builder(
+                            padding: EdgeInsets.all(0),
+                            itemCount: querySnapshot.size,
+                            itemBuilder: (BuildContext context, int index) {
+                              UserModel userModelTemp = UserModel.fromJson(
+                                  querySnapshot.docs[index].data());
+                              if (userModelTemp.uId ==
+                                  FirebaseAuth.instance.currentUser.uid) {
+                                return Container();
+                              } else {
+                                if (userModelTemp.firstName
+                                        .toLowerCase()
+                                        .contains(
+                                            widget.searchController.text) ||
+                                    userModelTemp.lastName
+                                        .toLowerCase()
+                                        .contains(
+                                            widget.searchController.text) ||
+                                    userModelTemp.tagName
+                                        .toLowerCase()
+                                        .contains(
+                                            widget.searchController.text)) {
+                                  return ActivePeopleWidget(
+                                      context,
+                                      userModelTemp.imageUrl,
+                                      userModelTemp.firstName +
+                                          " " +
+                                          userModelTemp.lastName,
+                                      userModelTemp.tagName,
+                                      userModelTemp.uId,
+                                      onClick: widget.onOtherProfileClick);
+                                } else {
+                                  return Container();
+                                }
+                              }
+                            });
+                      }
                     }))));
   }
 }

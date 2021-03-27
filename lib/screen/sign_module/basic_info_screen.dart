@@ -18,6 +18,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' as io;
 import 'package:audioroom/library/image_picker/image_picker_handler.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class BasicInfoScreen extends StatefulWidget {
@@ -44,7 +45,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
     super.initState();
     //firstNameController.text = "test";
     //lastNameController.text = "test";
-    //userNameController.text = "test";
+    //userNameController.text = "testing";
     //aboutController.text = "about info";
 
     _controller = new AnimationController(
@@ -163,7 +164,11 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
             fontWeight: FontWeight.bold),
         SizedBox(height: 8),
         TextFieldWidget(
-            controller: userNameController, keyboardType: TextInputType.text),
+            controller: userNameController,
+            keyboardType: TextInputType.name,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp("[a-z]"))
+            ]),
         SizedBox(height: 16),
         TextWidget(AppConstants.str_about,
             color: AppConstants.clrBlack,
@@ -179,7 +184,9 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
   }
 
   void validateInputs(BuildContext con) {
-    if (firstNameController.text.trim().isEmpty) {
+    if (imageFile == null) {
+      showToast(AppConstants.str_enter_profile_image);
+    } else if (firstNameController.text.trim().isEmpty) {
       showToast(AppConstants.str_enter_first_name);
     } else if (lastNameController.text.trim().isEmpty) {
       showToast(AppConstants.str_enter_last_name);
@@ -188,8 +195,22 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
     } else if (aboutController.text.trim().isEmpty) {
       showToast(AppConstants.str_enter_about);
     } else {
-      uploadProfileImage();
+      checkUserName();
     }
+  }
+
+  Future<void> checkUserName() async {
+    PrintLog.printMessage('checkUserName -> ${userNameController.text.trim()}');
+    await UserService()
+        .getUserByUserName("@" + userNameController.text.trim())
+        .then((userModel) {
+      if (userModel != null) {
+        showToast("Username is unavailable. please try with another one.");
+      } else {
+        //showToast("okay");
+        uploadProfileImage();
+      }
+    });
   }
 
   Future<void> uploadProfileImage() async {
@@ -225,7 +246,8 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
         isDelete: false,
         joinedDate: DateTime.now(),
         uId: user.uid,
-        recommendedBy: null,phoneNumber: user.phoneNumber);
+        recommendedBy: null,
+        phoneNumber: user.phoneNumber);
     UserService().createUser(userModel);
     Navigator.pop(navigatorKey.currentContext);
     Navigator.push(

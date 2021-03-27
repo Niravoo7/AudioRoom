@@ -131,7 +131,7 @@ class AppConstants {
   static const String str_sign_up = "Sign Up";
   static const String str_tab_room = "Start A Room";
   static const String str_all_rooms = "All Rooms";
-  static const String str_tab_home = "🙏 Welcome Sera";
+  static const String str_tab_home = "🙏 Welcome ";
   static const String str_tab_search = "Explore";
   static const String str_tab_upcoming = "Upcoming for you";
   static const String str_tab_active = "Active People & Clubs";
@@ -151,13 +151,14 @@ class AppConstants {
   static const String str_description = "Description";
   static const String str_write_the_event_details = "Write the event details";
   static const String str_add_a_co_host_or_guest = "Add a Co-host or Guest";
-  static const String str_write_a_title_for_the_event = "Write a title for the event";
+  static const String str_write_a_title_for_the_event =
+      "Write a title for the event";
   static const String str_valid_mobile_number =
       "Mobile number require 10 digits.";
   static const String str_enter_first_name = "First name required.";
   static const String str_enter_last_name = "Last name required.";
   static const String str_enter_code = "Verification code required.";
-  static const String str_valid_code = "Verification code require 4 digits.";
+  static const String str_valid_code = "Verification code require 6 digits.";
   static const String str_enter_pwd = "Password required.";
   static const String str_valid_pwd =
       "Password should be at least 6 characters.";
@@ -187,7 +188,7 @@ class AppConstants {
   static const String str_make_speaker = 'Make Speaker';
   static const String str_send_remainder = 'Send Remainder';
   static const String str_clubs_joined = 'Clubs Joined';
-  static const String str_joined = 'Joined';
+  static const String str_joined = 'Joined on ';
   static const String str_recommended_by = 'Recommended by';
   static const String str_lorem_ipsum =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eros, eleifend neque, arcu eget in tortor facilisi dignissim elementum. Fermentum semper turpis felis lacus, euismod egestas lorem malesuada a. Quam faucibus cras et tincidunt feugiat.';
@@ -201,10 +202,15 @@ class AppConstants {
   static const String str_top = 'Top';
   static const String str_all = 'All';
   static const String str_people = 'People';
+  static const String str_active_people = 'Active People';
   static const String str_people_conversation =
       'People Interested in This Conversation';
   static const String str_clubs = 'Clubs';
+  static const String str_active_clubs = 'Active Clubs';
   static const String str_view_more_people = 'View more people';
+  static const String str_view_less_people = 'View less people';
+  static const String str_view_more_club = 'View more club';
+  static const String str_view_less_club = 'View less club';
   static const String str_ongoing = 'Ongoing';
   static const String str_upcoming_for_you = 'Upcoming for you';
   static const String str_upcoming = 'Upcoming';
@@ -213,6 +219,7 @@ class AppConstants {
   static const String str_clubs_to_follow = 'Clubs to Follow';
   static const String str_title = 'Title';
   static const String str_select_the_audience = 'Select The Audience';
+  static const String str_select_club = 'Select Club';
   static const String str_write_a_title_for_the_conversation =
       'Write a title for the conversation';
   static const String str_global = 'Global';
@@ -230,4 +237,15 @@ class AppConstants {
   static const String str_tweet = 'Tweet';
   static const String str_copy_link = 'Copy Link';
   static const String str_add_to_call = 'Add to Call';
+  static const String str_clubName_is_already_used =
+      'ClubName is already used. Try with another one!';
+  static const String str_roomName_is_already_used =
+      'RoomName is already used. Try with another one!';
+  static const String str_member_online = 'members online';
+  static const String str_please_select_club_first = 'Please select club first';
+  static const String str_title_required = 'Title required!!';
+  static const String str_please_select_1_user =
+      'Please select at least 1 user';
+  static const String str_leave = 'Leave';
+  static const String str_join = 'Join';
 }

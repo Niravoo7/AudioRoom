@@ -2,6 +2,7 @@ import 'package:audioroom/custom_widget/button_widget.dart';
 import 'package:audioroom/custom_widget/follow_people_widget.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
+import 'package:audioroom/firestore/model/user_model.dart';
 import 'package:audioroom/firestore/network/user_fire.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
@@ -43,10 +44,6 @@ class _FollowSomePeopleScreenState extends State<FollowSomePeopleScreen> {
                         child: StreamBuilder(
                           stream: UserService().getUserQuery().snapshots(),
                           builder: (context, stream) {
-                            /*if (stream.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            }*/
                             if (stream.hasError) {
                               return Center(
                                   child: TextWidget(stream.error.toString(),
@@ -56,28 +53,54 @@ class _FollowSomePeopleScreenState extends State<FollowSomePeopleScreen> {
                             QuerySnapshot querySnapshot = stream.data;
                             if (querySnapshot == null ||
                                 querySnapshot.size == 0) {
-                              return Center(
-                                  child: TextWidget(
-                                      AppConstants.str_no_room_found,
+                              if (querySnapshot == null) {
+                                if (querySnapshot == null) {
+                                  if (querySnapshot == null) {
+                                    return Container();
+                                  } else {
+                                    return Center(
+                                      child: TextWidget(
+                                          AppConstants.str_no_record_found,
+                                          color: AppConstants.clrBlack,
+                                          fontSize: 20),
+                                    );
+                                  }
+                                } else {
+                                  return TextWidget(
+                                      AppConstants.str_no_record_found,
                                       color: AppConstants.clrBlack,
-                                      fontSize: 20));
+                                      fontSize: 20);
+                                }
+                              } else {
+                                return TextWidget(
+                                    AppConstants.str_no_record_found,
+                                    color: AppConstants.clrBlack,
+                                    fontSize: 20);
+                              }
+                            } else {
+                              return ListView.builder(
+                                  padding: EdgeInsets.all(0),
+                                  itemCount: querySnapshot.size,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    UserModel userModelTemp =
+                                        UserModel.fromJson(
+                                            querySnapshot.docs[index].data());
+
+                                    if (userModelTemp.uId == uid) {
+                                      return Container();
+                                    } else {
+                                      return FollowPeopleWidget(
+                                          context,
+                                          userModelTemp.imageUrl,
+                                          userModelTemp.firstName +
+                                              " " +
+                                              userModelTemp.lastName,
+                                          userModelTemp.tagName,
+                                          userModelTemp.uId);
+                                    }
+                                  });
                             }
-                            return ListView.builder(
-                                padding: EdgeInsets.all(0),
-                                itemCount: querySnapshot.size,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return FollowPeopleWidget(
-                                      context,
-                                      querySnapshot.docs[index]["image_url"],
-                                      querySnapshot.docs[index]["first_name"] +
-                                          " " +
-                                          querySnapshot.docs[index]
-                                              ["last_name"],
-                                      querySnapshot.docs[index]["tag_name"],
-                                      AppConstants.str_follow,
-                                      false,
-                                      () {});
-                                });
                           },
                         ),
                       ),

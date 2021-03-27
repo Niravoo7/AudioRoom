@@ -4,6 +4,7 @@ import 'package:audioroom/helper/navigate_effect.dart';
 import 'package:audioroom/helper/shar_pref.dart';
 import 'package:audioroom/screen/main_module/main_screen.dart';
 import 'package:audioroom/screen/sign_module/login_screen.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,18 +25,19 @@ class SplashState extends State<SplashScreen> {
 
   Future navigationPage() async {
     if (mobileNo != null && mobileNo.length > 0) {
+      //Navigator.pushReplacement(context, NavigatePageRoute(context, AccountCreatedScreen()));
       Navigator.pushReplacement(
           context, NavigatePageRoute(context, MainScreen()));
     } else {
-      Navigator.pushReplacement(
-          context, NavigatePageRoute(context, LoginScreen()));
-      //Navigator.pushReplacement(context, NavigatePageRoute(context, MainScreen()));
+      //Navigator.pushReplacement(context, NavigatePageRoute(context, EnterCodeScreen("", "")));
+      Navigator.pushReplacement(context, NavigatePageRoute(context, LoginScreen()));
     }
   }
 
   @override
   initState() {
     super.initState();
+    //FirebaseCrashlytics.instance.crash();
     startTime();
   }
 

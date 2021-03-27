@@ -15,7 +15,12 @@ class TabNavigatorRoutes {
   static const String detail = '/active';
 }
 
+// ignore: must_be_immutable
 class ActiveUserScreen extends StatefulWidget {
+  Function(String) onOtherProfileClick;
+
+  ActiveUserScreen(this.onOtherProfileClick);
+
   @override
   _ActiveUserScreenState createState() => _ActiveUserScreenState();
 }
@@ -24,10 +29,6 @@ class _ActiveUserScreenState extends State<ActiveUserScreen> {
   TabItemActive currentTab;
 
   TextEditingController searchController = new TextEditingController();
-
-  AllScreen allScreen;
-  PeopleScreen peopleScreen;
-  ClubsScreen clubsScreen;
 
   Map<TabItemActive, GlobalKey<NavigatorState>> navigatorKeys = {
     TabItemActive.all: GlobalKey<NavigatorState>(),
@@ -38,10 +39,6 @@ class _ActiveUserScreenState extends State<ActiveUserScreen> {
   @override
   void initState() {
     super.initState();
-
-    allScreen = new AllScreen();
-    peopleScreen = new PeopleScreen();
-    clubsScreen = new ClubsScreen();
 
     currentTab = TabItemActive.all;
   }
@@ -54,7 +51,10 @@ class _ActiveUserScreenState extends State<ActiveUserScreen> {
           child: Column(
             children: <Widget>[
               SearchInputField(
-                  searchInputHintText(currentTab), searchController, true,(text) {}),
+                  searchInputHintText(currentTab), searchController, true,
+                  (text) {
+                setState(() {});
+              }),
               tabBar(context),
               Flexible(
                   child: Stack(children: <Widget>[
@@ -86,11 +86,19 @@ class _ActiveUserScreenState extends State<ActiveUserScreen> {
   Map<String, WidgetBuilder> _routeBuilders(
       BuildContext context, TabItemActive tabItem) {
     if (tabItem == TabItemActive.all) {
-      return {TabNavigatorRoutes.root: (context) => allScreen};
+      return {
+        TabNavigatorRoutes.root: (context) =>
+            AllScreen(searchController, widget.onOtherProfileClick)
+      };
     } else if (tabItem == TabItemActive.people) {
-      return {TabNavigatorRoutes.root: (context) => peopleScreen};
+      return {
+        TabNavigatorRoutes.root: (context) =>
+            PeopleScreen(searchController, widget.onOtherProfileClick)
+      };
     } else if (tabItem == TabItemActive.clubs) {
-      return {TabNavigatorRoutes.root: (context) => clubsScreen};
+      return {
+        TabNavigatorRoutes.root: (context) => ClubsScreen(searchController)
+      };
     }
   }
 

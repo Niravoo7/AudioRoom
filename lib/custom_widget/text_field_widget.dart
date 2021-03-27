@@ -9,15 +9,18 @@ Widget TextFieldWidget(
     TextInputType keyboardType,
     FormFieldValidator<String> validator,
     ValueChanged<String> onChanged,
-    int lines}) {
+    int lines,
+    List<TextInputFormatter> inputFormatters,bool enabled}) {
   return TextFormField(
     minLines: (lines != null) ? lines : 1,
     maxLines: (lines != null) ? lines : 1,
     keyboardType: keyboardType,
     controller: controller,
     autocorrect: true,
+    enabled: enabled,
     scrollPadding: EdgeInsets.all(0),
     textAlign: TextAlign.start,
+    inputFormatters: inputFormatters,
     textAlignVertical: TextAlignVertical.center,
     style: TextStyle(
         color: AppConstants.clrBlack,

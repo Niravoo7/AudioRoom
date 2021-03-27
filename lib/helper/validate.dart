@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -31,4 +32,30 @@ void showToast(String message) {
 
 Widget noRecordFoundView() {
   return TextWidget(AppConstants.str_no_record_found);
+}
+
+String datetimeToString(DateTime dateTime) {
+  return dateTime.day.toString() +
+      "/" +
+      dateTime.month.toString() +
+      "/" +
+      dateTime.year.toString() +
+      " " +
+      dateTime.hour.toString() +
+      ":" +
+      dateTime.minute.toString();
+}
+
+int dateDifference(DateTime dateTime) {
+  return DateTime.now().difference(dateTime).inMinutes;
+}
+
+String strDateDifference(int minute) {
+  if (minute < 60) {
+    return minute.toString() + " mins ago";
+  } else if (minute >= 60 && minute < 1440) {
+    return (minute ~/ 60).toString() + " hrs ago";
+  } else {
+    return (minute ~/ 1440).toString() + " days ago";
+  }
 }

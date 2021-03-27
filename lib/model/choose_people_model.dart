@@ -1,10 +1,9 @@
+import 'package:audioroom/firestore/model/user_model.dart';
+
 class ChoosePeopleModel {
-  String name;
-  String tagName;
-  String profilePic;
+  UserModel userModel;
   bool isOnline;
   bool isSelected;
 
-  ChoosePeopleModel(
-      this.name, this.tagName, this.profilePic, this.isOnline, this.isSelected);
+  ChoosePeopleModel(this.userModel, this.isOnline, this.isSelected);
 }

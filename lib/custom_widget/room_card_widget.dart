@@ -1,18 +1,21 @@
 import 'package:audioroom/custom_widget/text_widget.dart';
+import 'package:audioroom/custom_widget/room_card_user_widget.dart';
+import 'package:audioroom/firestore/model/room_model.dart';
 import 'package:audioroom/helper/constants.dart';
-import 'package:audioroom/model/room_card_model.dart';
+import 'package:audioroom/helper/print_log.dart';
 import 'package:flutter/cupertino.dart';
 
 // ignore: non_constant_identifier_names
-Widget RoomCardWidget(BuildContext context, RoomCardModel postListModel,
-    bool disableNotificationIcon) {
+Widget RoomCardWidget(
+    BuildContext context, RoomModel roomModel, bool disableNotificationIcon) {
+  PrintLog.printMessage("RoomCardWidget -> " + roomModel.toJson().toString());
   double crossAxisSpacing = 10;
   double mainAxisSpacing = 10;
   double screenWidth = MediaQuery.of(context).size.width - 35;
   int crossAxisCount = 3;
   double width = (screenWidth - ((crossAxisCount - 1) * crossAxisSpacing)) /
       crossAxisCount;
-  double cellHeight = 40;
+  double cellHeight = 50;
   double aspectRatio = width / cellHeight;
   return Container(
       margin: EdgeInsets.only(left: 16, right: 16, top: 16),
@@ -22,6 +25,7 @@ Widget RoomCardWidget(BuildContext context, RoomCardModel postListModel,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(width: 1, color: AppConstants.clrWidgetBGColor)),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -37,7 +41,7 @@ Widget RoomCardWidget(BuildContext context, RoomCardModel postListModel,
                       color: AppConstants.clrBlack,
                     ),
                   ),
-                  TextWidget(postListModel.title,
+                  TextWidget(roomModel.roomName,
                       color: AppConstants.clrBlack,
                       fontSize: AppConstants.size_small_medium,
                       fontWeight: FontWeight.normal),
@@ -72,14 +76,14 @@ Widget RoomCardWidget(BuildContext context, RoomCardModel postListModel,
           ),
           Container(
             padding: EdgeInsets.only(top: 13),
-            child: TextWidget(postListModel.detail,
+            child: TextWidget(roomModel.roomDesc,
                 color: AppConstants.clrBlack,
                 fontSize: AppConstants.size_medium_large,
                 fontWeight: FontWeight.w600,
                 maxLines: 2),
           ),
           GridView.builder(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
+              padding: EdgeInsets.only(top: 8),
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -87,36 +91,18 @@ Widget RoomCardWidget(BuildContext context, RoomCardModel postListModel,
                   crossAxisSpacing: crossAxisSpacing,
                   mainAxisSpacing: mainAxisSpacing,
                   childAspectRatio: aspectRatio),
-              itemCount: postListModel.userListModel.length,
-              itemBuilder: (context, index1) {
-                return Row(
-                  children: [
-                    Flexible(
-                      child: Container(
-                        margin: EdgeInsets.only(right: 5),
-                        height: 33,
-                        width: 36,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            // borderRadius: BorderRadius.all(Radius.circular(8)),
-                            color: AppConstants.clrTransparent,
-                            image: DecorationImage(
-                                image: AssetImage(postListModel
-                                    .userListModel[index1].profile),
-                                fit: BoxFit.cover)),
-                      ),
-                    ),
-                    Flexible(
-                      child: TextWidget(
-                          postListModel.userListModel[index1].name,
-                          color: AppConstants.clrBlack,
-                          fontSize: AppConstants.size_small_medium,
-                          fontWeight: FontWeight.normal,
-                          textOverflow: TextOverflow.ellipsis),
-                    ),
-                  ],
-                );
+              itemCount:
+                  roomModel.broadcaster.length + roomModel.moderator.length,
+              itemBuilder: (context, index) {
+                if (roomModel.broadcaster.length <= index) {
+                  return RoomCardUserWidget(
+                      uId: roomModel
+                          .moderator[index - roomModel.broadcaster.length]);
+                } else {
+                  return RoomCardUserWidget(uId: roomModel.broadcaster[index]);
+                }
               }),
+          SizedBox(height: 10),
           Row(
             children: [
               Container(
@@ -128,23 +114,27 @@ Widget RoomCardWidget(BuildContext context, RoomCardModel postListModel,
                   color: AppConstants.clrBlack,
                 ),
               ),
-              TextWidget(postListModel.speakerCounter,
+              TextWidget(roomModel.broadcaster.length.toString(),
                   color: AppConstants.clrBlack,
                   fontSize: AppConstants.size_small_medium,
                   fontWeight: FontWeight.normal),
-              Container(
-                padding: const EdgeInsets.only(right: 8, left: 10),
-                child: Image.asset(
-                  AppConstants.ic_user,
-                  height: 15,
-                  width: 15,
-                  color: AppConstants.clrBlack,
-                ),
-              ),
-              TextWidget(postListModel.userCounter,
-                  color: AppConstants.clrBlack,
-                  fontSize: AppConstants.size_small_medium,
-                  fontWeight: FontWeight.normal),
+              (roomModel.people != null && roomModel.people.length > 0)
+                  ? Container(
+                      padding: const EdgeInsets.only(right: 8, left: 10),
+                      child: Image.asset(
+                        AppConstants.ic_user,
+                        height: 15,
+                        width: 15,
+                        color: AppConstants.clrBlack,
+                      ),
+                    )
+                  : Container(),
+              (roomModel.people != null && roomModel.people.length > 0)
+                  ? TextWidget(roomModel.people.length.toString(),
+                      color: AppConstants.clrBlack,
+                      fontSize: AppConstants.size_small_medium,
+                      fontWeight: FontWeight.normal)
+                  : Container(),
             ],
           )
         ],

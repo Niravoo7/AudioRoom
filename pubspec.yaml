@@ -32,13 +32,14 @@ dependencies:
   fluttertoast: 7.1.8
   intl: 0.17.0
   firebase_auth: 1.0.1
-  firebase_core: 1.0.1
-  #agora_rtc_engine: 3.2.1
+  firebase_core: 1.0.2
+  agora_rtc_engine: 3.2.1
   permission_handler: 6.0.1+1
-  #http: 0.12.2
+  http: 0.13.0
   cloud_firestore: 1.0.1
   firebase_storage: 8.0.0
   image_picker: 0.7.2+1
+  firebase_crashlytics: 1.0.0
 
 
 flutter_icons:

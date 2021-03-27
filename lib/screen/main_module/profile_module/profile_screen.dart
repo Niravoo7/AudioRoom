@@ -1,8 +1,13 @@
 import 'package:audioroom/custom_widget/flexible_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
+import 'package:audioroom/firestore/model/follow_model.dart';
+import 'package:audioroom/firestore/network/club_fire.dart';
+import 'package:audioroom/firestore/network/follow_fire.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/firestore/network/user_fire.dart';
 import 'package:audioroom/firestore/model/user_model.dart';
+import 'package:audioroom/helper/validate.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
@@ -14,8 +19,9 @@ import 'package:audioroom/screen/main_module/profile_module/setting_screen.dart'
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
   bool isOther;
+  String uId;
 
-  ProfileScreen(this.isOther);
+  ProfileScreen(this.isOther, this.uId);
 
   @override
   ProfileScreenState createState() => ProfileScreenState();
@@ -24,16 +30,25 @@ class ProfileScreen extends StatefulWidget {
 class ProfileScreenState extends State<ProfileScreen> {
   bool isFollowingSelected = true;
   UserModel userModel;
+  UserModel userModelRecommendedBy;
 
   @override
   void initState() {
     super.initState();
-    UserService()
-        .getUsersByRefID(FirebaseAuth.instance.currentUser.uid)
-        .then((userModel) {
+    UserService().getUserByReferences(widget.uId).then((userModel) {
       if (userModel != null) {
         this.userModel = userModel;
         setState(() {});
+        if (this.userModel.recommendedBy != null) {
+          UserService()
+              .getUserByReferences(this.userModel.recommendedBy)
+              .then((userModelRecommendedBy) {
+            if (userModelRecommendedBy != null) {
+              this.userModelRecommendedBy = userModelRecommendedBy;
+              setState(() {});
+            }
+          });
+        }
       }
     });
   }
@@ -183,12 +198,48 @@ class ProfileScreenState extends State<ProfileScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                            TextWidget(
-                                                userModel.followers.toString(),
-                                                color: AppConstants.clrBlack,
-                                                fontSize:
-                                                    AppConstants.size_medium,
-                                                fontWeight: FontWeight.bold),
+                                            StreamBuilder(
+                                              stream: FollowService()
+                                                  .checkFollowerByUID()
+                                                  .snapshots(),
+                                              builder: (context, stream) {
+                                                if (stream.hasError) {
+                                                  return Center(
+                                                      child: TextWidget(
+                                                          stream.error
+                                                              .toString(),
+                                                          color: AppConstants
+                                                              .clrBlack,
+                                                          fontSize: 20));
+                                                }
+                                                QuerySnapshot querySnapshot =
+                                                    stream.data;
+                                                if (querySnapshot == null ||
+                                                    querySnapshot.size == 0) {
+                                                  if (querySnapshot == null) {
+                                                    return Container();
+                                                  } else {
+                                                    return TextWidget("0",
+                                                        color: AppConstants
+                                                            .clrBlack,
+                                                        fontSize: AppConstants
+                                                            .size_medium,
+                                                        fontWeight:
+                                                            FontWeight.bold);
+                                                  }
+                                                } else {
+                                                  return TextWidget(
+                                                      querySnapshot.size
+                                                          .toString(),
+                                                      color:
+                                                          AppConstants.clrBlack,
+                                                      fontSize: AppConstants
+                                                          .size_medium,
+                                                      fontWeight:
+                                                          FontWeight.bold);
+                                                }
+                                              },
+                                            ),
                                             TextWidget(
                                               AppConstants.str_followers,
                                               color: AppConstants.clrBlack,
@@ -210,12 +261,48 @@ class ProfileScreenState extends State<ProfileScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                            TextWidget(
-                                                userModel.following.toString(),
-                                                color: AppConstants.clrBlack,
-                                                fontSize:
-                                                    AppConstants.size_medium,
-                                                fontWeight: FontWeight.bold),
+                                            StreamBuilder(
+                                              stream: FollowService()
+                                                  .checkFollowingByUID()
+                                                  .snapshots(),
+                                              builder: (context, stream) {
+                                                if (stream.hasError) {
+                                                  return Center(
+                                                      child: TextWidget(
+                                                          stream.error
+                                                              .toString(),
+                                                          color: AppConstants
+                                                              .clrBlack,
+                                                          fontSize: 20));
+                                                }
+                                                QuerySnapshot querySnapshot =
+                                                    stream.data;
+                                                if (querySnapshot == null ||
+                                                    querySnapshot.size == 0) {
+                                                  if (querySnapshot == null) {
+                                                    return Container();
+                                                  } else {
+                                                    return TextWidget("0",
+                                                        color: AppConstants
+                                                            .clrBlack,
+                                                        fontSize: AppConstants
+                                                            .size_medium,
+                                                        fontWeight:
+                                                            FontWeight.bold);
+                                                  }
+                                                } else {
+                                                  return TextWidget(
+                                                      querySnapshot.size
+                                                          .toString(),
+                                                      color:
+                                                          AppConstants.clrBlack,
+                                                      fontSize: AppConstants
+                                                          .size_medium,
+                                                      fontWeight:
+                                                          FontWeight.bold);
+                                                }
+                                              },
+                                            ),
                                             TextWidget(
                                               AppConstants.str_following,
                                               color: AppConstants.clrBlack,
@@ -237,12 +324,48 @@ class ProfileScreenState extends State<ProfileScreen> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                            TextWidget(
-                                                userModel.clubJoined.toString(),
-                                                color: AppConstants.clrBlack,
-                                                fontSize:
-                                                    AppConstants.size_medium,
-                                                fontWeight: FontWeight.bold),
+                                            StreamBuilder(
+                                              stream: ClubService()
+                                                  .getClubByUIDQuery()
+                                                  .snapshots(),
+                                              builder: (context, stream) {
+                                                if (stream.hasError) {
+                                                  return Center(
+                                                      child: TextWidget(
+                                                          stream.error
+                                                              .toString(),
+                                                          color: AppConstants
+                                                              .clrBlack,
+                                                          fontSize: 20));
+                                                }
+                                                QuerySnapshot querySnapshot =
+                                                    stream.data;
+                                                if (querySnapshot == null ||
+                                                    querySnapshot.size == 0) {
+                                                  if (querySnapshot == null) {
+                                                    return Container();
+                                                  } else {
+                                                    return TextWidget("0",
+                                                        color: AppConstants
+                                                            .clrBlack,
+                                                        fontSize: AppConstants
+                                                            .size_medium,
+                                                        fontWeight:
+                                                            FontWeight.bold);
+                                                  }
+                                                } else {
+                                                  return TextWidget(
+                                                      querySnapshot.size
+                                                          .toString(),
+                                                      color:
+                                                          AppConstants.clrBlack,
+                                                      fontSize: AppConstants
+                                                          .size_medium,
+                                                      fontWeight:
+                                                          FontWeight.bold);
+                                                }
+                                              },
+                                            ),
                                             TextWidget(
                                               AppConstants.str_clubs_joined,
                                               color: AppConstants.clrBlack,
@@ -293,39 +416,71 @@ class ProfileScreenState extends State<ProfileScreen> {
                             (widget.isOther)
                                 ? Row(
                                     children: [
-                                      GestureDetector(
-                                          onTap: () {},
-                                          child: Container(
-                                              alignment: Alignment.center,
-                                              height: 36,
-                                              padding: EdgeInsets.only(
-                                                  left: 24, right: 24),
-                                              decoration: BoxDecoration(
-                                                  color: isFollowingSelected
-                                                      ? AppConstants.clrPrimary
-                                                      : AppConstants.clrWhite,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  border: isFollowingSelected
-                                                      ? null
-                                                      : Border.all(
-                                                          width: 1,
-                                                          color: AppConstants
-                                                              .clrPrimary)),
-                                              child: TextWidget(
-                                                  isFollowingSelected
-                                                      ? AppConstants
-                                                          .str_following
-                                                      : AppConstants.str_follow,
-                                                  color: isFollowingSelected
-                                                      ? AppConstants.clrWhite
-                                                      : AppConstants.clrPrimary,
-                                                  fontSize:
-                                                      AppConstants.size_medium,
-                                                  fontWeight: FontWeight.bold,
-                                                  maxLines: 1,
-                                                  textOverflow:
-                                                      TextOverflow.ellipsis))),
+                                      StreamBuilder(
+                                        stream: FollowService()
+                                            .checkFollowByUser(widget.uId)
+                                            .snapshots(),
+                                        builder: (context, stream) {
+                                          if (stream != null &&
+                                              stream.data != null) {
+                                            return GestureDetector(
+                                                onTap: () {
+                                                  if (stream.data.size > 0) {
+                                                    FollowService()
+                                                        .deleteFollow(
+                                                            FollowModel
+                                                                .fromJson(stream
+                                                                    .data
+                                                                    .docs[0]
+                                                                    .data()));
+                                                  } else {
+                                                    FollowService().createFollow(
+                                                        new FollowModel(
+                                                            followBy:
+                                                                FirebaseAuth
+                                                                    .instance
+                                                                    .currentUser
+                                                                    .uid,
+                                                            followTo:
+                                                                widget.uId,
+                                                            status: 1));
+                                                  }
+                                                },
+                                                child: Container(
+                                                    alignment: Alignment.center,
+                                                    height: 36,
+                                                    margin: EdgeInsets.only(
+                                                        right: 16),
+                                                    padding: EdgeInsets.only(
+                                                        left: 24, right: 24),
+                                                    decoration: BoxDecoration(
+                                                        color: (stream.data.size > 0)
+                                                            ? AppConstants
+                                                                .clrPrimary
+                                                            : AppConstants
+                                                                .clrWhite,
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                10),
+                                                        border: (stream.data.size > 0)
+                                                            ? null
+                                                            : Border.all(
+                                                                width: 1,
+                                                                color: AppConstants
+                                                                    .clrPrimary)),
+                                                    child: TextWidget((stream.data.size > 0) ? AppConstants.str_following : AppConstants.str_follow,
+                                                        color: (stream.data.size > 0)
+                                                            ? AppConstants.clrWhite
+                                                            : AppConstants.clrPrimary,
+                                                        fontSize: AppConstants.size_medium,
+                                                        fontWeight: FontWeight.bold,
+                                                        maxLines: 1,
+                                                        textOverflow: TextOverflow.ellipsis)));
+                                          } else {
+                                            return Container();
+                                          }
+                                        },
+                                      ),
                                       GestureDetector(
                                         child: Container(
                                           width: 54,
@@ -356,37 +511,50 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 fontWeight: FontWeight.w400,
                                 maxLines: 10),
                             SizedBox(height: 16),
-                            Row(children: [
-                              Container(
-                                  height: 40,
-                                  width: 40,
-                                  margin: EdgeInsets.only(right: 10),
-                                  decoration: BoxDecoration(
-                                      color: AppConstants.clrProfileBG,
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              AppConstants.str_image_url),
-                                          fit: BoxFit.fill),
-                                      shape: BoxShape.circle)),
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    TextWidget(
-                                        AppConstants.str_joined +
-                                            " Feb 27 2021",
-                                        color: AppConstants.clrBlack,
-                                        fontSize:
-                                            AppConstants.size_small_medium,
-                                        fontWeight: FontWeight.w400),
-                                    TextWidget(
-                                        AppConstants.str_recommended_by +
-                                            " Alex Benkre",
-                                        color: AppConstants.clrBlack,
-                                        fontSize: AppConstants.size_medium,
-                                        fontWeight: FontWeight.w400),
+                            (userModelRecommendedBy != null)
+                                ? Row(children: [
+                                    Container(
+                                        height: 40,
+                                        width: 40,
+                                        margin: EdgeInsets.only(right: 10),
+                                        decoration: BoxDecoration(
+                                            color: AppConstants.clrProfileBG,
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                    userModelRecommendedBy
+                                                        .imageUrl),
+                                                fit: BoxFit.fill),
+                                            shape: BoxShape.circle)),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          TextWidget(
+                                              AppConstants.str_joined +
+                                                  datetimeToString(
+                                                      userModelRecommendedBy
+                                                          .joinedDate),
+                                              color: AppConstants.clrBlack,
+                                              fontSize: AppConstants
+                                                  .size_small_medium,
+                                              fontWeight: FontWeight.w400),
+                                          TextWidget(
+                                              AppConstants.str_recommended_by +
+                                                  " " +
+                                                  userModelRecommendedBy
+                                                      .firstName +
+                                                  " " +
+                                                  userModelRecommendedBy
+                                                      .lastName,
+                                              color: AppConstants.clrBlack,
+                                              fontSize:
+                                                  AppConstants.size_medium,
+                                              fontWeight: FontWeight.w400),
+                                        ])
                                   ])
-                            ])
+                                : Container()
                           ])
                     : Center(child: CircularProgressIndicator()))));
   }

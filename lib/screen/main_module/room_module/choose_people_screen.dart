@@ -3,45 +3,45 @@ import 'package:audioroom/custom_widget/divider_widget.dart';
 import 'package:audioroom/custom_widget/search_input_field.dart';
 import 'package:audioroom/custom_widget/button_widget.dart';
 import 'package:audioroom/custom_widget/choose_people_widget.dart';
+import 'package:audioroom/firestore/network/follow_fire.dart';
+import 'package:audioroom/firestore/network/user_fire.dart';
 import 'package:audioroom/helper/constants.dart';
+import 'package:audioroom/helper/print_log.dart';
+import 'package:audioroom/helper/validate.dart';
 import 'package:audioroom/model/choose_people_model.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class ChoosePeopleScreen extends StatefulWidget {
-  Function onStartRoomClick;
-
-  ChoosePeopleScreen(this.onStartRoomClick);
+  ChoosePeopleScreen();
 
   @override
   _ChoosePeopleScreenState createState() => _ChoosePeopleScreenState();
 }
 
 class _ChoosePeopleScreenState extends State<ChoosePeopleScreen> {
-  List<ChoosePeopleModel> choosePeopleModels =[];
   TextEditingController searchController = new TextEditingController();
+  List<ChoosePeopleModel> choosePeopleModels = [];
+  List<String> uIdList = [];
 
   @override
   void initState() {
     super.initState();
-    choosePeopleModels.add(new ChoosePeopleModel(
-        "Saikik", "@saikik.jp", AppConstants.str_image_url, false, false));
-    choosePeopleModels.add(new ChoosePeopleModel(
-        "Mr Beast", "@mrbest6000", AppConstants.str_image_url, false, false));
-    choosePeopleModels.add(new ChoosePeopleModel(
-        "GraphyBoy", "@graphyboy", AppConstants.str_image_url, false, false));
-    choosePeopleModels.add(new ChoosePeopleModel(
-        "Amy Doe", "@amygirl", AppConstants.str_image_url, false, false));
-    choosePeopleModels.add(new ChoosePeopleModel(
-        "Saikik", "@saikik.jp", AppConstants.str_image_url, false, false));
-    choosePeopleModels.add(new ChoosePeopleModel(
-        "Mr Beast", "@mrbest6000", AppConstants.str_image_url, false, false));
-    choosePeopleModels.add(new ChoosePeopleModel(
-        "GraphyBoy", "@graphyboy", AppConstants.str_image_url, false, false));
-    choosePeopleModels.add(new ChoosePeopleModel(
-        "Amy Doe", "@amygirl", AppConstants.str_image_url, false, false));
-    choosePeopleModels.add(new ChoosePeopleModel(
-        "Rishab Pant", "@amygirl", AppConstants.str_image_url, false, false));
+
+    FollowService().getFollowUserConnected().then((value) {
+      if (value != null) {
+        for (int i = 0; i < value.length; i++) {
+          UserService().getUserByReferences(value[i]).then((value) {
+            if (value != null) {
+              choosePeopleModels.add(ChoosePeopleModel(value, false, false));
+              setState(() {});
+            }
+          });
+        }
+      } else {
+        PrintLog.printMessage("getFollowUserConnected count1 -> null");
+      }
+    });
   }
 
   @override
@@ -61,16 +61,20 @@ class _ChoosePeopleScreenState extends State<ChoosePeopleScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   return ChoosePeopleWidget(
                       context,
-                      choosePeopleModels[index].profilePic,
-                      choosePeopleModels[index].name,
-                      choosePeopleModels[index].tagName,
-                      choosePeopleModels[index].isSelected
-                          ? AppConstants.str_following
-                          : AppConstants.str_follow,
+                      choosePeopleModels[index].userModel.imageUrl,
+                      choosePeopleModels[index].userModel.firstName +
+                          " " +
+                          choosePeopleModels[index].userModel.lastName,
+                      choosePeopleModels[index].userModel.tagName,
                       choosePeopleModels[index].isSelected,
                       choosePeopleModels[index].isOnline, () {
                     choosePeopleModels[index].isSelected =
                         !choosePeopleModels[index].isSelected;
+                    if (choosePeopleModels[index].isSelected) {
+                      uIdList.add(choosePeopleModels[index].userModel.uId);
+                    } else {
+                      uIdList.remove(choosePeopleModels[index].userModel.uId);
+                    }
                     setState(() {});
                   });
                 }),
@@ -80,7 +84,11 @@ class _ChoosePeopleScreenState extends State<ChoosePeopleScreen> {
             padding: EdgeInsets.only(left: 16, right: 16),
             child:
                 ButtonWidget(context, AppConstants.str_start_a_room_small, () {
-              widget.onStartRoomClick();
+              if (uIdList != null && uIdList.length > 0) {
+                Navigator.of(context).pop(uIdList);
+              } else {
+                showToast(AppConstants.str_please_select_1_user);
+              }
             }),
           )
         ]))));

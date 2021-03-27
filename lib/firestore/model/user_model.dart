@@ -12,6 +12,7 @@ class UserModel {
     this.clubJoined,
     this.phoneNumber,
     this.isDelete,
+    this.isOnline,
     this.instagramName,
     this.followers,
     this.lastName,
@@ -31,6 +32,7 @@ class UserModel {
   int clubJoined;
   String phoneNumber;
   bool isDelete;
+  bool isOnline;
   String instagramName;
   int followers;
   String lastName;
@@ -49,6 +51,7 @@ class UserModel {
         clubJoined: json["club_joined"] == null ? null : json["club_joined"],
         phoneNumber: json["phone_number"] == null ? null : json["phone_number"],
         isDelete: json["is_delete"] == null ? null : json["is_delete"],
+        isOnline: json["is_online"] == null ? null : json["is_online"],
         instagramName:
             json["instagram_name"] == null ? null : json["instagram_name"],
         followers: json["followers"] == null ? null : json["followers"],
@@ -76,6 +79,7 @@ class UserModel {
         "club_joined": clubJoined == null ? null : clubJoined,
         "phone_number": phoneNumber == null ? null : phoneNumber,
         "is_delete": isDelete == null ? null : isDelete,
+        "is_online": isOnline == null ? null : isOnline,
         "instagram_name": instagramName == null ? null : instagramName,
         "followers": followers == null ? null : followers,
         "last_name": lastName == null ? null : lastName,
@@ -95,6 +99,7 @@ class UserModel {
         "club_joined": clubJoined == null ? null : clubJoined,
         "phone_number": phoneNumber == null ? null : phoneNumber,
         "is_delete": isDelete == null ? null : isDelete,
+        "is_online": isOnline == null ? null : isOnline,
         "instagram_name": instagramName == null ? null : instagramName,
         "followers": followers == null ? null : followers,
         "last_name": lastName == null ? null : lastName,

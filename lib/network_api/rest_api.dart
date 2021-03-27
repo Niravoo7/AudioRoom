@@ -29,7 +29,7 @@ class Apis {
         switch (apisType) {
           case ApisType.post:
             http
-                .post(Uri(path: url), headers: headers, body: body)
+                .post(Uri.parse(url), headers: headers, body: body)
                 .then((responseBody) {
               showResponseData(responseBody);
               Navigator.pop(navigatorKey.currentContext);
@@ -41,7 +41,7 @@ class Apis {
             });
             break;
           case ApisType.get:
-            http.get(Uri(path: url), headers: headers).then((responseBody) {
+            http.get(Uri.parse(url), headers: headers).then((responseBody) {
               showResponseData(responseBody);
               Navigator.pop(navigatorKey.currentContext);
               _apisInterface.onSuccess(url, responseBody);

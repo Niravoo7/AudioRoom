@@ -1,3 +1,5 @@
+import 'package:audioroom/firestore/model/room_model.dart';
+
 class YourRoomCardModel {
   String title;
   String detail;
@@ -16,4 +18,15 @@ class YourRoomCardPeopleModel {
   bool isMute;
 
   YourRoomCardPeopleModel(this.profile, this.name, this.isStar, this.isMute);
+}
+
+class StartRoomModel {
+  List<String> peopleList;
+  String roomName;
+  String roomDesc;
+  String roomType;
+  RoomModel roomModel;
+
+  StartRoomModel(this.peopleList, this.roomName, this.roomDesc, this.roomType,
+      this.roomModel);
 }

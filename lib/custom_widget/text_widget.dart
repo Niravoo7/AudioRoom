@@ -16,7 +16,7 @@ Widget TextWidget(String string,
           (string != null) ? string : "",
           overflow: (textOverflow!=null)?textOverflow:TextOverflow.ellipsis,
           maxLines: (maxLines != null) ? maxLines : 1,
-          style: TextStyle(
+          style: TextStyle(decoration: TextDecoration.none,
               height: height,
               color: (color != null) ? color : AppConstants.clrBlack,
               fontSize: fontSize,

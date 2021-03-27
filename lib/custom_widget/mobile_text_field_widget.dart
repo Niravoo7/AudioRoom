@@ -10,7 +10,8 @@ Widget MobileTextFieldWidget(
     TextInputType keyboardType,
     FormFieldValidator<String> validator,
     ValueChanged<String> onChanged,
-    CountryCode countryCode}) {
+    CountryCode countryCode,
+    Function(CountryCode) onCountryCodeChange}) {
   return TextFormField(
     minLines: 1,
     maxLines: 1,
@@ -37,6 +38,7 @@ Widget MobileTextFieldWidget(
           child: CountryCodePicker(
             onChanged: (e) {
               countryCode = e;
+              onCountryCodeChange(countryCode);
               PrintLog.printMessage(
                   e.name + " " + e.code + " " + e.flagUri + " " + e.dialCode);
             },

@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    //mobileNumberController.text = "1234567890";
+    //mobileNumberController.text = "3216549870";
   }
 
   @override
@@ -84,7 +84,10 @@ class _LoginScreenState extends State<LoginScreen> {
         MobileTextFieldWidget(
             controller: mobileNumberController,
             countryCode: countryCode,
-            keyboardType: TextInputType.number),
+            keyboardType: TextInputType.number,
+            onCountryCodeChange: (c) {
+              countryCode = c;
+            }),
       ],
     );
   }
@@ -125,8 +128,12 @@ class _LoginScreenState extends State<LoginScreen> {
       codeSent: (String verificationId, int resendToken) async {
         Navigator.pop(navigatorKey.currentContext);
         PrintLog.printMessage("verifyPhoneNumber -> codeSent $verificationId");
-        Navigator.push(context,
-            NavigatePageRoute(context, EnterCodeScreen(verificationId)));
+        Navigator.push(
+            context,
+            NavigatePageRoute(
+                context,
+                EnterCodeScreen(verificationId,
+                    '${countryCode.dialCode} ${mobileNumberController.text}')));
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         PrintLog.printMessage(

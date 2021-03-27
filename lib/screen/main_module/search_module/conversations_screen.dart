@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:audioroom/custom_widget/title_widget.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
 import 'package:audioroom/custom_widget/divider_widget.dart';
-import 'package:audioroom/custom_widget/follow_people_widget.dart';
+import 'package:audioroom/custom_widget/follow_people_widget_temp.dart';
 import 'package:audioroom/model/follow_people_model.dart';
 import 'package:audioroom/model/interests_model.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
@@ -76,7 +76,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: followPeopleModelsPeople.length,
               itemBuilder: (BuildContext context, int index) {
-                return FollowPeopleWidget(
+                return FollowPeopleWidgetTemp(
                     context,
                     followPeopleModelsPeople[index].profilePic,
                     followPeopleModelsPeople[index].name,
@@ -254,7 +254,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: followPeopleModelsClubs.length,
               itemBuilder: (BuildContext context, int index) {
-                return FollowPeopleWidget(
+                return FollowPeopleWidgetTemp(
                     context,
                     followPeopleModelsClubs[index].profilePic,
                     followPeopleModelsClubs[index].name,
