@@ -90,7 +90,6 @@ class UserService {
     });
   }
 
-
   Stream<UserModel> getUserByReferencesStream(String refId) {
     return Stream.fromFuture(getUserByReferences(refId));
   }
@@ -118,14 +117,16 @@ class UserService {
         .set(userModel.toJsonTimeStamp());
   }
 
-  Future<void> updateUser(UserModel userModel) async {
+  Future<int> updateUser(UserModel userModel) async {
     PrintLog.printMessage(
         "updateUser -> ${userModel.refId.toString()}  ${userModel.toJson().toString()}");
     await _fs
         .collection('/$_coll')
         .doc(userModel.refId.toString())
-        .update(userModel.toJsonTimeStamp());
+        .update(userModel.toJsonTimeStamp())
+        .then((value) {
+      return null;
+    });
+    return null;
   }
-
-
 }

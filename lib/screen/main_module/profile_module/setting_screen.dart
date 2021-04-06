@@ -1,3 +1,4 @@
+import 'package:audioroom/firestore/network/user_fire.dart';
 import 'package:audioroom/helper/shar_pref.dart';
 import 'package:audioroom/helper/validate.dart';
 import 'package:audioroom/screen/main_module/profile_module/hidden_rooms_screen.dart';
@@ -130,7 +131,8 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  Widget settingConnectWidget(BuildContext context, String option, Function onClick) {
+  Widget settingConnectWidget(
+      BuildContext context, String option, Function onClick) {
     return GestureDetector(
       onTap: onClick,
       child: Container(
@@ -156,12 +158,19 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget settingLogoutWidget(BuildContext context, String option) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        FirebaseAuth.instance.signOut();
-        SharePref.clearAllPref();
-        Navigator.pushReplacement(
-            context, NavigatePageRoute(context, LoginScreen()));
+        UserService()
+            .getUserByReferences(FirebaseAuth.instance.currentUser.uid)
+            .then((userModel) {
+          userModel.isOnline = false;
+          userModel.offlineDate = DateTime.now();
+          UserService().updateUser(userModel);
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          FirebaseAuth.instance.signOut();
+          SharePref.clearAllPref();
+          Navigator.pushReplacement(
+              context, NavigatePageRoute(context, LoginScreen()));
+        });
       },
       child: Container(
         alignment: Alignment.center,

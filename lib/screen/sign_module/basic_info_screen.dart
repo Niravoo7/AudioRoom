@@ -20,8 +20,14 @@ import 'dart:io' as io;
 import 'package:audioroom/library/image_picker/image_picker_handler.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
+// ignore: must_be_immutable
 class BasicInfoScreen extends StatefulWidget {
+  UserModel userModel;
+
+  BasicInfoScreen({this.userModel});
+
   @override
   _BasicInfoScreenState createState() => _BasicInfoScreenState();
 }
@@ -37,23 +43,42 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
   ImagePickerHandler imagePicker;
   PickedFile imageFile;
 
+  String firstUserImage;
+
   final _firebaseStorage = FirebaseStorage.instance;
   String profileUrl;
 
   @override
   void initState() {
     super.initState();
-    //firstNameController.text = "test";
-    //lastNameController.text = "test";
-    //userNameController.text = "testing";
-    //aboutController.text = "about info";
 
+    if (widget.userModel != null) {
+      firstNameController.text = widget.userModel.firstName;
+      lastNameController.text = widget.userModel.lastName;
+      userNameController.text = widget.userModel.tagName.replaceAll("@", "");
+      aboutController.text = widget.userModel.aboutInfo;
+      firstUserImage = widget.userModel.imageUrl;
+    }
     _controller = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
     imagePicker = new ImagePickerHandler(this, _controller);
     imagePicker.init();
+  }
+
+  Future<void> getPermission() async {
+    var status = await Permission.storage.status;
+    if (status.isDenied) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.storage,
+      ].request();
+      print(statuses);
+    } else if (status.isGranted) {
+      imagePicker.showDialog(context);
+    } else {
+      getPermission();
+    }
   }
 
   @override
@@ -96,7 +121,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
         height: 80,
         width: 80,
         alignment: Alignment.centerLeft,
-        child: (imageFile == null)
+        child: (imageFile == null && firstUserImage == null)
             ? GestureDetector(
                 child: Container(
                     height: 80,
@@ -108,7 +133,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
                     child: Icon(Icons.camera_alt,
                         size: 22, color: AppConstants.clrBlack)),
                 onTap: () {
-                  imagePicker.showDialog(context);
+                  getPermission();
                 },
               )
             : Stack(
@@ -119,7 +144,9 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
                       width: 80,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: FileImage(io.File(imageFile.path)),
+                              image: (firstUserImage != null)
+                                  ? NetworkImage(firstUserImage)
+                                  : FileImage(io.File(imageFile.path)),
                               fit: BoxFit.fill),
                           borderRadius: BorderRadius.circular(35))),
                   GestureDetector(
@@ -131,6 +158,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
                                 image: AssetImage(AppConstants.img_close)))),
                     onTap: () {
                       imageFile = null;
+                      firstUserImage = null;
                       setState(() {});
                     },
                   )
@@ -166,6 +194,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
         TextFieldWidget(
             controller: userNameController,
             keyboardType: TextInputType.name,
+            enabled: (widget.userModel == null),
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.allow(RegExp("[a-z]"))
             ]),
@@ -184,7 +213,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
   }
 
   void validateInputs(BuildContext con) {
-    if (imageFile == null) {
+    if (firstUserImage == null && imageFile == null) {
       showToast(AppConstants.str_enter_profile_image);
     } else if (firstNameController.text.trim().isEmpty) {
       showToast(AppConstants.str_enter_first_name);
@@ -195,7 +224,21 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
     } else if (aboutController.text.trim().isEmpty) {
       showToast(AppConstants.str_enter_about);
     } else {
-      checkUserName();
+      if (widget.userModel == null) {
+        checkUserName();
+      } else {
+        if (firstUserImage == null) {
+          uploadProfileImage();
+        } else {
+          UserModel userModel = widget.userModel;
+          userModel.firstName = firstNameController.text;
+          userModel.lastName = lastNameController.text;
+          userModel.aboutInfo = aboutController.text;
+          UserService().updateUser(userModel).then((value) {
+            Navigator.of(context).pop();
+          });
+        }
+      }
     }
   }
 
@@ -223,7 +266,20 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
 
     profileUrl = await snapshot.ref.getDownloadURL();
     PrintLog.printMessage('imageUrl -> $profileUrl');
-    submitEvent();
+    if (widget.userModel == null) {
+      submitEvent();
+    } else {
+      UserModel userModel = widget.userModel;
+      userModel.imageUrl = profileUrl;
+      userModel.firstName = firstNameController.text;
+      userModel.lastName = lastNameController.text;
+      userModel.aboutInfo = aboutController.text;
+      UserService().updateUser(userModel).then((value) {
+        PrintLog.printMessage("updateUser -> ok");
+        Navigator.pop(navigatorKey.currentContext);
+        Navigator.of(context).pop();
+      });
+    }
   }
 
   void submitEvent() {
@@ -245,6 +301,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
         twitterName: "",
         isDelete: false,
         joinedDate: DateTime.now(),
+        offlineDate: DateTime.now(),
         uId: user.uid,
         recommendedBy: null,
         phoneNumber: user.phoneNumber);

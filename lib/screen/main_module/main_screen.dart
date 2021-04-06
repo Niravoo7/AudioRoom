@@ -39,6 +39,7 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   TabItemMain currentTab;
+  TabItemMain previousTab;
 
   HomeScreen homeScreen;
   SearchScreen searchScreen;
@@ -72,7 +73,12 @@ class MainScreenState extends State<MainScreen> {
     homeScreen = new HomeScreen(callYourRoomScreen);
     searchScreen =
         new SearchScreen(callConversationsScreen, callOtherProfileScreen);
-    startRoomScreen = new StartRoomScreen(callYourRoomScreen);
+    startRoomScreen = new StartRoomScreen(callYourRoomScreen, () {
+      if (previousTab != null && previousTab != currentTab) {
+        currentTab = previousTab;
+        setState(() {});
+      }
+    });
     upcomingScreen = new UpcomingScreen(callNewEventScreen);
     activeUserScreen = new ActiveUserScreen(callOtherProfileScreen);
 
@@ -89,9 +95,11 @@ class MainScreenState extends State<MainScreen> {
       if (userModel != null) {
         this.userModel = userModel;
         if (currentTab == TabItemMain.home) {
-          appbarName = AppConstants.str_tab_home + userModel.displayName;
+          appbarName = AppConstants.str_tab_home + userModel.firstName;
         }
         setState(() {});
+        this.userModel.isOnline = true;
+        UserService().updateUser(this.userModel);
       }
     });
 
@@ -99,14 +107,29 @@ class MainScreenState extends State<MainScreen> {
   }
 
   Future<void> getPermission() async {
-    var status = await Permission.storage.status;
-    if (status.isDenied) {
+    var statusM = await Permission.microphone.status;
+    var statusC = await Permission.camera.status;
+    var statusS = await Permission.storage.status;
+    if (statusM.isDenied) {
       Map<Permission, PermissionStatus> statuses = await [
         Permission.microphone,
+      ].request();
+      print(statuses);
+    }
+    if (statusC.isDenied) {
+      Map<Permission, PermissionStatus> statuses = await [
         Permission.camera,
+      ].request();
+      print(statuses);
+    }
+    if (statusS.isDenied) {
+      Map<Permission, PermissionStatus> statuses = await [
         Permission.storage,
       ].request();
       print(statuses);
+    }
+    if (!statusM.isGranted || !statusC.isGranted || !statusS.isGranted) {
+      getPermission();
     }
   }
 
@@ -122,14 +145,32 @@ class MainScreenState extends State<MainScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    //showToast("on dospose");
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (!navigatorKeys[currentTab].currentState.canPop()) {
-          SystemNavigator.pop();
+        if (currentTab != TabItemMain.room) {
+          if (!navigatorKeys[currentTab].currentState.canPop()) {
+            onWillPop().then((value) {
+              if (value) {
+                SystemNavigator.pop();
+              }
+            });
+          } else {
+            await navigatorKeys[currentTab].currentState.maybePop();
+          }
         } else {
-          await navigatorKeys[currentTab].currentState.maybePop();
+          if (previousTab != null && previousTab != currentTab) {
+            currentTab = previousTab;
+            setState(() {});
+          }
         }
+
         return false;
       },
       child: Scaffold(
@@ -254,7 +295,9 @@ class MainScreenState extends State<MainScreen> {
                     (isRoomLargeVisible)
                         ? icRoomLargeBottomSheet()
                         : Container(),
-                    bottomBar(context),
+                    (currentTab != TabItemMain.room)
+                        ? bottomBar(context)
+                        : Container(),
                   ],
                 ),
               ],
@@ -604,7 +647,7 @@ class MainScreenState extends State<MainScreen> {
                   TabItemMain.home,
                   AppConstants.ic_home,
                   AppConstants.str_tab_home +
-                      ((userModel != null) ? userModel.displayName : "")),
+                      ((userModel != null) ? userModel.firstName : "")),
               flex: 1),
           Flexible(
               child: tabWidget(context, TabItemMain.search,
@@ -684,6 +727,7 @@ class MainScreenState extends State<MainScreen> {
 
   onTabClick(TabItemMain itemMain) async {
     setState(() {
+      previousTab = currentTab;
       currentTab = itemMain;
     });
   }
@@ -693,8 +737,21 @@ class MainScreenState extends State<MainScreen> {
   }
 
   void callYourRoomScreen(StartRoomModel startRoomModel) {
-    Navigator.push(
-        context, NavigatePageRoute(context, YourRoomScreen(startRoomModel)));
+    if (startRoomModel.roomModel != null &&
+        startRoomModel.roomModel.broadcaster != null &&
+        !startRoomModel.roomModel.broadcaster
+            .contains(FirebaseAuth.instance.currentUser.uid) &&
+        startRoomModel.roomModel.isRoomLock) {
+      showToast("it's a locked room");
+    } else {
+      Navigator.push(context,
+              NavigatePageRoute(context, YourRoomScreen(startRoomModel)))
+          .then((value) {
+        previousTab = currentTab;
+        currentTab = TabItemMain.home;
+        setState(() {});
+      });
+    }
   }
 
   void callNewEventScreen() {

@@ -135,6 +135,7 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
 
     PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: codeController.text.trim());
+
     await auth
         .signInWithCredential(phoneAuthCredential)
         .then((userCredential) async {
@@ -150,9 +151,8 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
       } else {
         Navigator.push(context, NavigatePageRoute(context, MainScreen()));
       }
-    }).catchError(() {
-      showToast("Wrong OTP!");
     }).onError((error, stackTrace) {
+      Navigator.pop(navigatorKey.currentContext);
       showToast("Wrong OTP!");
     });
   }

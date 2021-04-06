@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:audioroom/custom_widget/room_appbar.dart';
+import 'package:audioroom/custom_widget/search_input_field.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/custom_widget/flexible_widget.dart';
 import 'package:audioroom/custom_widget/switch_widget.dart';
@@ -23,6 +24,10 @@ import 'package:audioroom/network_api/rest_url.dart';
 import 'package:audioroom/network_api/model/token_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../../../firestore/model/notification_model.dart';
+import '../../../firestore/network/notification_fire.dart';
+import '../../../helper/constants.dart';
 
 // ignore: must_be_immutable
 class YourRoomScreen extends StatefulWidget {
@@ -53,8 +58,9 @@ class _YourRoomScreenState extends State<YourRoomScreen>
   bool icAddUserBottomSheetVisible = false;
   bool icSpeakerBottomSheetVisible = false;
 
-  bool isEdit = false;
   bool isLock = false;
+
+  TextEditingController titleController = new TextEditingController();
 
   @override
   void dispose() {
@@ -154,6 +160,20 @@ class _YourRoomScreenState extends State<YourRoomScreen>
           hidePeople: [],
           channelToken: token);
 
+      if (widget.startRoomModel.roomType != "Global") {
+        for (int i = 0; i < widget.startRoomModel.peopleList.length; i++) {
+          NotificationModel notificationModel = new NotificationModel(
+              uId: widget.startRoomModel.peopleList[i],
+              notificationType: "room",
+              description:
+                  "You are joined in ${widget.startRoomModel.roomName} room",
+              imageUrl: AppConstants.str_image_url,
+              createDatetime: DateTime.now(),
+              title: "Room joined");
+          NotificationService().createNotification(notificationModel);
+        }
+      }
+
       PrintLog.printMessage("roomModel 1 -> ${roomModelLive.toJson()}");
 
       RoomService().createRoom(roomModelLive).then((value) {
@@ -207,7 +227,10 @@ class _YourRoomScreenState extends State<YourRoomScreen>
     // ignore: deprecated_member_use
     await _engine.enableWebSdkInteroperability(true);
     await _engine.joinChannel(token, roomModelLive.channelName, null, 0);
-    if (roomModelLive.createrUid != FirebaseAuth.instance.currentUser.uid) {
+    if (!roomModelLive.broadcaster
+            .contains(FirebaseAuth.instance.currentUser.uid) &&
+        !roomModelLive.moderator
+            .contains(FirebaseAuth.instance.currentUser.uid)) {
       _engine.muteLocalAudioStream(false);
     }
   }
@@ -257,8 +280,9 @@ class _YourRoomScreenState extends State<YourRoomScreen>
       setState(() {});
       if (roomModelLive.createrUid != FirebaseAuth.instance.currentUser.uid) {
         roomModelLive.audiance.remove(FirebaseAuth.instance.currentUser.uid);
-        if (!roomModelLive.people
-            .contains(FirebaseAuth.instance.currentUser.uid)) {
+        if (roomModelLive.people != null &&
+            !roomModelLive.people
+                .contains(FirebaseAuth.instance.currentUser.uid)) {
           roomModelLive.people.add(FirebaseAuth.instance.currentUser.uid);
         }
         RoomService().updateRoom(roomModelLive);
@@ -296,8 +320,9 @@ class _YourRoomScreenState extends State<YourRoomScreen>
     } else {
       roomModelLive.audiance.remove(FirebaseAuth.instance.currentUser.uid);
 
-      if (!roomModelLive.people
-          .contains(FirebaseAuth.instance.currentUser.uid)) {
+      if (roomModelLive.people != null &&
+          !roomModelLive.people
+              .contains(FirebaseAuth.instance.currentUser.uid)) {
         roomModelLive.people.add(FirebaseAuth.instance.currentUser.uid);
       }
       RoomService().updateRoom(roomModelLive);
@@ -423,14 +448,10 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                                                                     .ic_edit,
                                                                 height: 22,
                                                                 width: 22,
-                                                                color: (isEdit)
-                                                                    ? AppConstants
-                                                                        .clrPrimary
-                                                                    : AppConstants
-                                                                        .clrBlack)),
+                                                                color: AppConstants
+                                                                    .clrBlack)),
                                                         onTap: () {
-                                                          isEdit = !isEdit;
-                                                          setState(() {});
+                                                          inputTextDialogue();
                                                         },
                                                       )
                                                     : Container(),
@@ -894,8 +915,9 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                       roomModelLive.people.contains(clubModel.userList[index]),
                       (isInvited) {
                     if (isInvited) {
-                      if (!roomModelLive.people
-                          .contains(clubModel.userList[index])) {
+                      if (roomModelLive.people != null &&
+                          !roomModelLive.people
+                              .contains(clubModel.userList[index])) {
                         roomModelLive.people.add(clubModel.userList[index]);
                         RoomService().updateRoom(roomModelLive);
                         setState(() {});
@@ -1040,5 +1062,74 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                 fontWeight: FontWeight.bold),
           )
         ]));
+  }
+
+  void inputTextDialogue() {
+    showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)), //this right here
+            child: Container(
+              child: Wrap(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20, bottom: 10),
+                    child: SearchInputField(
+                        AppConstants.str_write_a_title_for_the_conversation,
+                        titleController,
+                        false,
+                        (text) {}),
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: GestureDetector(
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(10),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: AppConstants.clrGrey, width: 1)),
+                            child: TextWidget(AppConstants.str_ok,
+                                fontSize: AppConstants.size_text_medium,
+                                color: AppConstants.clrBlack),
+                          ),
+                          onTap: () {
+                            roomModelLive.roomDesc = titleController.text;
+                            RoomService().updateRoom(roomModelLive);
+                            Navigator.of(ctx).pop();
+                          },
+                        ),
+                      ),
+                      Flexible(
+                        child: GestureDetector(
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(10),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: AppConstants.clrGrey, width: 1)),
+                            child: TextWidget(AppConstants.str_cancle,
+                                fontSize: AppConstants.size_text_medium,
+                                color: AppConstants.clrBlack),
+                          ),
+                          onTap: () {
+                            Navigator.of(ctx).pop();
+                          },
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

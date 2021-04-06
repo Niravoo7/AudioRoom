@@ -3,11 +3,12 @@ import 'package:audioroom/custom_widget/divider_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/helper/print_log.dart';
+import 'package:audioroom/helper/validate.dart';
 import 'package:flutter/material.dart';
 
 // ignore: non_constant_identifier_names
 Widget ActivePeopleWidget(BuildContext context, String profilePic, String name,
-    String tagName, String uId,
+    String tagName, String uId, bool isOnline, DateTime offlineDate,
     {Function(String) onClick}) {
   return Container(
       child: Column(
@@ -15,7 +16,14 @@ Widget ActivePeopleWidget(BuildContext context, String profilePic, String name,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Row(children: [
-        CommonUserDetailWidget(context, profilePic, name, tagName, onClick: () {
+        CommonUserDetailWidget(
+            context,
+            profilePic,
+            name,
+            (isOnline != null && isOnline)
+                ? "Online"
+                : strDateDifference(dateDifference(offlineDate)),
+            isOnline: isOnline, onClick: () {
           if (onClick != null) {
             PrintLog.printMessage("ActivePeopleWidget -> $uId");
             onClick(uId);

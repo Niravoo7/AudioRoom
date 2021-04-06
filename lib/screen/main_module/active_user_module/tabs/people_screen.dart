@@ -43,10 +43,8 @@ class _PeopleScreenState extends State<PeopleScreen> {
                           return Container();
                         } else {
                           return Center(
-                            child: TextWidget(
-                                AppConstants.str_no_record_found,
-                                color: AppConstants.clrBlack,
-                                fontSize: 20),
+                            child: TextWidget(AppConstants.str_no_record_found,
+                                color: AppConstants.clrBlack, fontSize: 20),
                           );
                         }
                       } else {
@@ -80,6 +78,8 @@ class _PeopleScreenState extends State<PeopleScreen> {
                                           userModelTemp.lastName,
                                       userModelTemp.tagName,
                                       userModelTemp.uId,
+                                      userModelTemp.isOnline,
+                                      userModelTemp.offlineDate,
                                       onClick: widget.onOtherProfileClick);
                                 } else {
                                   return Container();

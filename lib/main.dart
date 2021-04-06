@@ -107,14 +107,12 @@ class _MyAppState extends State<MyApp> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
+                return Container();
               }
               return SplashScreen();
               break;
             default:
-              return const Center(child: Text('Loading'));
+              return Container();
           }
         },
       ),

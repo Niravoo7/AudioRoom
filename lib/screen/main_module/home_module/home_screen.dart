@@ -85,70 +85,82 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (roomModelTemp != null &&
                               !roomModelTemp.hidePeople.contains(
                                   FirebaseAuth.instance.currentUser.uid)) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.only(
-                                      left: 16, right: 16, top: 10),
-                                  child: Row(
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8),
-                                        child: Image.asset(
-                                          AppConstants.ic_dark_home,
-                                          height: 18,
-                                          width: 18,
-                                          color: AppConstants.clrBlack,
-                                        ),
+                            return GestureDetector(
+                              onTap: () {
+                                widget.onStartRoomClick(new StartRoomModel(
+                                    null, null, null, null, roomModelTemp));
+                              },
+                              child: Container(
+                                color: AppConstants.clrTransparent,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.only(
+                                          left: 16, right: 16, top: 10),
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 8),
+                                            child: Image.asset(
+                                              AppConstants.ic_dark_home,
+                                              height: 18,
+                                              width: 18,
+                                              color: AppConstants.clrBlack,
+                                            ),
+                                          ),
+                                          TextWidget(roomModelTemp.roomName,
+                                              color: AppConstants.clrBlack,
+                                              fontSize: AppConstants
+                                                  .size_small_medium,
+                                              fontWeight: FontWeight.w600),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10, right: 8),
+                                            child: Image.asset(
+                                              AppConstants.ic_clock,
+                                              height: 18,
+                                              width: 18,
+                                              color: AppConstants.clrBlack,
+                                            ),
+                                          ),
+                                          TextWidget(
+                                              datetimeToString(
+                                                  roomModelTemp.createDatetime),
+                                              color: AppConstants.clrBlack,
+                                              fontSize: AppConstants
+                                                  .size_small_medium,
+                                              fontWeight: FontWeight.w600),
+                                        ],
                                       ),
-                                      TextWidget(roomModelTemp.roomName,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8,
+                                          left: 16,
+                                          right: 16,
+                                          bottom: 10),
+                                      child: TextWidget(roomModelTemp.roomDesc,
                                           color: AppConstants.clrBlack,
-                                          fontSize:
-                                              AppConstants.size_small_medium,
-                                          fontWeight: FontWeight.w600),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(left: 10, right: 8),
-                                        child: Image.asset(
-                                          AppConstants.ic_clock,
-                                          height: 18,
-                                          width: 18,
-                                          color: AppConstants.clrBlack,
-                                        ),
-                                      ),
-                                      TextWidget(
-                                          datetimeToString(
-                                              roomModelTemp.createDatetime),
-                                          color: AppConstants.clrBlack,
-                                          fontSize:
-                                              AppConstants.size_small_medium,
-                                          fontWeight: FontWeight.w600),
-                                    ],
-                                  ),
+                                          fontSize: AppConstants.size_medium,
+                                          fontWeight: FontWeight.w600,
+                                          maxLines: 1,
+                                          textOverflow: TextOverflow.ellipsis),
+                                    ),
+                                    (index != querySnapshot.size - 1)
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 16, right: 16),
+                                            child: DividerWidget(
+                                                height: 1,
+                                                color: AppConstants.clrBlack
+                                                    .withOpacity(0.2)),
+                                          )
+                                        : Container(),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 8, left: 16, right: 16, bottom: 10),
-                                  child: TextWidget(roomModelTemp.roomDesc,
-                                      color: AppConstants.clrBlack,
-                                      fontSize: AppConstants.size_medium,
-                                      fontWeight: FontWeight.w600,
-                                      maxLines: 1,
-                                      textOverflow: TextOverflow.ellipsis),
-                                ),
-                                (index != querySnapshot.size - 1)
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 16, right: 16),
-                                        child: DividerWidget(
-                                            height: 1,
-                                            color: AppConstants.clrBlack
-                                                .withOpacity(0.2)),
-                                      )
-                                    : Container(),
-                              ],
+                              ),
                             );
                           } else {
                             return Container();
@@ -174,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       return Container();
                     } else {
                       return Container(
-                        height: MediaQuery.of(context).size.height-200,
+                        height: MediaQuery.of(context).size.height - 200,
                         child: Center(
                           child: TextWidget(AppConstants.str_no_record_found,
                               color: AppConstants.clrBlack, fontSize: 20),

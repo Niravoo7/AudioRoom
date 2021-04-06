@@ -7,6 +7,7 @@ import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/firestore/network/user_fire.dart';
 import 'package:audioroom/firestore/model/user_model.dart';
 import 'package:audioroom/helper/validate.dart';
+import 'package:audioroom/screen/sign_module/basic_info_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,10 @@ class ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    getUserDetails();
+  }
+
+  void getUserDetails() {
     UserService().getUserByReferences(widget.uId).then((userModel) {
       if (userModel != null) {
         this.userModel = userModel;
@@ -163,24 +168,50 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 },
                               ),
                               Flexible(
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                    TextWidget(
-                                        userModel.firstName +
-                                            " " +
-                                            userModel.lastName,
-                                        color: AppConstants.clrBlack,
-                                        fontSize:
-                                            AppConstants.size_medium_large,
-                                        fontWeight: FontWeight.bold),
-                                    TextWidget(userModel.tagName,
-                                        color: AppConstants.clrBlack,
-                                        fontSize:
-                                            AppConstants.size_small_medium,
-                                        fontWeight: FontWeight.w400),
-                                  ]))
+                                  child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextWidget(
+                                          userModel.firstName +
+                                              " " +
+                                              userModel.lastName,
+                                          color: AppConstants.clrBlack,
+                                          fontSize:
+                                              AppConstants.size_medium_large,
+                                          fontWeight: FontWeight.bold),
+                                      TextWidget(userModel.tagName,
+                                          color: AppConstants.clrBlack,
+                                          fontSize:
+                                              AppConstants.size_small_medium,
+                                          fontWeight: FontWeight.w400),
+                                    ]),
+                              )),
+                              GestureDetector(
+                                child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  color: AppConstants.clrTransparent,
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    Icons.edit,
+                                    size: 30,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                          context,
+                                          NavigatePageRoute(
+                                              context,
+                                              BasicInfoScreen(
+                                                  userModel: userModel)))
+                                      .then((value) {
+                                    getUserDetails();
+                                  });
+                                },
+                              )
                             ]),
                             SizedBox(height: 16),
                             Row(
@@ -194,60 +225,67 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                 context, FollowerScreen()));
                                       },
                                       child: Container(
+                                          color: AppConstants.clrTransparent,
                                           child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                            StreamBuilder(
-                                              stream: FollowService()
-                                                  .checkFollowerByUID()
-                                                  .snapshots(),
-                                              builder: (context, stream) {
-                                                if (stream.hasError) {
-                                                  return Center(
-                                                      child: TextWidget(
-                                                          stream.error
+                                                StreamBuilder(
+                                                  stream: FollowService()
+                                                      .checkFollowerByUID()
+                                                      .snapshots(),
+                                                  builder: (context, stream) {
+                                                    if (stream.hasError) {
+                                                      return Center(
+                                                          child: TextWidget(
+                                                              stream.error
+                                                                  .toString(),
+                                                              color:
+                                                                  AppConstants
+                                                                      .clrBlack,
+                                                              fontSize: 20));
+                                                    }
+                                                    QuerySnapshot
+                                                        querySnapshot =
+                                                        stream.data;
+                                                    if (querySnapshot == null ||
+                                                        querySnapshot.size ==
+                                                            0) {
+                                                      if (querySnapshot ==
+                                                          null) {
+                                                        return Container();
+                                                      } else {
+                                                        return TextWidget("0",
+                                                            color: AppConstants
+                                                                .clrBlack,
+                                                            fontSize:
+                                                                AppConstants
+                                                                    .size_medium,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold);
+                                                      }
+                                                    } else {
+                                                      return TextWidget(
+                                                          querySnapshot.size
                                                               .toString(),
                                                           color: AppConstants
                                                               .clrBlack,
-                                                          fontSize: 20));
-                                                }
-                                                QuerySnapshot querySnapshot =
-                                                    stream.data;
-                                                if (querySnapshot == null ||
-                                                    querySnapshot.size == 0) {
-                                                  if (querySnapshot == null) {
-                                                    return Container();
-                                                  } else {
-                                                    return TextWidget("0",
-                                                        color: AppConstants
-                                                            .clrBlack,
-                                                        fontSize: AppConstants
-                                                            .size_medium,
-                                                        fontWeight:
-                                                            FontWeight.bold);
-                                                  }
-                                                } else {
-                                                  return TextWidget(
-                                                      querySnapshot.size
-                                                          .toString(),
-                                                      color:
-                                                          AppConstants.clrBlack,
-                                                      fontSize: AppConstants
-                                                          .size_medium,
-                                                      fontWeight:
-                                                          FontWeight.bold);
-                                                }
-                                              },
-                                            ),
-                                            TextWidget(
-                                              AppConstants.str_followers,
-                                              color: AppConstants.clrBlack,
-                                              fontSize:
-                                                  AppConstants.size_medium,
-                                              fontWeight: FontWeight.w400,
-                                            )
-                                          ]))),
+                                                          fontSize: AppConstants
+                                                              .size_medium,
+                                                          fontWeight:
+                                                              FontWeight.bold);
+                                                    }
+                                                  },
+                                                ),
+                                                TextWidget(
+                                                  AppConstants.str_followers,
+                                                  color: AppConstants.clrBlack,
+                                                  fontSize:
+                                                      AppConstants.size_medium,
+                                                  fontWeight: FontWeight.w400,
+                                                )
+                                              ]))),
                                   SizedBox(width: 16),
                                   GestureDetector(
                                       onTap: () {
@@ -257,60 +295,67 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                 context, FollowingScreen()));
                                       },
                                       child: Container(
+                                          color: AppConstants.clrTransparent,
                                           child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                            StreamBuilder(
-                                              stream: FollowService()
-                                                  .checkFollowingByUID()
-                                                  .snapshots(),
-                                              builder: (context, stream) {
-                                                if (stream.hasError) {
-                                                  return Center(
-                                                      child: TextWidget(
-                                                          stream.error
+                                                StreamBuilder(
+                                                  stream: FollowService()
+                                                      .checkFollowingByUID()
+                                                      .snapshots(),
+                                                  builder: (context, stream) {
+                                                    if (stream.hasError) {
+                                                      return Center(
+                                                          child: TextWidget(
+                                                              stream.error
+                                                                  .toString(),
+                                                              color:
+                                                                  AppConstants
+                                                                      .clrBlack,
+                                                              fontSize: 20));
+                                                    }
+                                                    QuerySnapshot
+                                                        querySnapshot =
+                                                        stream.data;
+                                                    if (querySnapshot == null ||
+                                                        querySnapshot.size ==
+                                                            0) {
+                                                      if (querySnapshot ==
+                                                          null) {
+                                                        return Container();
+                                                      } else {
+                                                        return TextWidget("0",
+                                                            color: AppConstants
+                                                                .clrBlack,
+                                                            fontSize:
+                                                                AppConstants
+                                                                    .size_medium,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold);
+                                                      }
+                                                    } else {
+                                                      return TextWidget(
+                                                          querySnapshot.size
                                                               .toString(),
                                                           color: AppConstants
                                                               .clrBlack,
-                                                          fontSize: 20));
-                                                }
-                                                QuerySnapshot querySnapshot =
-                                                    stream.data;
-                                                if (querySnapshot == null ||
-                                                    querySnapshot.size == 0) {
-                                                  if (querySnapshot == null) {
-                                                    return Container();
-                                                  } else {
-                                                    return TextWidget("0",
-                                                        color: AppConstants
-                                                            .clrBlack,
-                                                        fontSize: AppConstants
-                                                            .size_medium,
-                                                        fontWeight:
-                                                            FontWeight.bold);
-                                                  }
-                                                } else {
-                                                  return TextWidget(
-                                                      querySnapshot.size
-                                                          .toString(),
-                                                      color:
-                                                          AppConstants.clrBlack,
-                                                      fontSize: AppConstants
-                                                          .size_medium,
-                                                      fontWeight:
-                                                          FontWeight.bold);
-                                                }
-                                              },
-                                            ),
-                                            TextWidget(
-                                              AppConstants.str_following,
-                                              color: AppConstants.clrBlack,
-                                              fontSize:
-                                                  AppConstants.size_medium,
-                                              fontWeight: FontWeight.w400,
-                                            )
-                                          ]))),
+                                                          fontSize: AppConstants
+                                                              .size_medium,
+                                                          fontWeight:
+                                                              FontWeight.bold);
+                                                    }
+                                                  },
+                                                ),
+                                                TextWidget(
+                                                  AppConstants.str_following,
+                                                  color: AppConstants.clrBlack,
+                                                  fontSize:
+                                                      AppConstants.size_medium,
+                                                  fontWeight: FontWeight.w400,
+                                                )
+                                              ]))),
                                   SizedBox(width: 16),
                                   GestureDetector(
                                       onTap: () {
@@ -320,60 +365,67 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                 context, ClubsScreen()));
                                       },
                                       child: Container(
+                                          color: AppConstants.clrTransparent,
                                           child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                            StreamBuilder(
-                                              stream: ClubService()
-                                                  .getClubByUIDQuery()
-                                                  .snapshots(),
-                                              builder: (context, stream) {
-                                                if (stream.hasError) {
-                                                  return Center(
-                                                      child: TextWidget(
-                                                          stream.error
+                                                StreamBuilder(
+                                                  stream: ClubService()
+                                                      .getClubByUIDQuery()
+                                                      .snapshots(),
+                                                  builder: (context, stream) {
+                                                    if (stream.hasError) {
+                                                      return Center(
+                                                          child: TextWidget(
+                                                              stream.error
+                                                                  .toString(),
+                                                              color:
+                                                                  AppConstants
+                                                                      .clrBlack,
+                                                              fontSize: 20));
+                                                    }
+                                                    QuerySnapshot
+                                                        querySnapshot =
+                                                        stream.data;
+                                                    if (querySnapshot == null ||
+                                                        querySnapshot.size ==
+                                                            0) {
+                                                      if (querySnapshot ==
+                                                          null) {
+                                                        return Container();
+                                                      } else {
+                                                        return TextWidget("0",
+                                                            color: AppConstants
+                                                                .clrBlack,
+                                                            fontSize:
+                                                                AppConstants
+                                                                    .size_medium,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold);
+                                                      }
+                                                    } else {
+                                                      return TextWidget(
+                                                          querySnapshot.size
                                                               .toString(),
                                                           color: AppConstants
                                                               .clrBlack,
-                                                          fontSize: 20));
-                                                }
-                                                QuerySnapshot querySnapshot =
-                                                    stream.data;
-                                                if (querySnapshot == null ||
-                                                    querySnapshot.size == 0) {
-                                                  if (querySnapshot == null) {
-                                                    return Container();
-                                                  } else {
-                                                    return TextWidget("0",
-                                                        color: AppConstants
-                                                            .clrBlack,
-                                                        fontSize: AppConstants
-                                                            .size_medium,
-                                                        fontWeight:
-                                                            FontWeight.bold);
-                                                  }
-                                                } else {
-                                                  return TextWidget(
-                                                      querySnapshot.size
-                                                          .toString(),
-                                                      color:
-                                                          AppConstants.clrBlack,
-                                                      fontSize: AppConstants
-                                                          .size_medium,
-                                                      fontWeight:
-                                                          FontWeight.bold);
-                                                }
-                                              },
-                                            ),
-                                            TextWidget(
-                                              AppConstants.str_clubs_joined,
-                                              color: AppConstants.clrBlack,
-                                              fontSize:
-                                                  AppConstants.size_medium,
-                                              fontWeight: FontWeight.w400,
-                                            )
-                                          ])))
+                                                          fontSize: AppConstants
+                                                              .size_medium,
+                                                          fontWeight:
+                                                              FontWeight.bold);
+                                                    }
+                                                  },
+                                                ),
+                                                TextWidget(
+                                                  AppConstants.str_clubs_joined,
+                                                  color: AppConstants.clrBlack,
+                                                  fontSize:
+                                                      AppConstants.size_medium,
+                                                  fontWeight: FontWeight.w400,
+                                                )
+                                              ])))
                                 ]),
                             SizedBox(height: 16),
                             Row(
@@ -432,7 +484,13 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                                 .fromJson(stream
                                                                     .data
                                                                     .docs[0]
-                                                                    .data()));
+                                                                    .data()),
+                                                            userModel
+                                                                    .firstName +
+                                                                " " +
+                                                                userModel
+                                                                    .lastName,
+                                                            userModel.imageUrl);
                                                   } else {
                                                     FollowService().createFollow(
                                                         new FollowModel(
@@ -443,7 +501,11 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                                     .uid,
                                                             followTo:
                                                                 widget.uId,
-                                                            status: 1));
+                                                            status: 1),
+                                                        userModel.firstName +
+                                                            " " +
+                                                            userModel.lastName,
+                                                        userModel.imageUrl);
                                                   }
                                                 },
                                                 child: Container(

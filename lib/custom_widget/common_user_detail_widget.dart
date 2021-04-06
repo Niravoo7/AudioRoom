@@ -5,21 +5,34 @@ import 'package:flutter/material.dart';
 // ignore: non_constant_identifier_names
 Widget CommonUserDetailWidget(
     BuildContext context, String imageURL, String name, String desc,
-    {bool isSelected, Function onClick}) {
+    {bool isSelected, Function onClick, bool isOnline}) {
   return Flexible(
       child: GestureDetector(
     child: Container(
       color: AppConstants.clrTransparent,
       child: Row(
         children: [
-          Container(
-              margin: EdgeInsets.only(left: 16, top: 16, bottom: 16),
-              height: 40,
-              width: 40,
-              decoration: BoxDecoration(
-                  color: AppConstants.clrGrey,
-                  shape: BoxShape.circle,
-                  image: DecorationImage(image: NetworkImage(imageURL)))),
+          Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Container(
+                  margin: EdgeInsets.only(left: 16, top: 16, bottom: 16),
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                      color: AppConstants.clrGrey,
+                      shape: BoxShape.circle,
+                      image: DecorationImage(image: NetworkImage(imageURL)))),
+              (isOnline != null && isOnline)
+                  ? Container(
+                      margin: EdgeInsets.only(left: 16, bottom: 16),
+                      height: 10,
+                      width: 10,
+                      decoration: BoxDecoration(
+                          color: AppConstants.clrGreen, shape: BoxShape.circle))
+                  : Container(),
+            ],
+          ),
           Flexible(
             child: Container(
                 margin: EdgeInsets.only(left: 10),

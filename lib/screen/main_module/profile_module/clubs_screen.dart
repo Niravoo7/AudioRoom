@@ -30,7 +30,11 @@ class _ClubsScreenState extends State<ClubsScreen> {
           child: Container(
               child: Column(children: [
                 SearchInputField(
-                    AppConstants.str_search_for_clubs, searchController, true, (text) {}),
+                    AppConstants.str_search_for_clubs, searchController, true, (text) {
+                      setState(() {
+
+                      });
+                }),
                 DividerWidget(height: 1),
                 Flexible(
                   child: StreamBuilder(
@@ -67,7 +71,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
                                     context,
                                     clubModelTemp.imageUrl,
                                     clubModelTemp.clubName,
-                                    clubModelTemp.onlineMemberCount.toString(),
+                                    clubModelTemp.userList.length.toString(),
                                     clubModelTemp);
                               } else {
                                 return Container();

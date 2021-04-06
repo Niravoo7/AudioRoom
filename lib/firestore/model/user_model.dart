@@ -23,6 +23,7 @@ class UserModel {
     this.tagName,
     this.following,
     this.joinedDate,
+    this.offlineDate,
     this.firstName,
     this.uId,
   });
@@ -43,6 +44,7 @@ class UserModel {
   String tagName;
   int following;
   DateTime joinedDate;
+  DateTime offlineDate;
   String firstName;
   String uId;
 
@@ -70,6 +72,13 @@ class UserModel {
                     : null
                 : json["joined_date"].toDate()
             : null,
+        offlineDate: json["offline_date"] != null
+            ? (json["offline_date"] is String)
+                ? (json["offline_date"] != "")
+                    ? DateTime.parse(json["offline_date"])
+                    : null
+                : json["offline_date"].toDate()
+            : null,
         firstName: json["first_name"] == null ? null : json["first_name"],
         uId: json["uid"] == null ? null : json["uid"],
       );
@@ -90,6 +99,7 @@ class UserModel {
         "tag_name": tagName == null ? null : tagName,
         "following": following == null ? null : following,
         "joined_date": (joinedDate != null) ? joinedDate.toString() : null,
+        "offline_date": (offlineDate != null) ? offlineDate.toString() : null,
         "first_name": firstName == null ? null : firstName,
         "uid": uId == null ? null : uId,
       };
@@ -111,6 +121,8 @@ class UserModel {
         "following": following == null ? null : following,
         "joined_date":
             (joinedDate != null) ? Timestamp.fromDate(joinedDate) : null,
+        "offline_date":
+            (offlineDate != null) ? Timestamp.fromDate(offlineDate) : null,
         "first_name": firstName == null ? null : firstName,
         "uid": uId == null ? null : uId,
       };

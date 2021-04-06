@@ -12,6 +12,8 @@ import 'package:audioroom/helper/print_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:audioroom/firestore/network/user_fire.dart';
+import 'package:audioroom/firestore/model/user_model.dart';
 
 class NewEventScreen extends StatefulWidget {
   @override
@@ -28,6 +30,7 @@ class _NewEventScreenState extends State<NewEventScreen> {
   List<ClubModel> clubModels = [];
 
   List<String> uIdList = [];
+  UserModel userModel;
 
   @override
   void initState() {
@@ -36,6 +39,15 @@ class _NewEventScreenState extends State<NewEventScreen> {
     //dateController.text = "test";
     //timeController.text = "test";
     //descriptionController.text = "about info";
+
+    UserService()
+        .getUserByReferences(FirebaseAuth.instance.currentUser.uid)
+        .then((userModel) {
+      if (userModel != null) {
+        this.userModel = userModel;
+        setState(() {});
+      }
+    });
 
     ClubService().getClubByUserId().then((value) {
       if (value != null) {
@@ -232,8 +244,13 @@ class _NewEventScreenState extends State<NewEventScreen> {
                     color: AppConstants.clrGreen,
                     borderRadius: BorderRadius.circular(5),
                     image: DecorationImage(
-                        image: NetworkImage(AppConstants.str_image_url)))),
-            TextWidget(AppConstants.str_melinda_livsey,
+                        image: NetworkImage((userModel != null)
+                            ? userModel.imageUrl
+                            : AppConstants.str_image_url)))),
+            TextWidget(
+                (userModel != null)
+                    ? userModel.firstName + " " + userModel.lastName
+                    : "",
                 color: AppConstants.clrBlack,
                 fontSize: AppConstants.size_medium_large,
                 fontWeight: FontWeight.w400),

@@ -1,4 +1,3 @@
-
 import 'package:audioroom/custom_widget/active_people_widget.dart';
 import 'package:audioroom/custom_widget/club_people_widget.dart';
 import 'package:audioroom/custom_widget/divider_widget.dart';
@@ -40,6 +39,53 @@ class _AllScreenState extends State<AllScreen> {
         child: Container(
           child: ListView(
             children: [
+              TitleWidget(context, AppConstants.str_active_clubs),
+              StreamBuilder(
+                stream: ClubService().getClubQuery().snapshots(),
+                builder: (context, stream) {
+                  if (stream.hasError) {
+                    return Center(
+                        child: TextWidget(stream.error.toString(),
+                            color: AppConstants.clrBlack, fontSize: 20));
+                  }
+                  QuerySnapshot querySnapshot = stream.data;
+                  if (querySnapshot == null || querySnapshot.size == 0) {
+                    if (querySnapshot == null) {
+                      return Container();
+                    } else {
+                      return Center(
+                        child: TextWidget(AppConstants.str_no_record_found,
+                            color: AppConstants.clrBlack, fontSize: 20),
+                      );
+                    }
+                  } else {
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.all(0),
+                        itemCount: isMoreClub || querySnapshot.size < 3
+                            ? querySnapshot.size
+                            : 3,
+                        itemBuilder: (BuildContext context, int index) {
+                          ClubModel clubModelTemp = ClubModel.fromJson(
+                              querySnapshot.docs[index].data());
+
+                          if (clubModelTemp.clubName
+                              .toLowerCase()
+                              .contains(widget.searchController.text)) {
+                            return ClubPeopleWidget(
+                                context,
+                                clubModelTemp.imageUrl,
+                                clubModelTemp.clubName,
+                                clubModelTemp.userList.length.toString(),
+                                clubModelTemp);
+                          } else {
+                            return Container();
+                          }
+                        });
+                  }
+                },
+              ),
               TitleWidget(context, AppConstants.str_active_people),
               StreamBuilder(
                   stream: UserService().getUserQuery().snapshots(),
@@ -55,10 +101,8 @@ class _AllScreenState extends State<AllScreen> {
                         return Container();
                       } else {
                         return Center(
-                          child: TextWidget(
-                              AppConstants.str_no_record_found,
-                              color: AppConstants.clrBlack,
-                              fontSize: 20),
+                          child: TextWidget(AppConstants.str_no_record_found,
+                              color: AppConstants.clrBlack, fontSize: 20),
                         );
                       }
                     } else {
@@ -98,6 +142,8 @@ class _AllScreenState extends State<AllScreen> {
                                             userModelTemp.lastName,
                                         userModelTemp.tagName,
                                         userModelTemp.uId,
+                                        userModelTemp.isOnline,
+                                        userModelTemp.offlineDate,
                                         onClick: widget.onOtherProfileClick);
                                   } else {
                                     return Container();
@@ -139,55 +185,6 @@ class _AllScreenState extends State<AllScreen> {
                       );
                     }
                   }),
-              TitleWidget(context, AppConstants.str_active_clubs),
-              StreamBuilder(
-                stream: ClubService().getClubQuery().snapshots(),
-                builder: (context, stream) {
-                  if (stream.hasError) {
-                    return Center(
-                        child: TextWidget(stream.error.toString(),
-                            color: AppConstants.clrBlack, fontSize: 20));
-                  }
-                  QuerySnapshot querySnapshot = stream.data;
-                  if (querySnapshot == null || querySnapshot.size == 0) {
-                    if (querySnapshot == null) {
-                      return Container();
-                    } else {
-                      return Center(
-                        child: TextWidget(
-                            AppConstants.str_no_record_found,
-                            color: AppConstants.clrBlack,
-                            fontSize: 20),
-                      );
-                    }
-                  } else {
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.all(0),
-                        itemCount: isMoreClub || querySnapshot.size < 3
-                            ? querySnapshot.size
-                            : 3,
-                        itemBuilder: (BuildContext context, int index) {
-                          ClubModel clubModelTemp = ClubModel.fromJson(
-                              querySnapshot.docs[index].data());
-
-                          if (clubModelTemp.clubName
-                              .toLowerCase()
-                              .contains(widget.searchController.text)) {
-                            return ClubPeopleWidget(
-                                context,
-                                clubModelTemp.imageUrl,
-                                clubModelTemp.clubName,
-                                clubModelTemp.onlineMemberCount.toString(),
-                                clubModelTemp);
-                          } else {
-                            return Container();
-                          }
-                        });
-                  }
-                },
-              ),
             ],
           ),
         ),

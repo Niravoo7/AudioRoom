@@ -15,11 +15,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
 
+import '../../../helper/constants.dart';
+
 // ignore: must_be_immutable
 class StartRoomScreen extends StatefulWidget {
   Function(StartRoomModel) onStartRoomClick;
+  Function() onBackPressed;
 
-  StartRoomScreen(this.onStartRoomClick);
+  StartRoomScreen(this.onStartRoomClick, this.onBackPressed);
 
   @override
   _StartRoomScreenState createState() => _StartRoomScreenState();
@@ -46,8 +49,15 @@ class _StartRoomScreenState extends State<StartRoomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CommonAppBar(
-            context, AppConstants.str_tab_room, false, false, null),
+        appBar:
+            CommonAppBar(context, AppConstants.str_tab_room, false, false, null,
+                leading: GestureDetector(
+                  child: Container(
+                    color: AppConstants.clrTransparent,
+                    child: Icon(Icons.arrow_back_outlined),
+                  ),
+                  onTap: widget.onBackPressed,
+                )),
         body: SafeArea(
             child: Container(
                 color: AppConstants.clrTitleBG,
@@ -153,17 +163,13 @@ class _StartRoomScreenState extends State<StartRoomScreen> {
                             }
                           });*/
                               /*ClubService().getClubByUserId();*/
-                              /*ClubModel clubModel = new ClubModel(
-                              imageUrl: AppConstants.str_image_url,
-                              clubName: "Entertainment",
-                              memberCount: 50,
-                              onlineMemberCount: 25,
-                              userList: [
-                                "CwTXnB8YYGesBM6eXz7rM70pchh2",
-                                "Rjs4r7EZscWCItJMA0ohCfXwIpg2",
-                                "LiDT5PRmRkPX52rp6ZPH4C8zbDc2"
-                              ]);
-                          ClubService().createClub(clubModel);*/
+                              ClubModel clubModel = new ClubModel(
+                                  imageUrl: AppConstants.str_image_url,
+                                  clubName: "The Future",
+                                  memberCount: 50,
+                                  onlineMemberCount: 25,
+                                  userList: []);
+                              ClubService().createClub(clubModel);
                             },
                           ),
                           Container(
@@ -286,6 +292,9 @@ class _StartRoomScreenState extends State<StartRoomScreen> {
                                                           selectedRoomType]
                                                       .name,
                                                   null));
+                                          titleController.text = "";
+                                          selectedClub = null;
+                                          setState(() {});
                                         } else {
                                           showToast("Room already exist");
                                         }
@@ -307,6 +316,9 @@ class _StartRoomScreenState extends State<StartRoomScreen> {
                                               roomTypeModels[selectedRoomType]
                                                   .name,
                                               null));
+                                      titleController.text = "";
+                                      selectedClub = null;
+                                      setState(() {});
                                     } else {
                                       showToast("Room already exist");
                                     }

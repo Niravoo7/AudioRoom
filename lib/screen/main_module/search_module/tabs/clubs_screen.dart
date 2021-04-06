@@ -59,7 +59,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
                         context,
                         clubModelTemp.imageUrl,
                         clubModelTemp.clubName,
-                        clubModelTemp.onlineMemberCount.toString(),
+                        clubModelTemp.userList.length.toString(),
                         clubModelTemp);
                   } else {
                     return Container();

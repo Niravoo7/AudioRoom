@@ -40,6 +40,9 @@ dependencies:
   firebase_storage: 8.0.0
   image_picker: 0.7.2+1
   firebase_crashlytics: 1.0.0
+  flutter_contacts: 0.3.3+1
+  #geolocator: 7.0.1
+  #geocoder: 0.2.1
 
 
 flutter_icons:

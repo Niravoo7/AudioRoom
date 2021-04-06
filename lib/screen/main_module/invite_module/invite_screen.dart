@@ -1,16 +1,13 @@
-import 'package:audioroom/firestore/model/user_model.dart';
-import 'package:audioroom/firestore/network/user_fire.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:audioroom/custom_widget/invite_people_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:audioroom/helper/constants.dart';
-import 'package:audioroom/custom_widget/invite_people_widget.dart';
 import 'package:audioroom/screen/main_module/invite_module/pending_invite_screen.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
 import 'package:audioroom/custom_widget/search_input_field.dart';
 import 'package:audioroom/custom_widget/divider_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 class InviteScreen extends StatefulWidget {
   @override
@@ -21,9 +18,23 @@ class _InviteScreenState extends State<InviteScreen> {
   TextEditingController searchController = new TextEditingController();
   List<String> strInvited = [];
 
+  List<Contact> contacts;
+  bool permissionDenied = false;
+
   @override
   void initState() {
     super.initState();
+
+    fetchContacts();
+  }
+
+  Future fetchContacts() async {
+    if (!await FlutterContacts.requestPermission()) {
+      setState(() => permissionDenied = true);
+    } else {
+      final contacts = await FlutterContacts.getContacts();
+      setState(() => this.contacts = contacts);
+    }
   }
 
   @override
@@ -48,70 +59,34 @@ class _InviteScreenState extends State<InviteScreen> {
       }),
       DividerWidget(height: 1),
       Flexible(
-        child: StreamBuilder(
-            stream: UserService().getUserQuery().snapshots(),
-            builder: (context, stream) {
-              if (stream.hasError) {
-                return Center(
-                    child: TextWidget(stream.error.toString(),
-                        color: AppConstants.clrBlack, fontSize: 20));
-              }
-              QuerySnapshot querySnapshot = stream.data;
-              if (querySnapshot == null || querySnapshot.size == 1) {
-                if (querySnapshot == null) {
-                  return Container();
-                } else {
-                  return Center(
-                    child: TextWidget(
-                        AppConstants.str_no_record_found,
-                        color: AppConstants.clrBlack,
-                        fontSize: 20),
-                  );
-                }
-              } else {
-                return ListView.builder(
-                    padding: EdgeInsets.all(0),
-                    itemCount: querySnapshot.size,
-                    itemBuilder: (BuildContext context, int index) {
-                      UserModel userModelTemp =
-                          UserModel.fromJson(querySnapshot.docs[index].data());
-                      if (userModelTemp.uId ==
-                          FirebaseAuth.instance.currentUser.uid) {
-                        return Container();
-                      } else {
-                        if (userModelTemp.firstName
-                                .toLowerCase()
-                                .contains(searchController.text) ||
-                            userModelTemp.lastName
-                                .toLowerCase()
-                                .contains(searchController.text) ||
-                            userModelTemp.tagName
-                                .toLowerCase()
-                                .contains(searchController.text)) {
-                          return InvitePeopleWidget(
-                              context,
-                              userModelTemp.imageUrl,
-                              userModelTemp.firstName +
-                                  " " +
-                                  userModelTemp.lastName,
-                              userModelTemp.tagName,
-                              userModelTemp.uId,
-                              strInvited.contains(userModelTemp.tagName),
-                              onInviteClick: () {
-                            if (strInvited.contains(userModelTemp.tagName)) {
-                              strInvited.remove(userModelTemp.tagName);
-                            } else {
-                              strInvited.add(userModelTemp.tagName);
-                            }
-                            setState(() {});
-                          });
+        child: (permissionDenied)
+            ? Center(
+                child: TextWidget("Permission denied",
+                    color: AppConstants.clrBlack,
+                    fontSize: AppConstants.size_medium_large,
+                    textAlign: TextAlign.center),
+              )
+            : (contacts != null && contacts.length > 0)
+                ? ListView.builder(
+                    itemCount: contacts.length,
+                    itemBuilder: (context, i) {
+                      return InvitePeopleWidget(
+                          context,
+                          contacts[i].displayName,
+                          (contacts[i].phones.length > 0)
+                              ? contacts[i].phones[0].number
+                              : null,
+                          strInvited.contains(contacts[i].displayName),
+                          onInviteClick: () {
+                        if (strInvited.contains(contacts[i].displayName)) {
+                          strInvited.remove(contacts[i].displayName);
                         } else {
-                          return Container();
+                          strInvited.add(contacts[i].displayName);
                         }
-                      }
-                    });
-              }
-            }),
+                        setState(() {});
+                      });
+                    })
+                : Container(),
         flex: 1,
       )
     ]);

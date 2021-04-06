@@ -8,6 +8,8 @@ import 'package:audioroom/helper/validate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../../helper/constants.dart';
+
 // ignore: must_be_immutable
 class NotificationScreen extends StatefulWidget {
   NotificationScreen();
@@ -42,10 +44,8 @@ class NotificationScreenState extends State<NotificationScreen> {
                 return Container();
               } else {
                 return Center(
-                  child: TextWidget(
-                      AppConstants.str_no_record_found,
-                      color: AppConstants.clrBlack,
-                      fontSize: 20),
+                  child: TextWidget(AppConstants.str_no_record_found,
+                      color: AppConstants.clrBlack, fontSize: 20),
                 );
               }
             } else {
@@ -65,7 +65,9 @@ class NotificationScreenState extends State<NotificationScreen> {
                           Container(
                             margin:
                                 EdgeInsets.only(left: 16, top: 16, bottom: 16),
-                            decoration: BoxDecoration(shape: BoxShape.circle),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppConstants.clrGrey),
                             child: Image.network(notificationModel.imageUrl,
                                 height: 40, width: 40),
                           ),

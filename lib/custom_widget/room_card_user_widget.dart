@@ -4,6 +4,9 @@ import 'package:audioroom/firestore/network/user_fire.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../helper/constants.dart';
+import '../helper/print_log.dart';
+
 // ignore: must_be_immutable
 class RoomCardUserWidget extends StatefulWidget {
   String uId;
@@ -20,6 +23,7 @@ class _RoomCardUserWidgetState extends State<RoomCardUserWidget> {
   @override
   void initState() {
     super.initState();
+
     UserService().getUserByReferences(widget.uId).then((userModel) {
       if (userModel != null) {
         this.userModel = userModel;
@@ -33,6 +37,7 @@ class _RoomCardUserWidgetState extends State<RoomCardUserWidget> {
   @override
   Widget build(BuildContext context) {
     if (userModel != null) {
+      PrintLog.printMessage("if " + widget.uId);
       return Container(
         padding: EdgeInsets.only(top: 10, bottom: 10),
         child: Row(
@@ -40,7 +45,8 @@ class _RoomCardUserWidgetState extends State<RoomCardUserWidget> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              height: 30,width: 30,
+              height: 30,
+              width: 30,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   // borderRadius: BorderRadius.all(Radius.circular(8)),

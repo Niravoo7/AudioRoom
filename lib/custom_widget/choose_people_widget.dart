@@ -18,13 +18,14 @@ Widget ChoosePeopleWidget(BuildContext context, String profilePic, String name,
             children: [
               Row(
                 children: [
-                  CommonUserDetailWidget(context, profilePic, name, tagName),
+                  CommonUserDetailWidget(context, profilePic, name, tagName,
+                      isOnline: isOnline),
                 ],
               ),
               Container(
                 height: 8,
                 width: 8,
-                margin: EdgeInsets.only(bottom: 16,left: 45),
+                margin: EdgeInsets.only(bottom: 16, left: 45),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: (isOnline)

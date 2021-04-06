@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 // ignore: non_constant_identifier_names
 Widget CommonAppBar(BuildContext context, String pageName,
-    bool backArrowVisible, bool skipVisible, Function onSkipCall) {
+    bool backArrowVisible, bool skipVisible, Function onSkipCall,
+    {Widget leading}) {
   return AppBar(
     titleSpacing: 0.0,
     backgroundColor: AppConstants.clrWhite,
@@ -61,5 +62,6 @@ Widget CommonAppBar(BuildContext context, String pageName,
             : Container(),
       ],
     ),
+    leading: leading,
   );
 }

@@ -51,32 +51,53 @@ class _ChoosePeopleScreenState extends State<ChoosePeopleScreen> {
         body: SafeArea(
             child: Container(
                 child: Column(children: [
-          SearchInputField(AppConstants.str_search_for_people, searchController,
-              true, (text) {}),
+          SearchInputField(
+              AppConstants.str_search_for_people, searchController, true,
+              (text) {
+            setState(() {});
+          }),
           DividerWidget(height: 1),
           Flexible(
             child: ListView.builder(
                 padding: EdgeInsets.all(0),
                 itemCount: choosePeopleModels.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ChoosePeopleWidget(
-                      context,
-                      choosePeopleModels[index].userModel.imageUrl,
-                      choosePeopleModels[index].userModel.firstName +
-                          " " +
-                          choosePeopleModels[index].userModel.lastName,
-                      choosePeopleModels[index].userModel.tagName,
-                      choosePeopleModels[index].isSelected,
-                      choosePeopleModels[index].isOnline, () {
-                    choosePeopleModels[index].isSelected =
-                        !choosePeopleModels[index].isSelected;
-                    if (choosePeopleModels[index].isSelected) {
-                      uIdList.add(choosePeopleModels[index].userModel.uId);
-                    } else {
-                      uIdList.remove(choosePeopleModels[index].userModel.uId);
-                    }
-                    setState(() {});
-                  });
+                  if (choosePeopleModels[index]
+                          .userModel
+                          .firstName
+                          .toLowerCase()
+                          .contains(searchController.text) ||
+                      choosePeopleModels[index]
+                          .userModel
+                          .lastName
+                          .toLowerCase()
+                          .contains(searchController.text) ||
+                      choosePeopleModels[index]
+                          .userModel
+                          .tagName
+                          .toLowerCase()
+                          .contains(searchController.text)) {
+                    return ChoosePeopleWidget(
+                        context,
+                        choosePeopleModels[index].userModel.imageUrl,
+                        choosePeopleModels[index].userModel.firstName +
+                            " " +
+                            choosePeopleModels[index].userModel.lastName,
+                        choosePeopleModels[index].userModel.tagName,
+                        choosePeopleModels[index].isSelected,
+                        choosePeopleModels[index].userModel.isOnline, () {
+                      choosePeopleModels[index].isSelected =
+                          !choosePeopleModels[index].isSelected;
+                      if (choosePeopleModels[index].isSelected) {
+                        uIdList.add(choosePeopleModels[index].userModel.uId);
+                      } else {
+                        uIdList.remove(choosePeopleModels[index].userModel.uId);
+                      }
+                      setState(() {});
+                    });
+                  } else {
+                    return Container();
+                  }
                 }),
             flex: 1,
           ),

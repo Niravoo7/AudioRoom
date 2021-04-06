@@ -1,5 +1,7 @@
 import 'package:audioroom/helper/print_log.dart';
 import 'package:audioroom/firestore/model/follow_model.dart';
+import 'package:audioroom/firestore/model/notification_model.dart';
+import 'package:audioroom/firestore/network/notification_fire.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -106,22 +108,40 @@ class FollowService {
     }
   }
 
-  Future<void> createFollow(FollowModel followModel) async {
+  Future<void> createFollow(
+      FollowModel followModel, String userName, String imageUrl) async {
     await _fs
         .collection('/$_coll')
         .doc(followModel.followBy.substring(0, 10) +
             "@" +
             followModel.followTo.substring(0, 10))
         .set(followModel.toJson());
+    NotificationModel notificationModel = new NotificationModel(
+        uId: followModel.followTo,
+        notificationType: "follow",
+        description: "$userName followed you",
+        imageUrl: imageUrl,
+        createDatetime: DateTime.now(),
+        title: "Follow");
+    NotificationService().createNotification(notificationModel);
   }
 
-  Future<void> deleteFollow(FollowModel followModel) async {
+  Future<void> deleteFollow(
+      FollowModel followModel, String userName, String imageUrl) async {
     await _fs
         .collection('/$_coll')
         .doc(followModel.followBy.substring(0, 10) +
             "@" +
             followModel.followTo.substring(0, 10))
         .delete();
+    NotificationModel notificationModel = new NotificationModel(
+        uId: followModel.followTo,
+        notificationType: "unfollow",
+        description: "$userName unfollowed you",
+        imageUrl: imageUrl,
+        createDatetime: DateTime.now(),
+        title: "Unfollow");
+    NotificationService().createNotification(notificationModel);
   }
 
   Future<void> updateFollow(FollowModel followModel) async {

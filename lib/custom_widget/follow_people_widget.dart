@@ -31,12 +31,17 @@ Widget FollowPeopleWidget(BuildContext context, String profilePic, String name,
                     onTap: () {
                       if (stream.data.size > 0) {
                         FollowService().deleteFollow(
-                            FollowModel.fromJson(stream.data.docs[0].data()));
+                            FollowModel.fromJson(stream.data.docs[0].data()),
+                            name,
+                            profilePic);
                       } else {
-                        FollowService().createFollow(new FollowModel(
-                            followBy: FirebaseAuth.instance.currentUser.uid,
-                            followTo: uId,
-                            status: 1));
+                        FollowService().createFollow(
+                            new FollowModel(
+                                followBy: FirebaseAuth.instance.currentUser.uid,
+                                followTo: uId,
+                                status: 1),
+                            name,
+                            profilePic);
                       }
                     },
                     child: Container(

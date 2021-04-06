@@ -8,7 +8,8 @@ import 'package:flutter/cupertino.dart';
 // ignore: non_constant_identifier_names
 Widget RoomCardWidget(
     BuildContext context, RoomModel roomModel, bool disableNotificationIcon) {
-  PrintLog.printMessage("RoomCardWidget -> " + roomModel.toJson().toString());
+  PrintLog.printMessage("RoomCardWidget -> " +
+      (roomModel.broadcaster.length + roomModel.moderator.length).toString());
   double crossAxisSpacing = 10;
   double mainAxisSpacing = 10;
   double screenWidth = MediaQuery.of(context).size.width - 35;

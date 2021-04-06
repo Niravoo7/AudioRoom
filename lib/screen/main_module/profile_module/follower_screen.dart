@@ -31,8 +31,11 @@ class _FollowerScreenState extends State<FollowerScreen> {
         body: SafeArea(
             child: Container(
                 child: Column(children: [
-          SearchInputField(AppConstants.str_search_for_people, searchController,
-              true, (text) {}),
+          SearchInputField(
+              AppConstants.str_search_for_people, searchController, true,
+              (text) {
+            setState(() {});
+          }),
           DividerWidget(height: 1),
           Flexible(
             child: StreamBuilder(
@@ -73,13 +76,27 @@ class _FollowerScreenState extends State<FollowerScreen> {
                             }
                             UserModel userModel = stream.data;
                             if (userModel != null) {
-                              return FollowPeopleWidget(
-                                  context,
-                                  userModel.imageUrl,
-                                  userModel.firstName + " " + userModel.lastName,
-                                  userModel.tagName,
-                                  userModel.uId,
-                                  onClick: (str) {});
+                              if (userModel.firstName
+                                      .toLowerCase()
+                                      .contains(searchController.text) ||
+                                  userModel.lastName
+                                      .toLowerCase()
+                                      .contains(searchController.text) ||
+                                  userModel.tagName
+                                      .toLowerCase()
+                                      .contains(searchController.text)) {
+                                return FollowPeopleWidget(
+                                    context,
+                                    userModel.imageUrl,
+                                    userModel.firstName +
+                                        " " +
+                                        userModel.lastName,
+                                    userModel.tagName,
+                                    userModel.uId,
+                                    onClick: (str) {});
+                              } else {
+                                return Container();
+                              }
                             } else {
                               return Container();
                             }

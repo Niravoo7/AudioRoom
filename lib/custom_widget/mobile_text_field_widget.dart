@@ -42,7 +42,7 @@ Widget MobileTextFieldWidget(
               PrintLog.printMessage(
                   e.name + " " + e.code + " " + e.flagUri + " " + e.dialCode);
             },
-            initialSelection: 'IN',
+            initialSelection: countryCode.code,
             showCountryOnly: true,
             showOnlyCountryWhenClosed: true,
             padding: EdgeInsets.all(0),
