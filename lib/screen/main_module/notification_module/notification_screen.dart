@@ -1,14 +1,13 @@
 import 'package:audioroom/custom_widget/divider_widget.dart';
 import 'package:audioroom/custom_widget/text_widget.dart';
 import 'package:audioroom/custom_widget/common_appbar.dart';
-import 'package:audioroom/firestore/model/notification_model.dart';
+//import 'package:audioroom/firestore/model/notification_model.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/firestore/network/notification_fire.dart';
 import 'package:audioroom/helper/validate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../../helper/constants.dart';
 
 // ignore: must_be_immutable
 class NotificationScreen extends StatefulWidget {
@@ -53,9 +52,6 @@ class NotificationScreenState extends State<NotificationScreen> {
                   padding: EdgeInsets.all(0),
                   itemCount: querySnapshot.size,
                   itemBuilder: (BuildContext context, int index) {
-                    NotificationModel notificationModel =
-                        NotificationModel.fromJson(
-                            querySnapshot.docs[index].data());
                     return Container(
                         child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -68,14 +64,14 @@ class NotificationScreenState extends State<NotificationScreen> {
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: AppConstants.clrGrey),
-                            child: Image.network(notificationModel.imageUrl,
+                            child: Image.network(/*notificationModel.imageUrl*/"",
                                 height: 40, width: 40),
                           ),
                           Flexible(
                             child: Container(
                                 margin: EdgeInsets.only(left: 10, right: 10),
                                 width: MediaQuery.of(context).size.width,
-                                child: TextWidget(notificationModel.description,
+                                child: TextWidget(/*notificationModel.description*/"",
                                     color: AppConstants.clrBlack,
                                     maxLines: 2,
                                     fontSize: AppConstants.size_medium_large,
@@ -86,7 +82,7 @@ class NotificationScreenState extends State<NotificationScreen> {
                             margin: EdgeInsets.only(right: 16),
                             child: TextWidget(
                                 strDateDifference(dateDifference(
-                                    notificationModel.createDatetime)),
+                                    /*notificationModel.createDatetime*/DateTime.now())),
                                 color: AppConstants.clrBlack,
                                 fontSize: AppConstants.size_small_medium,
                                 fontWeight: FontWeight.w500),

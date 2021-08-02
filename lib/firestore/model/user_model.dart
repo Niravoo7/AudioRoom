@@ -26,6 +26,7 @@ class UserModel {
     this.offlineDate,
     this.firstName,
     this.uId,
+    this.token,
   });
 
   String refId;
@@ -47,6 +48,7 @@ class UserModel {
   DateTime offlineDate;
   String firstName;
   String uId;
+  String token;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         twitterName: json["twitter_name"] == null ? null : json["twitter_name"],
@@ -81,6 +83,7 @@ class UserModel {
             : null,
         firstName: json["first_name"] == null ? null : json["first_name"],
         uId: json["uid"] == null ? null : json["uid"],
+        token: json["token"] == null ? null : json["token"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -102,6 +105,7 @@ class UserModel {
         "offline_date": (offlineDate != null) ? offlineDate.toString() : null,
         "first_name": firstName == null ? null : firstName,
         "uid": uId == null ? null : uId,
+        "token": token == null ? null : token,
       };
 
   Map<String, dynamic> toJsonTimeStamp() => {
@@ -125,5 +129,6 @@ class UserModel {
             (offlineDate != null) ? Timestamp.fromDate(offlineDate) : null,
         "first_name": firstName == null ? null : firstName,
         "uid": uId == null ? null : uId,
+        "token": token == null ? null : token,
       };
 }

@@ -13,6 +13,7 @@ import 'package:audioroom/helper/validate.dart';
 import 'package:audioroom/main.dart';
 import 'package:audioroom/screen/sign_module/choose_your_interests_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -282,7 +283,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
     }
   }
 
-  void submitEvent() {
+  Future<void> submitEvent() async {
     User user = FirebaseAuth.instance.currentUser;
     user.updateProfile(
         displayName: userNameController.text.toLowerCase(),
@@ -304,7 +305,8 @@ class _BasicInfoScreenState extends State<BasicInfoScreen>
         offlineDate: DateTime.now(),
         uId: user.uid,
         recommendedBy: null,
-        phoneNumber: user.phoneNumber);
+        phoneNumber: user.phoneNumber,
+        token: await FirebaseMessaging.instance.getAPNSToken());
     UserService().createUser(userModel);
     Navigator.pop(navigatorKey.currentContext);
     Navigator.push(

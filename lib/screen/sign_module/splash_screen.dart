@@ -4,8 +4,10 @@ import 'package:audioroom/helper/navigate_effect.dart';
 import 'package:audioroom/helper/shar_pref.dart';
 import 'package:audioroom/screen/main_module/main_screen.dart';
 import 'package:audioroom/screen/sign_module/login_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // ignore: must_be_immutable
 class SplashScreen extends StatefulWidget {
@@ -29,7 +31,23 @@ class SplashState extends State<SplashScreen> {
           context, NavigatePageRoute(context, MainScreen()));
     } else {
       //Navigator.pushReplacement(context, NavigatePageRoute(context, BasicInfoScreen()));
-      Navigator.pushReplacement(context, NavigatePageRoute(context, LoginScreen()));
+      Navigator.pushReplacement(
+          context, NavigatePageRoute(context, LoginScreen()));
+    }
+  }
+
+  Future<void> getPermission() async {
+    var statusN = await Permission.notification.status;
+    if (statusN.isDenied) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.microphone,
+      ].request();
+      print(statuses);
+    }
+    if (!statusN.isGranted) {
+      getPermission();
+    } else {
+      startTime();
     }
   }
 
@@ -37,7 +55,7 @@ class SplashState extends State<SplashScreen> {
   initState() {
     super.initState();
     //FirebaseCrashlytics.instance.crash();
-    startTime();
+    getPermission();
   }
 
   @override

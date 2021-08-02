@@ -15,8 +15,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:audioroom/helper/navigate_effect.dart';
 
-import '../../../helper/constants.dart';
-
 // ignore: must_be_immutable
 class StartRoomScreen extends StatefulWidget {
   Function(StartRoomModel) onStartRoomClick;
@@ -49,15 +47,13 @@ class _StartRoomScreenState extends State<StartRoomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:
-            CommonAppBar(context, AppConstants.str_tab_room, false, false, null,
-                leading: GestureDetector(
-                  child: Container(
+        appBar: CommonAppBar(
+            context, AppConstants.str_tab_room, false, false, null,
+            leading: GestureDetector(
+                child: Container(
                     color: AppConstants.clrTransparent,
-                    child: Icon(Icons.arrow_back_outlined),
-                  ),
-                  onTap: widget.onBackPressed,
-                )),
+                    child: Icon(Icons.arrow_back_outlined)),
+                onTap: widget.onBackPressed)),
         body: SafeArea(
             child: Container(
                 color: AppConstants.clrTitleBG,
@@ -66,32 +62,28 @@ class _StartRoomScreenState extends State<StartRoomScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Flexible(
-                          child: ListView(
-                        children: [
-                          Container(
+                          child: ListView(children: [
+                        Container(
                             margin: EdgeInsets.only(
                                 left: 16, top: 16, right: 16, bottom: 8),
                             child: TextWidget(AppConstants.str_title,
                                 color: AppConstants.clrBlack,
                                 fontSize: AppConstants.size_medium_large,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SearchInputField(
-                              AppConstants
-                                  .str_write_a_title_for_the_conversation,
-                              titleController,
-                              false,
-                              (text) {}),
-                          Container(
+                                fontWeight: FontWeight.bold)),
+                        SearchInputField(
+                            AppConstants.str_write_a_title_for_the_conversation,
+                            titleController,
+                            false,
+                            (text) {}),
+                        Container(
                             margin: EdgeInsets.only(
                                 left: 16, top: 8, right: 16, bottom: 8),
                             child: TextWidget(
                                 AppConstants.str_select_the_audience,
                                 color: AppConstants.clrBlack,
                                 fontSize: AppConstants.size_medium_large,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Container(
+                                fontWeight: FontWeight.bold)),
+                        Container(
                             height: 103,
                             child: ListView.builder(
                                 shrinkWrap: true,
@@ -100,69 +92,58 @@ class _StartRoomScreenState extends State<StartRoomScreen> {
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (BuildContext context, int index) {
                                   return GestureDetector(
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 16),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            height: 74,
-                                            width: 74,
-                                            padding: EdgeInsets.all(19),
-                                            margin: EdgeInsets.only(bottom: 8),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(25),
-                                                color: (selectedRoomType ==
-                                                        index)
-                                                    ? AppConstants.clrPrimary
-                                                    : AppConstants.clrWhite,
-                                                border: Border.all(
-                                                    width: 1,
-                                                    color:
-                                                        AppConstants.clrGrey)),
-                                            child: Image.asset(
-                                              roomTypeModels[index].pic,
-                                              height: 36,
-                                              width: 36,
-                                              color: (selectedRoomType == index)
-                                                  ? AppConstants.clrWhite
-                                                  : AppConstants.clrBlack,
-                                            ),
-                                          ),
-                                          TextWidget(roomTypeModels[index].name,
-                                              color: AppConstants.clrBlack,
-                                              fontSize:
-                                                  AppConstants.size_medium,
-                                              fontWeight: FontWeight.bold)
-                                        ],
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      selectedRoomType = index;
-                                      setState(() {});
-                                    },
-                                  );
-                                }),
-                          ),
-                          GestureDetector(
+                                      child: Container(
+                                          margin: EdgeInsets.only(right: 16),
+                                          child: Column(children: [
+                                            Container(
+                                                height: 74,
+                                                width: 74,
+                                                padding: EdgeInsets.all(19),
+                                                margin:
+                                                    EdgeInsets.only(bottom: 8),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            25),
+                                                    color: (selectedRoomType ==
+                                                            index)
+                                                        ? AppConstants
+                                                            .clrPrimary
+                                                        : AppConstants.clrWhite,
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color: AppConstants
+                                                            .clrGrey)),
+                                                child: Image.asset(
+                                                    roomTypeModels[index].pic,
+                                                    height: 36,
+                                                    width: 36,
+                                                    color: (selectedRoomType ==
+                                                            index)
+                                                        ? AppConstants.clrWhite
+                                                        : AppConstants
+                                                            .clrBlack)),
+                                            TextWidget(
+                                                roomTypeModels[index].name,
+                                                color: AppConstants.clrBlack,
+                                                fontSize:
+                                                    AppConstants.size_medium,
+                                                fontWeight: FontWeight.bold)
+                                          ])),
+                                      onTap: () {
+                                        selectedRoomType = index;
+                                        setState(() {});
+                                      });
+                                })),
+                        GestureDetector(
                             child: Container(
-                              margin: EdgeInsets.only(
-                                  left: 16, top: 8, right: 16, bottom: 8),
-                              child: TextWidget(AppConstants.str_select_club,
-                                  color: AppConstants.clrBlack,
-                                  fontSize: AppConstants.size_medium_large,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                                margin: EdgeInsets.only(
+                                    left: 16, top: 8, right: 16, bottom: 8),
+                                child: TextWidget(AppConstants.str_select_club,
+                                    color: AppConstants.clrBlack,
+                                    fontSize: AppConstants.size_medium_large,
+                                    fontWeight: FontWeight.bold)),
                             onTap: () {
-                              /*ClubService()
-                              .getClubByReferences("entertainment")
-                              .then((value) {
-                            if (value != null) {
-                              PrintLog.printMessage(
-                                  "getClub -> " + value.toJson().toString());
-                            }
-                          });*/
-                              /*ClubService().getClubByUserId();*/
                               ClubModel clubModel = new ClubModel(
                                   imageUrl: AppConstants.str_image_url,
                                   clubName: "The Future",
@@ -170,96 +151,94 @@ class _StartRoomScreenState extends State<StartRoomScreen> {
                                   onlineMemberCount: 25,
                                   userList: []);
                               ClubService().createClub(clubModel);
-                            },
-                          ),
-                          Container(
+                            }),
+                        Container(
                             color: AppConstants.clrWhite,
                             child: StreamBuilder(
-                              stream:
-                                  ClubService().getClubByUIDQuery().snapshots(),
-                              builder: (context, stream) {
-                                if (stream.hasError) {
-                                  return Center(
-                                      child: TextWidget(stream.error.toString(),
-                                          color: AppConstants.clrBlack,
-                                          fontSize: 20));
-                                }
-                                QuerySnapshot querySnapshot = stream.data;
-                                if (querySnapshot == null ||
-                                    querySnapshot.size == 0) {
-                                  if (querySnapshot == null) {
-                                    return Container();
-                                  } else {
+                                stream: ClubService()
+                                    .getClubByUIDQuery()
+                                    .snapshots(),
+                                builder: (context, stream) {
+                                  if (stream.hasError) {
                                     return Center(
-                                      child: TextWidget(
-                                          AppConstants.str_no_record_found,
-                                          color: AppConstants.clrBlack,
-                                          fontSize: 20),
-                                    );
+                                        child: TextWidget(
+                                            stream.error.toString(),
+                                            color: AppConstants.clrBlack,
+                                            fontSize: 20));
                                   }
-                                } else {
-                                  return ListView.builder(
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.all(0),
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: querySnapshot.size,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        ClubModel clubModelTemp =
-                                            ClubModel.fromJson(querySnapshot
-                                                .docs[index]
-                                                .data());
+                                  QuerySnapshot querySnapshot = stream.data;
+                                  if (querySnapshot == null ||
+                                      querySnapshot.size == 0) {
+                                    if (querySnapshot == null) {
+                                      return Container();
+                                    } else {
+                                      return Center(
+                                          child: TextWidget(
+                                              AppConstants.str_no_record_found,
+                                              color: AppConstants.clrBlack,
+                                              fontSize: 20));
+                                    }
+                                  } else {
+                                    return ListView.builder(
+                                        shrinkWrap: true,
+                                        padding: EdgeInsets.all(0),
+                                        physics: NeverScrollableScrollPhysics(),
+                                        itemCount: querySnapshot.size,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          ClubModel clubModelTemp =
+                                              ClubModel.fromJson(querySnapshot
+                                                  .docs[index]
+                                                  .data());
 
-                                        return Container(
-                                          height: 72,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(
-                                              color: (selectedClub ==
-                                                      clubModelTemp.clubName)
-                                                  ? AppConstants.clrPrimary
-                                                  : AppConstants.clrTransparent,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          margin: EdgeInsets.only(
-                                              left: 16, right: 16),
-                                          child: Column(
-                                            children: [
-                                              CommonUserDetailWidget(
-                                                  context,
-                                                  clubModelTemp.imageUrl,
-                                                  clubModelTemp.clubName,
-                                                  clubModelTemp
-                                                          .onlineMemberCount
-                                                          .toString() +
-                                                      " ${AppConstants.str_member_online}",
-                                                  isSelected: (selectedClub ==
-                                                      clubModelTemp.clubName),
-                                                  onClick: () {
-                                                uIdList = [];
-                                                for (int i = 0;
-                                                    i <
-                                                        clubModelTemp
-                                                            .userList.length;
-                                                    i++) {
-                                                  uIdList.add(clubModelTemp
-                                                      .userList[i]
-                                                      .toString());
-                                                }
-                                                selectedClub =
-                                                    clubModelTemp.clubName;
-                                                setState(() {});
-                                              }),
-                                            ],
-                                          ),
-                                        );
-                                      });
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      )),
+                                          return Container(
+                                              height: 72,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              decoration: BoxDecoration(
+                                                  color: (selectedClub ==
+                                                          clubModelTemp
+                                                              .clubName)
+                                                      ? AppConstants.clrPrimary
+                                                      : AppConstants
+                                                          .clrTransparent,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              margin: EdgeInsets.only(
+                                                  left: 16, right: 16),
+                                              child: Column(children: [
+                                                CommonUserDetailWidget(
+                                                    context,
+                                                    clubModelTemp.imageUrl,
+                                                    clubModelTemp.clubName,
+                                                    clubModelTemp
+                                                            .onlineMemberCount
+                                                            .toString() +
+                                                        " ${AppConstants.str_member_online}",
+                                                    isSelected: (selectedClub ==
+                                                        clubModelTemp.clubName),
+                                                    onClick: () {
+                                                  uIdList = [];
+                                                  for (int i = 0;
+                                                      i <
+                                                          clubModelTemp
+                                                              .userList.length;
+                                                      i++) {
+                                                    uIdList.add(clubModelTemp
+                                                        .userList[i]
+                                                        .toString());
+                                                  }
+                                                  selectedClub =
+                                                      clubModelTemp.clubName;
+                                                  setState(() {});
+                                                })
+                                              ]));
+                                        });
+                                  }
+                                }))
+                      ])),
                       Container(
                           margin: EdgeInsets.only(left: 16, right: 16),
                           child: ButtonWidget(
@@ -296,33 +275,41 @@ class _StartRoomScreenState extends State<StartRoomScreen> {
                                           selectedClub = null;
                                           setState(() {});
                                         } else {
-                                          showToast("Room already exist");
+                                          showToast(AppConstants
+                                              .str_room_already_exist);
                                         }
                                       });
                                     }
                                   });
                                 } else {
-                                  RoomService()
-                                      .getRoomByReferences(selectedClub
-                                          .toLowerCase()
-                                          .replaceAll(" ", "_"))
-                                      .then((value1) {
-                                    if (value1 == null) {
-                                      widget.onStartRoomClick(
-                                          new StartRoomModel(
-                                              uIdList,
-                                              selectedClub,
-                                              titleController.text,
-                                              roomTypeModels[selectedRoomType]
-                                                  .name,
-                                              null));
-                                      titleController.text = "";
-                                      selectedClub = null;
-                                      setState(() {});
-                                    } else {
-                                      showToast("Room already exist");
-                                    }
-                                  });
+                                  if (selectedClub != null &&
+                                      selectedClub != "") {
+                                    RoomService()
+                                        .getRoomByReferences(selectedClub
+                                            .toLowerCase()
+                                            .replaceAll(" ", "_"))
+                                        .then((value1) {
+                                      if (value1 == null) {
+                                        widget.onStartRoomClick(
+                                            new StartRoomModel(
+                                                uIdList,
+                                                selectedClub,
+                                                titleController.text,
+                                                roomTypeModels[selectedRoomType]
+                                                    .name,
+                                                null));
+                                        titleController.text = "";
+                                        selectedClub = null;
+                                        setState(() {});
+                                      } else {
+                                        showToast(AppConstants
+                                            .str_room_already_exist);
+                                      }
+                                    });
+                                  } else {
+                                    showToast(AppConstants
+                                        .str_please_select_club_first);
+                                  }
                                 }
                               } else {
                                 showToast(AppConstants.str_title_required);

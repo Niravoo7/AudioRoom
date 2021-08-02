@@ -58,60 +58,59 @@ class _ChoosePeopleScreenState extends State<ChoosePeopleScreen> {
           }),
           DividerWidget(height: 1),
           Flexible(
-            child: ListView.builder(
-                padding: EdgeInsets.all(0),
-                itemCount: choosePeopleModels.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (choosePeopleModels[index]
-                          .userModel
-                          .firstName
-                          .toLowerCase()
-                          .contains(searchController.text) ||
-                      choosePeopleModels[index]
-                          .userModel
-                          .lastName
-                          .toLowerCase()
-                          .contains(searchController.text) ||
-                      choosePeopleModels[index]
-                          .userModel
-                          .tagName
-                          .toLowerCase()
-                          .contains(searchController.text)) {
-                    return ChoosePeopleWidget(
-                        context,
-                        choosePeopleModels[index].userModel.imageUrl,
-                        choosePeopleModels[index].userModel.firstName +
-                            " " +
-                            choosePeopleModels[index].userModel.lastName,
-                        choosePeopleModels[index].userModel.tagName,
-                        choosePeopleModels[index].isSelected,
-                        choosePeopleModels[index].userModel.isOnline, () {
-                      choosePeopleModels[index].isSelected =
-                          !choosePeopleModels[index].isSelected;
-                      if (choosePeopleModels[index].isSelected) {
-                        uIdList.add(choosePeopleModels[index].userModel.uId);
-                      } else {
-                        uIdList.remove(choosePeopleModels[index].userModel.uId);
-                      }
-                      setState(() {});
-                    });
-                  } else {
-                    return Container();
-                  }
-                }),
-            flex: 1,
-          ),
+              child: ListView.builder(
+                  padding: EdgeInsets.all(0),
+                  itemCount: choosePeopleModels.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (choosePeopleModels[index]
+                            .userModel
+                            .firstName
+                            .toLowerCase()
+                            .contains(searchController.text) ||
+                        choosePeopleModels[index]
+                            .userModel
+                            .lastName
+                            .toLowerCase()
+                            .contains(searchController.text) ||
+                        choosePeopleModels[index]
+                            .userModel
+                            .tagName
+                            .toLowerCase()
+                            .contains(searchController.text)) {
+                      return ChoosePeopleWidget(
+                          context,
+                          choosePeopleModels[index].userModel.imageUrl,
+                          choosePeopleModels[index].userModel.firstName +
+                              " " +
+                              choosePeopleModels[index].userModel.lastName,
+                          choosePeopleModels[index].userModel.tagName,
+                          choosePeopleModels[index].isSelected,
+                          choosePeopleModels[index].userModel.isOnline, () {
+                        choosePeopleModels[index].isSelected =
+                            !choosePeopleModels[index].isSelected;
+                        if (choosePeopleModels[index].isSelected) {
+                          uIdList.add(choosePeopleModels[index].userModel.uId);
+                        } else {
+                          uIdList
+                              .remove(choosePeopleModels[index].userModel.uId);
+                        }
+                        setState(() {});
+                      });
+                    } else {
+                      return Container();
+                    }
+                  }),
+              flex: 1),
           Container(
-            padding: EdgeInsets.only(left: 16, right: 16),
-            child:
-                ButtonWidget(context, AppConstants.str_start_a_room_small, () {
-              if (uIdList != null && uIdList.length > 0) {
-                Navigator.of(context).pop(uIdList);
-              } else {
-                showToast(AppConstants.str_please_select_1_user);
-              }
-            }),
-          )
+              padding: EdgeInsets.only(left: 16, right: 16),
+              child: ButtonWidget(context, AppConstants.str_start_a_room_small,
+                  () {
+                if (uIdList != null && uIdList.length > 0) {
+                  Navigator.of(context).pop(uIdList);
+                } else {
+                  showToast(AppConstants.str_please_select_1_user);
+                }
+              }))
         ]))));
   }
 }

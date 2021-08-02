@@ -42,7 +42,7 @@ class _ClubsScreenState extends State<ClubsScreen> {
                 child: TextWidget(
                     AppConstants.str_no_record_found,
                     color: AppConstants.clrBlack,
-                    fontSize: 20),
+                    fontSize: 20)
               );
             }
           } else {
@@ -66,8 +66,8 @@ class _ClubsScreenState extends State<ClubsScreen> {
                   }
                 });
           }
-        },
-      ),
+        }
+      )
     )));
   }
 }

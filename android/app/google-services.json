@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "882881085203-6c7k794cqtsgm12ff7m5rch40ul1c370.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.audioroom",
+            "certificate_hash": "63a1f9838735ba485175b00a08ff24ed653118c6"
+          }
+        },
+        {
           "client_id": "882881085203-idpo867ocamn7kpn7a45kqpqh9jsv3sg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

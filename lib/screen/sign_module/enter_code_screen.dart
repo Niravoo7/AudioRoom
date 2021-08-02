@@ -15,6 +15,7 @@ import 'package:audioroom/main.dart';
 import 'package:audioroom/screen/main_module/main_screen.dart';
 import 'package:audioroom/screen/sign_module/basic_info_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -146,11 +147,15 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
 
       UserModel userModel =
           await UserService().getUserByReferences(userCredential.user.uid);
+      String token = await FirebaseMessaging.instance.getAPNSToken();
+      PrintLog.printMessage("token -> $token");
       if (userModel == null) {
         Navigator.push(context, NavigatePageRoute(context, BasicInfoScreen()));
       } else {
         Navigator.push(context, NavigatePageRoute(context, MainScreen()));
       }
+      userModel.token = token;
+      UserService().updateUser(userModel);
     }).onError((error, stackTrace) {
       Navigator.pop(navigatorKey.currentContext);
       showToast("Wrong OTP!");

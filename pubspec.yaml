@@ -32,7 +32,7 @@ dependencies:
   fluttertoast: 7.1.8
   intl: 0.17.0
   firebase_auth: 1.0.1
-  firebase_core: 1.0.2
+  firebase_core: 1.0.3
   agora_rtc_engine: 3.2.1
   permission_handler: 6.0.1+1
   http: 0.13.0
@@ -40,6 +40,8 @@ dependencies:
   firebase_storage: 8.0.0
   image_picker: 0.7.2+1
   firebase_crashlytics: 1.0.0
+  firebase_messaging: 9.1.1
+  flutter_local_notifications: 5.0.0+1
   flutter_contacts: 0.3.3+1
   #geolocator: 7.0.1
   #geocoder: 0.2.1

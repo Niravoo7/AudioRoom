@@ -244,8 +244,9 @@ class AppConstants {
   static const String str_roomName_is_already_used =
       'RoomName is already used. Try with another one!';
   static const String str_member_online = 'members online';
-  static const String str_please_select_club_first = 'Please select club';
-  static const String str_title_required = 'Please enter title!!';
+  static const String str_title_required = 'Please enter title';
+  static const String str_please_select_club_first = 'Please select club first';
+  static const String str_room_already_exist = 'Room already exist';
   static const String str_please_select_1_user =
       'Please select at least 1 user';
   static const String str_leave = 'Leave';

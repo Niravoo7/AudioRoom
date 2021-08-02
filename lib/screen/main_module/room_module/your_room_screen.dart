@@ -11,8 +11,10 @@ import 'package:audioroom/custom_widget/raise_hand_widget.dart';
 import 'package:audioroom/custom_widget/club_invite_widget.dart';
 import 'package:audioroom/custom_widget/your_room_user_widget.dart';
 import 'package:audioroom/firestore/model/club_model.dart';
+import 'package:audioroom/firestore/model/notification_model.dart';
 import 'package:audioroom/firestore/model/room_model.dart';
 import 'package:audioroom/firestore/network/club_fire.dart';
+import 'package:audioroom/firestore/network/notification_fire.dart';
 import 'package:audioroom/firestore/network/room_fire.dart';
 import 'package:audioroom/helper/constants.dart';
 import 'package:audioroom/helper/print_log.dart';
@@ -24,10 +26,6 @@ import 'package:audioroom/network_api/rest_url.dart';
 import 'package:audioroom/network_api/model/token_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../../../firestore/model/notification_model.dart';
-import '../../../firestore/network/notification_fire.dart';
-import '../../../helper/constants.dart';
 
 // ignore: must_be_immutable
 class YourRoomScreen extends StatefulWidget {
@@ -391,109 +389,100 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Row(
-                                              children: [
-                                                Container(
+                                            Row(children: [
+                                              Container(
                                                   padding:
                                                       const EdgeInsets.only(
                                                           right: 8),
                                                   child: Image.asset(
-                                                    AppConstants.ic_dark_home,
-                                                    height: 14,
-                                                    width: 14,
-                                                    color:
-                                                        AppConstants.clrBlack,
-                                                  ),
-                                                ),
-                                                TextWidget(roomModel.roomName,
-                                                    color:
-                                                        AppConstants.clrBlack,
-                                                    fontSize: AppConstants
-                                                        .size_small_medium,
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                                Container(
+                                                      AppConstants.ic_dark_home,
+                                                      height: 14,
+                                                      width: 14,
+                                                      color: AppConstants
+                                                          .clrBlack)),
+                                              TextWidget(roomModel.roomName,
+                                                  color: AppConstants.clrBlack,
+                                                  fontSize: AppConstants
+                                                      .size_small_medium,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                              Container(
                                                   padding:
                                                       const EdgeInsets.only(
                                                           right: 8, left: 16),
                                                   child: Image.asset(
-                                                    AppConstants.ic_speaker,
-                                                    height: 10,
-                                                    width: 10,
-                                                    color:
-                                                        AppConstants.clrBlack,
-                                                  ),
-                                                ),
-                                                TextWidget(
-                                                    roomModel.broadcaster.length
-                                                        .toString(),
+                                                      AppConstants.ic_speaker,
+                                                      height: 10,
+                                                      width: 10,
+                                                      color: AppConstants
+                                                          .clrBlack)),
+                                              TextWidget(
+                                                  roomModel.broadcaster.length
+                                                      .toString(),
+                                                  color: AppConstants.clrBlack,
+                                                  fontSize: AppConstants
+                                                      .size_small_medium,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                              FlexibleWidget(1),
+                                              (roomModelLive.createrUid ==
+                                                      FirebaseAuth.instance
+                                                          .currentUser.uid)
+                                                  ? GestureDetector(
+                                                      child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 8),
+                                                          child: Image.asset(
+                                                              AppConstants
+                                                                  .ic_edit,
+                                                              height: 22,
+                                                              width: 22,
+                                                              color: AppConstants
+                                                                  .clrBlack)),
+                                                      onTap: () {
+                                                        inputTextDialogue();
+                                                      })
+                                                  : Container(),
+                                              (roomModelLive.createrUid ==
+                                                      FirebaseAuth.instance
+                                                          .currentUser.uid)
+                                                  ? GestureDetector(
+                                                      child: Container(
+                                                          child: Image.asset(
+                                                              AppConstants
+                                                                  .ic_lock,
+                                                              height: 22,
+                                                              width: 22,
+                                                              color: (isLock)
+                                                                  ? AppConstants
+                                                                      .clrPrimary
+                                                                  : AppConstants
+                                                                      .clrBlack)),
+                                                      onTap: () {
+                                                        isLock = !isLock;
+                                                        setState(() {});
+                                                        roomModelLive
+                                                                .isRoomLock =
+                                                            isLock;
+                                                        RoomService()
+                                                            .updateRoom(
+                                                                roomModelLive);
+                                                      })
+                                                  : Container()
+                                            ]),
+                                            Container(
+                                                padding:
+                                                    EdgeInsets.only(top: 8),
+                                                child: TextWidget(
+                                                    roomModel.roomDesc,
                                                     color:
                                                         AppConstants.clrBlack,
                                                     fontSize: AppConstants
-                                                        .size_small_medium,
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                                FlexibleWidget(1),
-                                                (roomModelLive.createrUid ==
-                                                        FirebaseAuth.instance
-                                                            .currentUser.uid)
-                                                    ? GestureDetector(
-                                                        child: Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    right: 8),
-                                                            child: Image.asset(
-                                                                AppConstants
-                                                                    .ic_edit,
-                                                                height: 22,
-                                                                width: 22,
-                                                                color: AppConstants
-                                                                    .clrBlack)),
-                                                        onTap: () {
-                                                          inputTextDialogue();
-                                                        },
-                                                      )
-                                                    : Container(),
-                                                (roomModelLive.createrUid ==
-                                                        FirebaseAuth.instance
-                                                            .currentUser.uid)
-                                                    ? GestureDetector(
-                                                        child: Container(
-                                                            child: Image.asset(
-                                                                AppConstants
-                                                                    .ic_lock,
-                                                                height: 22,
-                                                                width: 22,
-                                                                color: (isLock)
-                                                                    ? AppConstants
-                                                                        .clrPrimary
-                                                                    : AppConstants
-                                                                        .clrBlack)),
-                                                        onTap: () {
-                                                          isLock = !isLock;
-                                                          setState(() {});
-                                                          roomModelLive
-                                                                  .isRoomLock =
-                                                              isLock;
-                                                          RoomService()
-                                                              .updateRoom(
-                                                                  roomModelLive);
-                                                        },
-                                                      )
-                                                    : Container(),
-                                              ],
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.only(top: 8),
-                                              child: TextWidget(
-                                                  roomModel.roomDesc,
-                                                  color: AppConstants.clrBlack,
-                                                  fontSize: AppConstants
-                                                      .size_medium_large,
-                                                  fontWeight: FontWeight.w600,
-                                                  maxLines: 2),
-                                            ),
+                                                        .size_medium_large,
+                                                    fontWeight: FontWeight.w600,
+                                                    maxLines: 2)),
                                             GridView.builder(
                                                 padding:
                                                     EdgeInsets.only(top: 8),
@@ -518,41 +507,38 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                                                           .broadcaster.length <=
                                                       index) {
                                                     return YourRoomUserWidget(
-                                                      uId: roomModel.moderator[
-                                                          index -
-                                                              roomModel
-                                                                  .broadcaster
-                                                                  .length],
-                                                      isSubWidget: false,
-                                                      isMute: roomModel
-                                                              .mutePeople
-                                                              .where((element) => (element ==
-                                                                  roomModel.moderator[index -
-                                                                      roomModel
-                                                                          .broadcaster
-                                                                          .length]))
-                                                              .toList()
-                                                              .length >
-                                                          0,
-                                                      isStar: false,
-                                                    );
+                                                        uId: roomModel
+                                                                .moderator[
+                                                            index -
+                                                                roomModel
+                                                                    .broadcaster
+                                                                    .length],
+                                                        isSubWidget: false,
+                                                        isMute: roomModel
+                                                                .mutePeople
+                                                                .where((element) =>
+                                                                    (element ==
+                                                                        roomModel.moderator[index -
+                                                                            roomModel.broadcaster.length]))
+                                                                .toList()
+                                                                .length >
+                                                            0,
+                                                        isStar: false);
                                                   } else {
                                                     return YourRoomUserWidget(
-                                                      uId: roomModel
-                                                          .broadcaster[index],
-                                                      isSubWidget: false,
-                                                      isMute: roomModel
-                                                              .mutePeople
-                                                              .where((element) =>
-                                                                  (element ==
-                                                                      roomModel
-                                                                              .broadcaster[
-                                                                          index]))
-                                                              .toList()
-                                                              .length >
-                                                          0,
-                                                      isStar: true,
-                                                    );
+                                                        uId: roomModel
+                                                            .broadcaster[index],
+                                                        isSubWidget: false,
+                                                        isMute: roomModel
+                                                                .mutePeople
+                                                                .where((element) =>
+                                                                    (element ==
+                                                                        roomModel
+                                                                            .broadcaster[index]))
+                                                                .toList()
+                                                                .length >
+                                                            0,
+                                                        isStar: true);
                                                   }
                                                 })
                                           ])),
@@ -572,32 +558,27 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                                                   color: AppConstants
                                                       .clrWidgetBGColor)),
                                           child: Column(children: [
-                                            Row(
-                                              children: [
-                                                Container(
+                                            Row(children: [
+                                              Container(
                                                   padding:
                                                       const EdgeInsets.only(
                                                           right: 8),
                                                   child: Image.asset(
-                                                    AppConstants.ic_speaker,
-                                                    height: 10,
-                                                    width: 10,
-                                                    color:
-                                                        AppConstants.clrBlack,
-                                                  ),
-                                                ),
-                                                TextWidget(
-                                                    roomModel.audiance.length
-                                                        .toString(),
-                                                    color:
-                                                        AppConstants.clrBlack,
-                                                    fontSize: AppConstants
-                                                        .size_small_medium,
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                                FlexibleWidget(1),
-                                              ],
-                                            ),
+                                                      AppConstants.ic_speaker,
+                                                      height: 10,
+                                                      width: 10,
+                                                      color: AppConstants
+                                                          .clrBlack)),
+                                              TextWidget(
+                                                  roomModel.audiance.length
+                                                      .toString(),
+                                                  color: AppConstants.clrBlack,
+                                                  fontSize: AppConstants
+                                                      .size_small_medium,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                              FlexibleWidget(1)
+                                            ]),
                                             GridView.builder(
                                                 padding:
                                                     EdgeInsets.only(top: 8),
@@ -618,12 +599,11 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                                                     roomModel.audiance.length,
                                                 itemBuilder: (context, index) {
                                                   return YourRoomUserWidget(
-                                                    uId: roomModel
-                                                        .audiance[index],
-                                                    isSubWidget: true,
-                                                    isMute: null,
-                                                    isStar: null,
-                                                  );
+                                                      uId: roomModel
+                                                          .audiance[index],
+                                                      isSubWidget: true,
+                                                      isMute: null,
+                                                      isStar: null);
                                                 })
                                           ]))
                                       : Container()
@@ -670,10 +650,9 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                                           margin: EdgeInsets.only(
                                               right: 8, left: 28),
                                           child: Image.asset(
-                                            AppConstants.ic_leave_group,
-                                            height: 17,
-                                            color: AppConstants.clrPrimary,
-                                          )),
+                                              AppConstants.ic_leave_group,
+                                              height: 17,
+                                              color: AppConstants.clrPrimary)),
                                       TextWidget(AppConstants.str_leave_quietly,
                                           color: AppConstants.clrPrimary,
                                           fontSize:
@@ -693,17 +672,15 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                                     itemBuilder: (context, index) {
                                       return GestureDetector(
                                           child: Container(
-                                            alignment: Alignment.center,
-                                            padding: EdgeInsets.only(
-                                                top: 8, bottom: 8, left: 20),
-                                            child: Image.asset(
-                                              icons[index].icon,
-                                              height: 20,
-                                              color: icons[index].isDark
-                                                  ? AppConstants.clrPrimary
-                                                  : AppConstants.clrBlack,
-                                            ),
-                                          ),
+                                              alignment: Alignment.center,
+                                              padding: EdgeInsets.only(
+                                                  top: 8, bottom: 8, left: 20),
+                                              child: Image.asset(
+                                                  icons[index].icon,
+                                                  height: 20,
+                                                  color: icons[index].isDark
+                                                      ? AppConstants.clrPrimary
+                                                      : AppConstants.clrBlack)),
                                           onTap: () {
                                             switch (icons[index].icon) {
                                               case AppConstants.ic_list:
@@ -895,12 +872,11 @@ class _YourRoomScreenState extends State<YourRoomScreen>
             border: Border.all(color: AppConstants.clrSearchBG, width: 1)),
         child: Wrap(children: [
           Container(
-            padding: EdgeInsets.all(16),
-            child: TextWidget(AppConstants.str_invite_people,
-                color: AppConstants.clrBlack,
-                fontSize: AppConstants.size_medium_large,
-                fontWeight: FontWeight.bold),
-          ),
+              padding: EdgeInsets.all(16),
+              child: TextWidget(AppConstants.str_invite_people,
+                  color: AppConstants.clrBlack,
+                  fontSize: AppConstants.size_medium_large,
+                  fontWeight: FontWeight.bold)),
           ListView.builder(
               shrinkWrap: true,
               padding: EdgeInsets.all(0),
@@ -960,7 +936,7 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                   TextWidget("@serafield",
                       color: AppConstants.clrBlack,
                       fontSize: AppConstants.size_small_medium,
-                      fontWeight: FontWeight.w400),
+                      fontWeight: FontWeight.w400)
                 ]))
           ]),
           Container(
@@ -976,12 +952,10 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                             color: AppConstants.clrBlack,
                             fontSize: AppConstants.size_medium,
                             fontWeight: FontWeight.bold),
-                        TextWidget(
-                          AppConstants.str_followers,
-                          color: AppConstants.clrBlack,
-                          fontSize: AppConstants.size_medium,
-                          fontWeight: FontWeight.w400,
-                        )
+                        TextWidget(AppConstants.str_followers,
+                            color: AppConstants.clrBlack,
+                            fontSize: AppConstants.size_medium,
+                            fontWeight: FontWeight.w400)
                       ]))),
               SizedBox(width: 16),
               GestureDetector(
@@ -994,12 +968,10 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                             color: AppConstants.clrBlack,
                             fontSize: AppConstants.size_medium,
                             fontWeight: FontWeight.bold),
-                        TextWidget(
-                          AppConstants.str_following,
-                          color: AppConstants.clrBlack,
-                          fontSize: AppConstants.size_medium,
-                          fontWeight: FontWeight.w400,
-                        )
+                        TextWidget(AppConstants.str_following,
+                            color: AppConstants.clrBlack,
+                            fontSize: AppConstants.size_medium,
+                            fontWeight: FontWeight.w400)
                       ]))),
               SizedBox(width: 16),
               GestureDetector(
@@ -1012,55 +984,50 @@ class _YourRoomScreenState extends State<YourRoomScreen>
                             color: AppConstants.clrBlack,
                             fontSize: AppConstants.size_medium,
                             fontWeight: FontWeight.bold),
-                        TextWidget(
-                          AppConstants.str_clubs_joined,
-                          color: AppConstants.clrBlack,
-                          fontSize: AppConstants.size_medium,
-                          fontWeight: FontWeight.w400,
-                        )
+                        TextWidget(AppConstants.str_clubs_joined,
+                            color: AppConstants.clrBlack,
+                            fontSize: AppConstants.size_medium,
+                            fontWeight: FontWeight.w400)
                       ])))
             ]),
           ),
           Container(
-            height: 44,
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.only(bottom: 8),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: AppConstants.clrPrimary,
-                borderRadius: BorderRadius.circular(10)),
-            child: TextWidget(AppConstants.str_make_a_speaker,
-                color: AppConstants.clrWhite,
-                fontSize: AppConstants.size_medium_large,
-                fontWeight: FontWeight.bold),
-          ),
+              height: 44,
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(bottom: 8),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: AppConstants.clrPrimary,
+                  borderRadius: BorderRadius.circular(10)),
+              child: TextWidget(AppConstants.str_make_a_speaker,
+                  color: AppConstants.clrWhite,
+                  fontSize: AppConstants.size_medium_large,
+                  fontWeight: FontWeight.bold)),
           Container(
-            height: 44,
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.only(bottom: 8),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: AppConstants.clrWhite,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppConstants.clrPrimary, width: 1)),
-            child: TextWidget(AppConstants.str_move_to_audience,
-                color: AppConstants.clrPrimary,
-                fontSize: AppConstants.size_medium_large,
-                fontWeight: FontWeight.bold),
-          ),
+              height: 44,
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(bottom: 8),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: AppConstants.clrWhite,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppConstants.clrPrimary, width: 1)),
+              child: TextWidget(AppConstants.str_move_to_audience,
+                  color: AppConstants.clrPrimary,
+                  fontSize: AppConstants.size_medium_large,
+                  fontWeight: FontWeight.bold)),
           Container(
-            height: 44,
-            width: MediaQuery.of(context).size.width,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: AppConstants.clrWhite,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppConstants.clrPrimary, width: 1)),
-            child: TextWidget(AppConstants.str_view_full_profile,
-                color: AppConstants.clrPrimary,
-                fontSize: AppConstants.size_medium_large,
-                fontWeight: FontWeight.bold),
-          )
+              height: 44,
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: AppConstants.clrWhite,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppConstants.clrPrimary, width: 1)),
+              child: TextWidget(AppConstants.str_view_full_profile,
+                  color: AppConstants.clrPrimary,
+                  fontSize: AppConstants.size_medium_large,
+                  fontWeight: FontWeight.bold))
         ]));
   }
 
@@ -1069,67 +1036,54 @@ class _YourRoomScreenState extends State<YourRoomScreen>
         context: context,
         builder: (BuildContext ctx) {
           return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)), //this right here
-            child: Container(
-              child: Wrap(
-                children: [
-                  Container(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)), //this right here
+              child: Container(
+                  child: Wrap(children: [
+                Container(
                     margin: EdgeInsets.only(top: 20, bottom: 10),
                     child: SearchInputField(
                         AppConstants.str_write_a_title_for_the_conversation,
                         titleController,
                         false,
-                        (text) {}),
-                  ),
-                  Row(
-                    children: [
-                      Flexible(
-                        child: GestureDetector(
+                        (text) {})),
+                Row(children: [
+                  Flexible(
+                      child: GestureDetector(
                           child: Container(
-                            margin: EdgeInsets.all(10),
-                            padding: EdgeInsets.all(10),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                    color: AppConstants.clrGrey, width: 1)),
-                            child: TextWidget(AppConstants.str_ok,
-                                fontSize: AppConstants.size_text_medium,
-                                color: AppConstants.clrBlack),
-                          ),
+                              margin: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(
+                                      color: AppConstants.clrGrey, width: 1)),
+                              child: TextWidget(AppConstants.str_ok,
+                                  fontSize: AppConstants.size_text_medium,
+                                  color: AppConstants.clrBlack)),
                           onTap: () {
                             roomModelLive.roomDesc = titleController.text;
                             RoomService().updateRoom(roomModelLive);
                             Navigator.of(ctx).pop();
-                          },
-                        ),
-                      ),
-                      Flexible(
-                        child: GestureDetector(
+                          })),
+                  Flexible(
+                      child: GestureDetector(
                           child: Container(
-                            margin: EdgeInsets.all(10),
-                            padding: EdgeInsets.all(10),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                    color: AppConstants.clrGrey, width: 1)),
-                            child: TextWidget(AppConstants.str_cancle,
-                                fontSize: AppConstants.size_text_medium,
-                                color: AppConstants.clrBlack),
-                          ),
+                              margin: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(10),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(
+                                      color: AppConstants.clrGrey, width: 1)),
+                              child: TextWidget(AppConstants.str_cancle,
+                                  fontSize: AppConstants.size_text_medium,
+                                  color: AppConstants.clrBlack)),
                           onTap: () {
                             Navigator.of(ctx).pop();
-                          },
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
+                          }))
+                ])
+              ])));
         });
   }
 }
