@@ -146,7 +146,7 @@ class _StartRoomScreenState extends State<StartRoomScreen> {
                             onTap: () {
                               ClubModel clubModel = new ClubModel(
                                   imageUrl: AppConstants.str_image_url,
-                                  clubName: "The Future",
+                                  clubName: "test club",
                                   memberCount: 50,
                                   onlineMemberCount: 25,
                                   userList: []);

@@ -257,7 +257,9 @@ class _YourRoomScreenState extends State<YourRoomScreen>
         if (!roomModelLive.audiance
             .contains(FirebaseAuth.instance.currentUser.uid)) {
           roomModelLive.audiance.add(FirebaseAuth.instance.currentUser.uid);
-          roomModelLive.people.remove(FirebaseAuth.instance.currentUser.uid);
+          if(roomModelLive.people!=null && roomModelLive.people.contains(FirebaseAuth.instance.currentUser.uid)) {
+            roomModelLive.people.remove(FirebaseAuth.instance.currentUser.uid);
+          }
           RoomService().updateRoom(roomModelLive);
         }
       }

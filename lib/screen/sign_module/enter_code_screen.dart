@@ -153,9 +153,10 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
         Navigator.push(context, NavigatePageRoute(context, BasicInfoScreen()));
       } else {
         Navigator.push(context, NavigatePageRoute(context, MainScreen()));
+        userModel.token = token;
+        UserService().updateUser(userModel);
       }
-      userModel.token = token;
-      UserService().updateUser(userModel);
+
     }).onError((error, stackTrace) {
       Navigator.pop(navigatorKey.currentContext);
       showToast("Wrong OTP!");
