@@ -4,7 +4,6 @@ import 'package:audioroom/helper/navigate_effect.dart';
 import 'package:audioroom/helper/shar_pref.dart';
 import 'package:audioroom/screen/main_module/main_screen.dart';
 import 'package:audioroom/screen/sign_module/login_screen.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
