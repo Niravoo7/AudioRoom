@@ -108,7 +108,7 @@ class AppConstants {
   static const String str_start_a_room = "+ Start a room";
   static const String str_your_mobile_number = "Your Mobile Number";
   static const String str_lorem =
-      "AudioRoom is a Lorem ipsum dolor sit amet, consectetur adipiscing elit. Porttitor comodo netus vitae, nibh pellentesque.";
+      "AudioRoom is a Audio based social Network. Connecting 7 billion+ people through Audio.";
   static const String str_user_name = "User Name";
   static const String str_password = "Password";
   static const String str_first_name = "First Name";
