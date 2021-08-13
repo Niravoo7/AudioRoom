@@ -87,6 +87,7 @@ class ClubService {
   }
 
   Future<void> createClub(ClubModel clubModel) async {
+    PrintLog.printMessage("clubmodel -> " + clubModel.toJson().toString());
     DocumentReference reference = _fs.doc(
         _coll + '/' + clubModel.clubName.toLowerCase().replaceAll(" ", "_"));
     DocumentSnapshot snapshot = await _fs.doc(reference?.path ?? "").get();
